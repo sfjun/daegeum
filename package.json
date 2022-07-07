@@ -1,0 +1,24 @@
+{
+  "name": "daegeum",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sfjun/daegeum.git"
+  },
+  "author": "thegyoo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sfjun/daegeum/issues"
+  },
+  "homepage": "https://github.com/sfjun/daegeum#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.18"
+  },
+  "keywords": [],
+  "description": ""
+}
