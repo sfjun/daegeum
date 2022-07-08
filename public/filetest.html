@@ -3,140 +3,54 @@
 <Html>
 <head>
 <title> thegyoo deageum </title>
-</head>
+<script src="../d3.v7.min.js"></script>
 
-<script type="text/javascript">
-
-    //파일 만드는 함수--------------------------------------------------
-    function createFile()
-    {
-        //text area에 기록된 text를 txt에 저장
-        var txt= document.getElementById("txtOutput").value;
-
-        var fnm= "test.csv";
-        saveToFile_Chrome(fnm, txt)
-        document.getElementById("txtOutput").innerHTML="저장되었습니다.show File 버튼을 누르면 확인할 수 있습니다.";
+<style>
+    table {
+        text-align: center;
+        width: 800px;
+        height: 400px;
+        
 
     }
+    tr, td {
+        width: 20px;
+        height: 20px;
+        text-align: left
+        <!-- font-size: 75%; -->
+    }
+</style>
+</head>
 
-    //http://www.gisdeveloper.co.kr/?p=5564 참조
+<body> 
 
-    function saveToFile_Chrome(fileName, content) {
-        var blob = new Blob([content], { type: 'text/csv' });
-        objURL = window.URL.createObjectURL(blob);
-                
-        // 이전에 생성된 메모리 해제
-        if (window.__Xr_objURL_forCreatingFile__) {
-            window.URL.revokeObjectURL(window.__Xr_objURL_forCreatingFile__);
-        }
-        window.__Xr_objURL_forCreatingFile__ = objURL;
-        var a = document.createElement('a');
-        a.download = fileName;
-        a.href = objURL;
-        a.click();
-    } 
-</script>
-    
 <br><p>정간보 pdf를 museSocre 사이트에서 읽고 텍스트를 csv 파일로 저장한 파일, 세로 작성</p><br>
 <input type="file" id="fileElem" multiple accept="*" style="display:none" onchange="handleFiles(this.files)">
 <button id="fileSelect">파일선택 및 읽기</button>
 <br>
-<div id="fileList">
-    <p>No files selected!</p>
-  </div>
+<div id="fileList"><p>No files selected!</p></div>
 
-  <textarea id="txtInput" name="text" rows="6" cols="100"></textarea>
+<textarea id="txtInput" name="text" rows="6"></textarea>
 <br><br>    
 <div id="preview"> </div>
 <br>
-<input type="button" value="csv 처리" onclick="csvVerToHor()"><br>
-
-<textarea id="txtOutput" name="text" rows="6" cols="40">
-처리된 글을 보기 위한 곳입니다.
-</textarea>
+<input type="button" value="csv 처리(세로) 가로로 정렬" onclick="csvVerToHor()"><br>
 <br>
 
-<input type="button" value="다른이름으로 저장" onclick="createFile()"><br>
+<p>처리된 글을 보기 위한 곳입니다.</p>
+<textarea id="txtOutput" name="text" rows="6"></textarea>
 <br>
-<script src="../d3.v7.min.js"></script>
+<br>
+<input type="button" value="다른이름으로 저장" onclick= "createFile()"><br>
+<br>
 
-<script type="text/javascript">
-
-/*    https://developer.mozilla.org/ko/docs/Web/API/File_API/Using_files_from_web_applications#%ec%98%88%ec%8b%9c_%ea%b0%9d%ec%b2%b4_url%ec%9d%84_%ec%82%ac%ec%9a%a9%ed%95%98%ec%97%ac_%ec%9d%b4%eb%af%b8%ec%a7%80_%ed%91%9c%ec%8b%9c%ed%95%98%ea%b8%b0 참조
-*/
-    const fileSelect = document.getElementById("fileSelect"), 
-          fileElem = document.getElementById("fileElem"),
-          fileList = document.getElementById("fileList");
-
-    var selectedFile = "";
-
-    fileSelect.addEventListener("click", function (e) {
-        if (fileElem) {
-            fileElem.click();
-        }
-    }, false);
-
-    function handleFiles(files) {
-
-        if (!files.length) {
-            fileList.innerHTML = "<p>No files selected!</p>";
-        } else {
-            fileList.innerHTML = "";
-            const list = document.createElement("ul");
-            fileList.appendChild(list);
-
-            for (let i = 0; i < files.length; i++) {
-              const li = document.createElement("li");
-              list.appendChild(li);
-        
-              const img = document.createElement("img");
-              img.src = window.URL.createObjectURL(files[i]);
-              img.height = 60;
-              img.onload = function() {
-                window.URL.revokeObjectURL(this.src);
-              }
-              li.appendChild(img);
-              const info = document.createElement("span");
-              info.innerHTML = files[i].name + ": " + files[i].size + " bytes";
-              li.appendChild(info);
-            }
-        }
-
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          
-      
-          if (file.type.startsWith('image/')) { 
-      
-            const img = document.createElement("img");
-            img.classList.add("obj");
-            img.file = file;
-            // const preview=document.getElementById('preview');
-            // preview.appendChild(img); // "preview"가 결과를 보여줄 div 출력이라 가정.
-        
-            const reader = new FileReader();
-            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-            reader.readAsDataURL(file);
-
-          } else if (file.type.startsWith('text/csv')) {
-         
-            var ffile = new FileReader();
-            ffile.onload = () => {
-                document.getElementById('txtInput').value = ffile.result;
-                selectedFile = ffile.result;
-            };
-            ffile.readAsText(file);
-
-          } else {
-              console.log(file.type)
-              alert("이미지  또는 텍스트 파일만 가능해요")
-          }
-
-        }
-      }
-</script>     
+<br>
+<input type="button" value="가로 csv 읽고 횡간보" onclick= "csvToTable()"><br>
+<br>
 
 <script type="text/javascript" src="../file.js"></script>
 <pre id="output"></pre>
+<div id = "team">잘안나오네
+</div>
 </body>
 </html>
