@@ -1,0 +1,118 @@
+<html>
+<head>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <html>
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+<div id="grid"></div>
+<!-- <script src="grid.js" type="text/javascript"></script> -->
+</body>
+</html>
+    <script type="text/javascript">
+        function gridConfig() {
+  var data = new Array();
+  var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+  var ypos = 80;
+  var width = 80;
+  var height = 80;
+  var click = 0;
+
+  for (var row = 0; row < 8; row++) {
+    data.push(new Array());
+    for (var column = 0; column < 8; column++) {
+      data[row].push({
+        rowNum: row + 1,
+        columnNum: column + 1,
+        x: xpos,
+        y: ypos,
+        width: width,
+        height: height,
+        chord: randomChord()
+      })
+      // increment the x position. I.e. move it over by width variable
+      xpos += width;
+    }
+    // reset the x position after a row is complete
+    xpos = 1;
+    // increment the y position for the next row. Move it down height variable
+    ypos += height;
+  }
+  return data;
+}
+
+function randomChord() {
+  var textArray = ['Cm', 'D7', 'Gm', 'Cdim', 'Am', 'Em'];
+  return textArray[Math.floor(Math.random() * textArray.length)];
+}
+
+var gridData = gridConfig();
+
+var grid = d3.select("#grid")
+  .append("svg")
+  .attr("width", "810px")
+  .attr("height", "890px");
+
+var row = grid.selectAll(".row") // select .row val from data
+  .data(gridData)
+  .enter().append("g")
+  .attr("class", "row")
+  .append("g")
+  .attr("class", "column");
+
+var column = row.selectAll(".square")
+  .data(function(d) {
+    return d;
+  })
+  .enter()
+  .append("rect")
+  .attr("class", "square")
+  .attr("x", function(d) {
+    return d.x;
+  })
+  .attr("y", function(d) {
+    return d.y;
+  })
+  .attr("width", function(d) {
+    return d.width;
+  })
+  .attr("height", function(d) {
+    return d.height;
+  })
+  .style("fill", "#fff")
+  .style("stroke", "#222");
+
+var columnText = row.selectAll(".column") // select .column val from data
+  .data(function(d) {
+    return d;
+  })
+  .enter()
+  .append("text")
+  .text(function(d) {
+    return d.chord;
+  })
+  .attr("rowNum", function(d) {
+    return d.rowNum;
+  })
+  .attr("columnNum", function(d) {
+    return d.columnNum;
+  })
+  .attr("x", function(d) {
+    return d.x + d.width / 2;
+  })
+  .attr("y", function(d) {
+    return d.y + d.height / 2;
+  })
+  .attr("text-anchor", "middle")
+  .attr("dominant-baseline", "middle")
+  .style("fill", "red")
+  .style("font-weight", "bold")
+  .style("font-size", "24");
+    </script>
+</body>
+</html>

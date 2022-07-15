@@ -1,56 +1,44 @@
 
 <!DOCTYPE html>
-<Html>
-<head>
+<Html><head>
 <title> thegyoo deageum </title>
-<script src="../d3.v7.min.js"></script>
-
-<style>
-    table {
-        text-align: center;
-        width: 800px;
-        height: 400px;
-        
-
-    }
-    tr, td {
-        width: 20px;
-        height: 20px;
-        text-align: left
-        <!-- font-size: 75%; -->
-    }
-</style>
+<!-- <script src="../d3.v7.min.js"></script> -->
+<script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
 </head>
-
-<body> 
 
 <br><p>정간보 pdf를 museSocre 사이트에서 읽고 텍스트를 csv 파일로 저장한 파일, 세로 작성</p><br>
 <input type="file" id="fileElem" multiple accept="*" style="display:none" onchange="handleFiles(this.files)">
-<button id="fileSelect">파일선택 및 읽기</button>
-<br>
-<div id="fileList"><p>No files selected!</p></div>
+<button id="fileSelect">파일선택 및 읽기</button><br>
 
-<textarea id="txtInput" name="text" rows="6"></textarea>
-<br><br>    
-<div id="preview"> </div>
-<br>
-<input type="button" value="csv 처리(세로) 가로로 정렬" onclick="csvVerToHor()"><br>
-<br>
+<div id="fileList"><p>No files selected!</p></div>
+<textarea id="txtInput" name="text" rows="6"></textarea><br><br>    
+<div id="preview"> </div><br>
+<input type="button" value="csv 처리(세로) 가로로 정렬" onclick="csvVerToHor()"><br><br>
 
 <p>처리된 글을 보기 위한 곳입니다.</p>
-<textarea id="txtOutput" name="text" rows="6"></textarea>
-<br>
-<br>
+<textarea id="txtOutput" name="text" rows="6"></textarea><br><br>
 <input type="button" value="다른이름으로 저장" onclick= "createFile()"><br>
-<br>
+<input type="button" value="가로 csv 읽고 횡간보(html Table)2" onclick= "csvToTable2()"><br>
+<input type="button" value="가로 csv 읽고 횡간보(svg)-실패" onclick= "csvToSvg()"><br><br><br>
+<input type="button" value="그리드로 횡간보svg-완성" onclick= "grid()"><br><br>
 
-<br>
-<input type="button" value="가로 csv 읽고 횡간보" onclick= "csvToTable()"><br>
-<br>
-
+<pre id= "output"></pre>
+<div id= "team">잘안나오네</div>
+<div id= "mygraph"></div>
+<div class= "myclass">Hello World!</div>
+<div id= "grid"></div>
 <script type="text/javascript" src="../file.js"></script>
-<pre id="output"></pre>
-<div id = "team">잘안나오네
-</div>
+<style>
+    .square {
+        background-color: red;
+    }
+    rect {
+        fill: red;
+        background-color: red;
+    }
+
+</style>
+
+
 </body>
 </html>

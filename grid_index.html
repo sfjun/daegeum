@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">img.wp-smiley,img.emoji{display:inline!important;border:none!important;box-shadow:none!important;height:1em!important;width:1em!important;margin:0 .07em!important;vertical-align:-.1em!important;background:none!important;padding:0!important}</style>
+    <script src="../d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="container">
+    </div>
+
+    <script>
+     //   var ctn = document.getElementById("container");
+     //   console.log(ctn)
+
+        // var dataset = [ 5, 10, 15, 20, 25 ];
+        var dataset = [[,,,,,'湳㵈','㳲','㶂','湳㶂','㳲㵈','㳲','㶂',,'湳㵈','㳲','-㵈','㵉㵈'],[,,,,,'湳㵈','㳲','㶂','湳㶂','㳲㵈','㳲','㶂',,'湳㵈','㳲','-㵈','㵉㵈']];
+
+        d3.select("div")          // 
+        .selectAll("div")          // 2
+        .data(dataset)           // 3
+        .enter()                 // 4
+        .append("div")    
+        .attr("class", "con-item")         // 5
+       // .text("New paragraph!"); // 6
+        .text(function(d) {return d}); // 6
+                //createDiv()
+
+    </script>
+
+    <style>
+        #container {
+            width: 1800px;
+            height: 500px;
+            display: grid;
+            grid-template-rows: repeat(20,  minmax(80px, auto));
+            color: grey;
+            font-size: 20px;
+            border: solid;       
+            row-gap: 10px;
+        	column-gap: 5px;      
+            align-content: start;
+            justify-content: start;            
+        }
+        .con-item {
+            border: solid;
+            height: 80px;
+            grid-template-columns: repeat(20,  minmax(80px, auto));
+        } 
+    </style>
+</body>
+</html>
