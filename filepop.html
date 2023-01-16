@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<Html><head>
+<title> thegyoo deageum </title>
+<!-- <script src="../d3.v7.min.js"></script> -->
+<script type = "text/javascript" src = "d3.v7.min.js"></script>
+<style>
+    .square:nth-child(2) {
+        fill: lime;
+        stroke: lime;
+      }
+</style>
+
+<script>
+    function getMid() {
+        childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value;
+      }
+      function setMid() {
+        opener.window.document.myform.mid.value = childForm.mid.value;
+      }
+      function wClose() {
+        opener.window.document.myform.mid.value = childForm.mid.value;
+        opener.window.document.myform.pwd.focus();
+        window.close();
+      }
+</script>
+</head>
+
+<form name="childForm">
+    <p>이곳은 새창입니다.</p>
+    <p>아이디 <input type="text" name="mid"/></p>
+    <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p>
+    <textarea id="txtOutput" name="xyzOutput" rows="6"></textarea><br><br>
+    <p><input type="button" value="부모창으로 값 보내기" onclick="setMid()"/></p>
+    <p><input type="button" value="창닫기" onclick="wClose()"/></p>
+  
+</form>
+
+
+<script type="text/javascript" src="file.js"></script>
+<div id= "grid"></div>
+</body>
+</html>
