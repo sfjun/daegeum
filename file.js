@@ -117,7 +117,7 @@ function csvVerToHor() {
         for (i= 0; i < data.length; i++) {
             val = data[i][k].replace(/\r|\n/g,"")
             // console.log(k, i,"-----",val)
-            vale_list = vale_list +","+ val
+            vale_list = vale_list +" "+ val
         }
         // console.log(k, [vale_list])
         // console.log(k, vale_list)

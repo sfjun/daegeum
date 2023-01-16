@@ -28,16 +28,21 @@
 
 <form name="childForm">
     <p>이곳은 새창입니다.</p>
-    <p>아이디 <input type="text" name="mid"/></p>
     <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p>
     <textarea id="txtOutput" name="xyzOutput" rows="6"></textarea><br><br>
+    
+    <p><input type="button" value="xyz >>> abc" onclick="f_xyztoabc()"/></p>
+    
+    <textarea id="txtOutput2" name="xyzOutput2" rows="6"></textarea><br><br>
+    
     <p><input type="button" value="부모창으로 값 보내기" onclick="setMid()"/></p>
     <p><input type="button" value="창닫기" onclick="wClose()"/></p>
   
 </form>
 
 
-<script type="text/javascript" src="file.js"></script>
+<!--script type="text/javascript" src="file.js"></script-->
+<script type="text/javascript" src="xyzToabc.js"></script>
 <div id= "grid"></div>
 </body>
 </html>
