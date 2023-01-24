@@ -1,9 +1,14 @@
 
 <!DOCTYPE html>
-<Html><head>
+<Html>
+<head>
+<script src = "jquery-3.6.3.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
 <title> thegyoo deageum </title>
-<!-- <script src="../d3.v7.min.js"></script> -->
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}" />
 <script type = "text/javascript" src = "d3.v7.min.js"></script>
+
 <style>
     .square:nth-child(2) {
         fill: lime;
@@ -12,30 +17,37 @@
 </style>
 
 <script>
-  function nWin() {
-    var url = "filepop.html";
-    var winX = 500; // 자식창의 폭
-    var winY = 800; // 자식창의 높이
-    var x = (window.screen.width/2) - (winX/2); // 자식창이 표시될 x좌표
-    var y = (window.screen.height/2) - (winY/2); // 자식창이 표시될 y좌표
-    window.open(url,"nWin","width="+winX+", height="+winY+", left="+x+", top="+y);  // (url,새창이름,옵션)
-  }
+function nWin() {
+  var url = "filepop.html";
+  var winX = 500; // 자식창의 폭
+  var winY = 800; // 자식창의 높이
+  var x = (window.screen.width/2) - (winX/2); // 자식창이 표시될 x좌표
+  var y = (window.screen.height/2) - (winY/2); // 자식창이 표시될 y좌표
+  window.open(url,"nWin","width="+winX+", height="+winY+", left="+x+", top="+y);  // (url,새창이름,옵션)
+}
+
 </script>
 </head>
 
-<br><p>정간보 pdf를 museSocre 사이트에서 읽고 텍스트를 csv 파일로 저장한 파일, 세로 작성</p><br>
+<br><p>pdf OCR 결과 csv 파일이 있는 경우 파일선택,<br> OCR 결과를 Copy & Paste</p><br>
 <input type="file" id="fileElem" multiple accept="*" style="display:none" onchange="handleFiles(this.files)">
-<button id="fileSelect">파일선택 및 읽기</button><br>
+<button id="fileSelect">CSV 파일선택</button><br>
+<div id="fileList"><p>No files selected!</p></div><br>
+<textarea id="txtInput" name="text" rows="6", cols="50" onkeyup="calc('result1', 'txtInput')"></textarea><br>     
+<input size="30" id="result1" name="result" value= "0" readonly style="border:none">
 
-<div id="fileList"><p>No files selected!</p></div>
-<textarea id="txtInput" name="text" rows="6"></textarea><br><br>    
-<div id="preview"> </div><br>
+<div id="preview"> </div>
+<p>-----------------------------------------------------------</p>
+
+<p>열수를 입력하세요</p> 
+<input type="number" id="colCnt1" name="colCnt" min=14 max=24 step=2 value=20>
 <input type="button" value="csv 처리(세로) 가로로 정렬" onclick="csvVerToHor()"><br><br>
-
-<p>처리된 글을 보기 위한 곳입니다.</p>
-<textarea id="txtOutput" name="text" rows="6"></textarea><br><br>
+<textarea id="txtOutput" name="text" rows="6" cols="50" onkeyup="calc('result2', 'txtOutput')"></textarea><br><br>
+<input size="30" id="result2" name="result" value= "0" readonly style="border:none">
 
 <input type="button" value="새창으로" onclick="nWin()"/>
+
+<p>-----------------------------------------------------------</p>
 
 <input type="button" value="다른이름으로 저장" onclick= "createFile()"><br>
 <input type="button" value="가로 csv 읽고 횡간보(html Table)2" onclick= "csvToTable2()"><br>
@@ -46,6 +58,8 @@
 <div id= "team">잘안나오네</div>
 <div id= "mygraph"></div>
 <div class= "myclass">Hello World!</div>
+
+<div id="testId">제이쿼리 테스트</div>
 
 <script type="text/javascript" src="file.js"></script>
 <div id= "grid"></div>

@@ -1,6 +1,19 @@
+// $(document).ready(function(){
+//     $('#testId').css('background-color','red');
+//     $('#testId').css('width','150px');
+// });
+
+
+function calc(a, b) {
+    document.getElementById(a).value = "글자수: " + document.getElementById(b).value.length + " 줄수: " +
+    document.getElementById(b).value.split('\n').length
+
+    // document.getElementById('result1').value = "글자수:" + value.length;  
+}
+  
+
 //파일 만드는 함수--------------------------------------------------
-function createFile()
-{
+function createFile() {
     //text area에 기록된 text를 txt에 저장
     var txt= document.getElementById("txtOutput").value;
 
@@ -26,8 +39,6 @@ function saveToFile_Chrome(fileName, content) {
     a.href = objURL;
     a.click();
 } 
-
-
 
 /*    https://developer.mozilla.org/ko/docs/Web/API/File_API/Using_files_from_web_applications#%ec%98%88%ec%8b%9c_%ea%b0%9d%ec%b2%b4_url%ec%9d%84_%ec%82%ac%ec%9a%a9%ed%95%98%ec%97%ac_%ec%9d%b4%eb%af%b8%ec%a7%80_%ed%91%9c%ec%8b%9c%ed%95%98%ea%b8%b0 참조
 */
@@ -73,7 +84,6 @@ function handleFiles(files) {
 for (let i = 0; i < files.length; i++) {
     const file = files[i];
 
-
     if (file.type.startsWith('image/')) { 
 
         const img = document.createElement("img");
@@ -104,34 +114,47 @@ for (let i = 0; i < files.length; i++) {
 }
 
 function csvVerToHor() {
+    // 시작하는 값가져오기, 이미지 구글에 올리기, 연결 프로그램 doc 선택하면 OCR 실행 후 결과 Copy & Paste
+    var data = document.getElementById('txtInput').value;
 
-    if (!selectedFile) { alert("파일을 먼저 선택하고 확인하세요!!!"); }
+    if (!data) { alert("파일을 먼저 선택하고 확인하세요!!!"); }
     
-    var vale_coll = [];
-    var data = d3.csvParse(selectedFile)
-    
-    for (k in data[0]) {     
-        // console.log(k, data[0])
-        var vale_list = "";
+    // \r, \n 제거하여 string으로 쭉 연결
+    var data2 = data.replace(/\r|\n/g,"")  //엔터, 리턴캐리지 제거하여 문자열로 변환
 
-        for (i= 0; i < data.length; i++) {
-            val = data[i][k].replace(/\r|\n/g,"")
-            // console.log(k, i,"-----",val)
-            vale_list = vale_list +" "+ val
-        }
-        // console.log(k, [vale_list])
-        // console.log(k, vale_list)
-        vale_coll.unshift(vale_list+'\r');    // 요소앞에 추가  
+    var kk = document.getElementById('colCnt1').value * 1; // number로 인식안되어 숫자화로 * 1
+        
+    var data3 = []
+   
+    for (let i = 0; i < data2.length; i= i + kk) {
+        data3.push([...data2.substring(i, i + kk)])  //변환된 문자열을 20개씩 짜른 string을 Arrary로 변환       
     }
-    
-    document.getElementById('txtOutput').value = vale_coll;
-       
-}
 
+    // console.log("data3", data3)
+
+    var xyList = [];
+    
+    for (let j = kk - 1; j >= 0; j--) {  // j 역순으로 루프 실행 19, 18,... 0, 마직막 columne을 기준으로 가로쓰기로 전환
+        var ijStr = "";
+
+        for (let k=0; k < data3.length; k++) {  //k로 row 1,.......을 값을 재구성하여 가로쓰기 완성  
+            ijStr = ijStr + " " + data3[k][j]; // 마지막 열을 기준으로 스트링으로 재구성
+            // console.log("스트링", ijStr)
+            
+        } 
+        // console.log("ijstr", ijStr)
+        xyList.push(ijStr+"\r");  //1열, 2열, 3열... 순으로 배열에 추가 
+        
+    }
+    // console.log("배열", xyList)
+    document.getElementById('txtOutput').value = xyList;
+    calc('result2', 'txtOutput'); //계산후 전체 글자수, 로카운트 디스플레이
+    
+}
 
 function csvToTable() {
     var ttdata = document.getElementById('txtOutput').value
-    // if (!selectedFile) { alert("파일을 먼저 선택하고 확인하세요!!!");}
+    // if (!selectedFile) {alert("파일을 먼저 선택하고 확인하세요!!!");}
     if (!ttdata) { return alert("파일을 먼저 선택하고 확인하세요!!!"); }
          
     var ttdata = document.getElementById('txtOutput').value.split("\n")
@@ -233,7 +256,6 @@ function csvToSvg() {
         
     }   
 
-
     var svg = d3.select("body")
         .append("svg")
         .attr("width", 2100)
@@ -268,7 +290,6 @@ function csvToSvg() {
 
 
 }
-
 
 // https://stackoverflow.com/questions/64723131/how-can-i-center-text-on-a-d3-js-svg-grid-rect
 
@@ -494,4 +515,3 @@ function grid_원본() {
     .style("font-weight", "bold")
     .style("font-size", "24");
 }
-
