@@ -19,8 +19,8 @@
 <script>
 function nWin() {
   var url = "filepop.html";
-  var winX = 500; // 자식창의 폭
-  var winY = 800; // 자식창의 높이
+  var winX = 600; // 자식창의 폭
+  var winY = 900; // 자식창의 높이
   var x = (window.screen.width/2) - (winX/2); // 자식창이 표시될 x좌표
   var y = (window.screen.height/2) - (winY/2); // 자식창이 표시될 y좌표
   window.open(url,"nWin","width="+winX+", height="+winY+", left="+x+", top="+y);  // (url,새창이름,옵션)
@@ -43,7 +43,7 @@ function nWin() {
 <input type="number" id="colCnt1" name="colCnt" min=14 max=24 step=2 value=20>
 <input type="button" value="csv 처리(세로) 가로로 정렬" onclick="csvVerToHor()"><br><br>
 <textarea id="txtOutput" name="text" rows="6" cols="50" onkeyup="calc('result2', 'txtOutput')"></textarea><br><br>
-<input size="30" id="result2" name="result" value= "0" readonly style="border:none">
+<input size="30" id="result2" name="result2" value= "0" readonly style="border:none">
 
 <input type="button" value="새창으로" onclick="nWin()"/>
 
