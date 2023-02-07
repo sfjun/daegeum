@@ -3,7 +3,10 @@
 <Html><head>
 <title> deageum pop </title>
 <script src = "jquery-3.6.3.min.js"></script>
-<script type = "text/javascript" src = "d3.v7.min.js"></script>
+<!-- <script type = "text/javascript" src = "d3.v7.min.js"></script> -->
+<script src="d3.v4.js"></script>
+<script type = "text/javascript" src = "d3-scale-chromatic.v1.min.js"></script>
+
 <style>
   .square:nth-child(2) {
       fill: lime;
@@ -23,7 +26,9 @@
   <p><input type="button" value="창닫기" onclick="wClose()"/></p>   -->
 </form>
 
-<p><input type="button" value="그리드전환" onclick="csvGrid()"/></p>
+<p><input type="button" value="그리드전환" onclick= "txtGrid()"/></p><br>
+<p><input type="button" value="파이전환" onclick= "txtPie()"/></p>
+
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 <!-- <input id="slider1" type="range" min="0" max="100" step="25" value="25" oninput="document.querySelector(`#SVG${this.id} rect`).setAttribute('height',this.value+'%')" /> -->
 
@@ -49,6 +54,11 @@
 </svg> -->
 
 <div id="grid"></div>
+<div id="my_dataviz">
+  <p id="piTitle">장제목</p>
+</div>
+
+
 <script type="text/javascript" src="d3grid.js"></script>
 <!-- <script type="text/javascript" src="xyzToabc.js"></script> -->
 <!-- <div id= "grid"></div> -->
