@@ -32,21 +32,24 @@ function txtGriddata() {
     
     // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
     var gangString = gakString.split("\n")  // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로  
-    var jungGans = []
+    var jungGans = [];
     
     // " "가 박자 구분이라 박자별로 절단하여 배열화
-    gangString.forEach(function(gang){
-        jungGans.push(gang.split(" "))  
+    gangString.forEach(function(gang) {
+        if (gang) {
+            jungGans.push(gang.split(" "))
+        }      
     })
     
     // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
 	// iterate for rows	
 	for (var row = 0; row < jungGans.length; row++) {
-		data.push( new Array() );
+		data.push(new Array());
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
-		for (var column = 0; column < jungGans[row].length ; column++) {
-            if (!jungGans[row][column]) continue; // null 값일 경우 pass
+		for (var column = 0; column < jungGans[row].length; column++) {
+            // console.log("row-jungGans", row, jungGans)
+            if ((!jungGans[row]) || (!jungGans[row][column])) continue; // null 값일 경우 pass
 			data[row].push({
 				x: xpos,
 				y: ypos,
@@ -64,7 +67,6 @@ function txtGriddata() {
 	}
 	return data;
 }
-
 
 var gridOx = true;
 
@@ -112,21 +114,11 @@ function txtGrid() {
 
 }
 
-
 function txtPie() {    
     if (!gridOx) return; 
     var lines = txtGriddata();
+    // console.log("lines", lines)
     gridOx = false;
-
-    // console.log("gridData",lines)
-    // alert("sfsf")
-    // set the dimensions and margins of the graph
-    // var width = 450
-    //     height = 450
-    //     margin = 40
-
-    // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-    // var radius = Math.min(width, height) / 2 - margin
 
     // var data = {임: 1/3, 황: 1/3, "-1":1/6, "-2":1/6}
     // var data = [["임", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]]
@@ -134,12 +126,11 @@ function txtPie() {
     // [음, %] 자료 저장
     var lineBox = [];
     // console.log("gridData, 갯수", lines.length, lines) // 5라인
-    lines.forEach(function(line){
-        // console.log("gD", fe )
-        // var name = "W"
+    lines.forEach(function(line) {
+        // console.log("linexyz", line[0]);
+        // console.log("linexyz", line[0].xyz);
         var hanBox = [];
         if (line[0].xyz.startsWith("w")) {  //w시작하는 문서 찾기
-            // alert(fe[0].xyz);
             $('#piTitle').text(line[0].xyz) // 제목으로 div에 처리
         } else {
             //임황-, ---, ---- 
@@ -147,18 +138,23 @@ function txtPie() {
                 // console.log("feeLen", hanbaksub.xyz)
                 var bitBox = []
                 // 한박에 대한 정규식 적용 "-" 제외
-                //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어]
+                //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
+                ///gu, g: 전역, u:unicode
                 //[임, 황, -]
-                var bits = hanbak.xyz.match(/[ㄴ^ㄷ]?\W+?[\(\)\/,]?/gu)         
+                var bits = hanbak.xyz.match(/[ㄴ^ㄷ]?[\WㄱN]+?[\(\)\/,]*/gu)         
                 // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
                 // 3
                 var bitsCnt = bits.length;  //park 갯수
 
                 // [임, 1/3],[황, 1/3],[-,1/3]
                 bits.forEach(function(part) {
-                    bitBox.push([part, 1/bitsCnt])
-                    // console.log(part, 1 / partcnt)
-                    
+                    //반박처리할 경우 셋잇단음 기준으로 
+                    if (part.indexOf("/") > 0) {
+                        bitBox.push([part, 1/bitsCnt/2])
+                    } else {
+                        bitBox.push([part, 1/bitsCnt])
+                    }                    
+                    // console.log(part, 1 / partcnt)                    
                 })
                 hanBox.push([bitBox])
                 // console.log("hanBox", hanBox)
@@ -173,30 +169,37 @@ function txtPie() {
 }
 
 function playControll(lines) {
-    console.log("라인박스",lines)
-    // pieRun(data);
+    // console.log("라인박스",lines)
+
+    lines.forEach(function(line) {
+        line.forEach(function(hanbaks) {
+            // console.log(hanbaks)
+            hanbaks.forEach(function(hanbak) {
+                console.log("hanbak", hanbak)
+                pieRun(hanbak);
+            })
+        })
+    })    
 }
 
 
 function pieRun(data) {
     // set the dimensions and margins of the graph
-    var width = 450
-        height = 450
-        margin = 40
+    var width = 150
+        height = 150
+        margin = 10
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin
 
     // append the svg object to the div called 'my_dataviz'
     var svg = d3.select("#my_dataviz")
-    .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-    .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
+        .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+        .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     // Create dummy data
-    
 
     // set the color scale
     var color = d3.scaleOrdinal()
@@ -237,10 +240,10 @@ function pieRun(data) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function(d){ return "grp " + d.data.value[0]})
+    .text(function(d){ return d.data.value[0]})
     // .text(function(d){ return "grp " + d.data.key})
     .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
     .style("text-anchor", "middle")
-    .style("font-size", 25)
+    .style("font-size", 20)
 
 }
