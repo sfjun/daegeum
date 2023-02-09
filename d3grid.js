@@ -19,47 +19,40 @@ function wClose() {
   window.close();
 }
 
-function gridData1() {
+function txtGriddata() {
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
 	var width = 50;
 	var height = 50;
 
-    var hData = document.getElementById('txtOutput').value; // typeof = string
-    // hData = hData.replace(/\r|\n/g,"")  //엔터, 리턴캐리지 제거하여 문자열로 변환
-    // var hData2 = hData.split("//")
-
-    var hData2 = hData.split("\n")
- 
-    var hData3 = []
+    // typeof = string
+    // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
+    var gakString = document.getElementById('txtOutput').value; 
     
-    hData2.forEach(function(fe){
-        hData3.push(fe.split(" "))
+    // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
+    var gangString = gakString.split("\n")  // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로  
+    var jungGans = []
+    
+    // " "가 박자 구분이라 박자별로 절단하여 배열화
+    gangString.forEach(function(gang){
+        jungGans.push(gang.split(" "))  
     })
-
-    // console.log("hd3",hData3)
-    // console.log("hd3-length",hData3.length)
-   
-    // for (let i= 0; i < hData2.length; i= i++) {
-    //     console.log(hData2[i])
-    //     // hData3.push(hData2[i].split(" "))  //변환된 문자열을 20개씩 짜른 string을 Arrary로 변환       
-    // }
     
-    //console.log("hdata 엔터", hData3)
-    
+    // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
 	// iterate for rows	
-	for (var row = 0; row < hData3.length; row++) {
+	for (var row = 0; row < jungGans.length; row++) {
 		data.push( new Array() );
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
-		for (var column = 0; column < hData3[row].length ; column++) {
+		for (var column = 0; column < jungGans[row].length ; column++) {
+            if (!jungGans[row][column]) continue; // null 값일 경우 pass
 			data[row].push({
 				x: xpos,
 				y: ypos,
 				width: width,
 				height: height,
-                xyz: hData3[row][column]
+                xyz: jungGans[row][column]
 			})
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
@@ -77,7 +70,7 @@ var gridOx = true;
 
 function txtGrid() {
     if (!gridOx) return 
-    var gridData = gridData1();
+    var gridData = txtGriddata();
     gridOx = false;
 
 
@@ -122,10 +115,10 @@ function txtGrid() {
 
 function txtPie() {    
     if (!gridOx) return; 
-    var gridData = gridData1();
+    var lines = txtGriddata();
     gridOx = false;
 
-    // console.log("gridData",gridData)
+    // console.log("gridData",lines)
     // alert("sfsf")
     // set the dimensions and margins of the graph
     // var width = 450
@@ -138,31 +131,53 @@ function txtPie() {
     // var data = {임: 1/3, 황: 1/3, "-1":1/6, "-2":1/6}
     // var data = [["임", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]]
     
-    gridData.forEach(function(fe){
+    // [음, %] 자료 저장
+    var lineBox = [];
+    // console.log("gridData, 갯수", lines.length, lines) // 5라인
+    lines.forEach(function(line){
         // console.log("gD", fe )
         // var name = "W"
-
-        if (fe[0].xyz.startsWith("w")) {  //w시작하는 문서 찾기
+        var hanBox = [];
+        if (line[0].xyz.startsWith("w")) {  //w시작하는 문서 찾기
             // alert(fe[0].xyz);
-            $('#piTitle').text(fe[0].xyz) //
+            $('#piTitle').text(line[0].xyz) // 제목으로 div에 처리
         } else {
-            fe.forEach(function(fee) {
-                // console.log("feeLen", fee.xyz)
-                var feeArr = [...fee.xyz]
-                feeArr.forEach(function(ffa){
-                    console.log("ffa", ffa)
+            //임황-, ---, ---- 
+            line.forEach(function(hanbak) {  //한박시작
+                // console.log("feeLen", hanbaksub.xyz)
+                var bitBox = []
+                // 한박에 대한 정규식 적용 "-" 제외
+                //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어]
+                //[임, 황, -]
+                var bits = hanbak.xyz.match(/[ㄴ^ㄷ]?\W+?[\(\)\/,]?/gu)         
+                // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
+                // 3
+                var bitsCnt = bits.length;  //park 갯수
+
+                // [임, 1/3],[황, 1/3],[-,1/3]
+                bits.forEach(function(part) {
+                    bitBox.push([part, 1/bitsCnt])
+                    // console.log(part, 1 / partcnt)
+                    
                 })
+                hanBox.push([bitBox])
+                // console.log("hanBox", hanBox)
             })
+            lineBox.push(hanBox)                
         }
-            
-            // $('#test').val('원하는 값');
-            // str.startsWith(name)
-
+        // pieData.push(pieDatasub)        
     })
-
-    // pieRun(data);
+    
+    playControll(lineBox)    
 
 }
+
+function playControll(lines) {
+    console.log("라인박스",lines)
+    // pieRun(data);
+}
+
+
 function pieRun(data) {
     // set the dimensions and margins of the graph
     var width = 450
