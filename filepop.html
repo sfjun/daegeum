@@ -5,13 +5,29 @@
 <script src = "jquery-3.6.3.min.js"></script>
 <!-- <script type = "text/javascript" src = "d3.v7.min.js"></script> -->
 <script src="d3.v4.js"></script>
+
 <script type = "text/javascript" src = "d3-scale-chromatic.v1.min.js"></script>
+<script type = "text/javascript" src = "colorbrewer.v1.min.js"></script>
 
 <style>
   .square:nth-child(2) {
       fill: lime;
       stroke: lime;
   }
+
+
+  button {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  #chart {
+    display: block;
+    margin: 20px auto 0;
+    height: 400px;
+    width: 400px;
+  }
+
 </style>
 </head>
 
@@ -58,6 +74,8 @@
   <p id="piTitle">각 제목</p>
 </div>
 
+<button onclick="runChart()">Return animation</button>
+<svg id="chart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 200 200"></svg>
 
 <script type="text/javascript" src="d3grid.js"></script>
 <!-- <script type="text/javascript" src="xyzToabc.js"></script> -->

@@ -193,6 +193,7 @@ function pieRun(data) {
     var radius = Math.min(width, height) / 2 - margin
 
     // append the svg object to the div called 'my_dataviz'
+
     var svg = d3.select("#my_dataviz")
         .append("svg")
             .attr("width", width)
@@ -247,3 +248,121 @@ function pieRun(data) {
     .style("font-size", 20)
 
 }
+
+
+function runChart() {
+    // var data = [0.33, 0.33, 0.33];
+    var dataOri = [['林', 0.3333333333333333], ['潢', 0.3333333333333333], ['-', 0.3333333333333333]]
+    var data =[]
+    var dataTxt = [];
+    
+    dataOri.forEach(function(cur) {
+        data.push(cur[1])
+        dataTxt.push(cur[0])
+    });    
+    // console.log(data, dataOri)
+    draw(data, dataTxt);
+}
+
+function draw(data, dataTxt) {
+
+    // 색깔 초이스
+    // (6)['#d53e4f', '#fc8d59', '#fee08b', '#e6f598', '#99d594', '#3288bd']
+    let colors = colorbrewer.Spectral[data.length];
+    // console.log("color", colors) 
+    
+    let sizes = {
+        innerRadius: 50,
+        outerRadius: 100
+    };
+    
+    // 박자관점으로 한박에 2초
+    let durations = {
+        entryAnimation: 2000
+    };
+
+    //기존항목 지우기?
+    d3.select("#chart").html("");
+
+    let generator = d3.pie()
+        .sort(null);        
+    // console.log("gen", generator)
+
+    // 각 조각별로 startAngle, endAngle 생성 됨
+    // {data:, value:, startAngle:0, endAngle:} 
+    let chart = generator(data);
+    // console.log("chart", chart)
+    
+    //텍스트 값추가하기
+    // {data:, value:, startAngle:0, endAngle:, xyz:} 
+    dataTxt.forEach(function(txt, i) {
+        chart[i]['xyz'] = txt;
+        
+    })
+    // console.log("chart", chart)
+
+    let arc = d3.arc();
+    console.log(arc)
+
+    // path 생성, 색깔지정 
+    let arcs = d3.select("#chart")
+        .append("g")
+            .attr("class", "gClass")
+            .attr("transform", "translate(100, 100)")
+        .selectAll("path")
+        .data(chart)
+        .enter()
+        .append("path")
+            .attr("d", arc)
+            .style("fill", (d, i) => colors[i]);
+
+    // https://gist.github.com/cricku/9af3b270bc2ac5d860ecd44da2471dc2
+            
+    let arcsSs = d3.selectAll(".gClass")
+        .data(chart)
+        .enter()
+        .append("text")
+        // .attr("transform", function(d) {
+        //     var _d = arc.centroid(d);
+        //     _d[0] *= 1.5;	//multiply by a constant factor
+        //     _d[1] *= 1.5;	//multiply by a constant factor
+        //     return "translate(" + _d + ")";
+        // })
+            .attr("dy", ".50em")
+            .style("text-anchor", "middle")
+        .text(function(d) { console.log("d", d.xyz)
+            return d.xyz;
+        });
+
+    // console.log("arcs", arcs)
+
+    let angleInterpolation = d3.interpolate(generator.startAngle()(), generator.endAngle()());
+    // console.log("각인터폴", angleInterpolation)
+    let innerRadiusInterpolation = d3.interpolate(0, sizes.innerRadius);
+    let outerRadiusInterpolation = d3.interpolate(0, sizes.outerRadius);
+
+    
+    arcs.transition()
+        .duration(durations.entryAnimation)
+        .attrTween("d", d => {
+            let originalEnd = d.endAngle;
+            return t => {
+                let currentAngle = angleInterpolation(t);
+                if (currentAngle < d.startAngle) {
+                    return "";
+                }
+                d.endAngle = Math.min(currentAngle, originalEnd);
+                return arc(d);
+            };
+        });
+
+    d3.select("#chart")
+        .transition()
+        .duration(durations.entryAnimation)
+        .tween("arcRadii", () => {
+        return t => arc
+            .innerRadius(innerRadiusInterpolation(t))
+            .outerRadius(outerRadiusInterpolation(t));
+        });
+
+}    
