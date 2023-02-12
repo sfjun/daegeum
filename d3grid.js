@@ -19,12 +19,12 @@ function wClose() {
   window.close();
 }
 
-function txtGriddata() {
+function txtTodata() {
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
-	var width = 50;
-	var height = 50;
+	var width = 60;
+	var height = 60;
 
     // typeof = string
     // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
@@ -70,9 +70,9 @@ function txtGriddata() {
 
 var gridOx = true;
 
-function txtGrid() {
+function runGrid() {
     if (!gridOx) return 
-    var gridData = txtGriddata();
+    var gridData = txtTodata();
     gridOx = false;
 
 
@@ -103,20 +103,19 @@ function txtGrid() {
         .style("stroke", "#222");
     
     column.append("text")
-        .attr("x", function(d) { return d.x; })
-        .attr("y", function(d) { return d.y + 25; })
+        .attr("x", function(d) { return d.x  + d.width/2; })
+        .attr("y", function(d) { return d.y + d.height*1/4; })
         // .attr("y", height / 2)
-       // .attr("dy", ".15em")
+        .attr("dy", ".35em")
         .text(function(d) { return d.xyz; })
-        // .style("text-anchor", "middle")
-        .style("font-size", 13);    
-
+        .style("text-anchor", "middle")
+        .style("font-size", 18);  
 
 }
 
-function txtPie() {    
+function runPie() {    
     if (!gridOx) return; 
-    var lines = txtGriddata();
+    var lines = txtTodata();
     // console.log("lines", lines)
     gridOx = false;
 
@@ -176,14 +175,16 @@ function playControll(lines) {
             // console.log(hanbaks)
             hanbaks.forEach(function(hanbak) {
                 console.log("hanbak", hanbak)
-                pieRun(hanbak);
+                //pie 챠트 적용시
+                // runPie(hanbak); 
+                runPie(hanbak);
             })
         })
     })    
 }
 
 
-function pieRun(data) {
+function runPie(data) {
     // set the dimensions and margins of the graph
     var width = 150
         height = 150
@@ -318,16 +319,20 @@ function draw(data, dataTxt) {
 
     // https://gist.github.com/cricku/9af3b270bc2ac5d860ecd44da2471dc2
             
-    let arcsSs = d3.selectAll(".gClass")
+    let arcsSs = d3.select("#chart")
+        .append("g")
+              .attr("transform", "translate(100, 100)")
+        .selectAll("path")
         .data(chart)
         .enter()
         .append("text")
-        // .attr("transform", function(d) {
-        //     var _d = arc.centroid(d);
-        //     _d[0] *= 1.5;	//multiply by a constant factor
-        //     _d[1] *= 1.5;	//multiply by a constant factor
-        //     return "translate(" + _d + ")";
-        // })
+            // .attr("transform", function(d) { return "translate(" + arcs.centroid(d) + ")";  })
+            // .attr("transform", function(d) {
+            //     var _d = arc.centroid(d);
+            //     _d[0] *= 1.5;	//multiply by a constant factor
+            //     _d[1] *= 1.5;	//multiply by a constant factor
+            //     return "translate(" + _d + ")";
+            // })
             .attr("dy", ".50em")
             .style("text-anchor", "middle")
         .text(function(d) { console.log("d", d.xyz)
