@@ -12,7 +12,7 @@
 
 <body>
 <script>
-   var data = [5, 10, 15, 20];
+   var data = [5, 5, 5, 5];
    var color = ["red", "blue", "pink", "gray"]
    
    var width = 500 
@@ -28,16 +28,19 @@
       .data(data)
       .enter()
       .append("g")
+      .attr("class", "gBar")
       .attr("transform", function(d, i) {
-        return "translate(" + d*5 +"," + i * barHeight + ")";
-      //  return "translate(" + d*5 +", 5 )";
+      //return "translate(" + d*5 +"," + i * barHeight + ")";
+      return "translate(" + i*100 +", 0 )";
            
       });
 
    bar.append("rect")
-      .attr("width", 25)   
-      .attr("height", barHeight - 1)
-      .style("fill", function(d,i) { return color[i];});
+      .attr("width", 100)   
+      .attr("height", 100)
+      .style("fill", "skyblue")
+      .style("fill-opacity", 0.1);
+      //.style("fill", function(d,i) { return color[i];});
    
    bar.append("text")
       .attr("x", function(d) { return (d*scaleFactor); })
@@ -45,19 +48,47 @@
       .attr("dy", ".35em")
       .attr("dx", "-.50em")
       .text(function(d) { return d; });
+
+    var dataSet = [[21, 25, 25],[22, 25, 25, 30, 20],[25, 25],[50]];
+    //var dataSet = [25, 25, 25, 25]
+    
+    var subBar = d3.selectAll(".gBar")
+      //.data(dataSet)
+      //.enter()
+      .append("g")
+      .attr("class", "gSubbar");
+      //.attr("transform", function(d, i) { 
+      //return "translate(" + d*5 +"," + i * barHeight + ")";
+      //return "translate(" + i*100 +", 0 )"  });  
+
+    subBar.selectAll(".gSubbar")
+      .data(dataSet)
+      .enter()
+      .append("rect")
+      .attr("x", function(d) { return (d*scaleFactor); })
+      .attr("y", function(d) { return (d*scaleFactor); })
+      .attr("width", 25)   
+      .attr("height", 25)
+      .style("fill", "red");
+      //.style("fill", function(d,i) { return color[i];});
+
+
+
    //console.log(bar)
-  
+  /*
    var xx = graph.selectAll("rect")
       .transition()
       .delay(function(d,i){ console.log("d", d); return i*3000;})
       .attr("width", function(d) {
-      return d * scaleFactor})
+      // return d * scaleFactor})
+      return 25})
       .duration(function(d, i) {
          return 5000});
-   
+  */
+  
 </script>
 
-<script>
+<!--script>
    var dataSet = [10, 5, 12, 15];
    console.log(dataSet)
    var xx = d3.selectAll("button")
