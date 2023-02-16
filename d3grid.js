@@ -50,12 +50,16 @@ function txtTodata() {
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
             if ((!jungGans[row]) || (!jungGans[row][column])) continue; // null 값일 경우 pass
+            var rowCol = jungGans[row][column];
+
+            //console.log("rowCol", rowCol)
 			data[row].push({
 				x: xpos,
 				y: ypos,
 				width: width,
 				height: height,
-                xyz: jungGans[row][column]
+                xyz: jungGans[row][column],
+                xyzbits: bakTobit(rowCol)
 			})
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
@@ -68,6 +72,34 @@ function txtTodata() {
 	return data;
 }
 
+
+function bakTobit(hanbak) {  //한박시작
+    // console.log("feeLen", hanbaksub.xyz)
+    var hanBox =[]
+    var bitBox = []
+    // 한박에 대한 정규식 적용 "-" 제외
+    //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
+    ///gu, g: 전역, u:unicode
+    //[임, 황, -]
+    var bits = hanbak.match(/[ㄴ^ㄷ]?[\WㄱN]+?[\(\)\/,]*/gu)         
+    // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
+    // 3
+    var bitsCnt = bits.length;  //park 갯수
+
+    // [임, 1/3],[황, 1/3],[-,1/3]
+    bits.forEach(function(part) {
+        //반박처리할 경우 셋잇단음 기준으로 
+        if (part.indexOf("/") > 0) {
+            bitBox.push([part, 1/bitsCnt/2])
+        } else {
+            bitBox.push([part, 1/bitsCnt])
+        }                    
+        // console.log(part, 1 / partcnt)                    
+    })
+    hanBox.push(bitBox)
+    return hanBox;
+    // console.log("hanBox", hanBox)
+}
 
 var gridOx = true;
 
@@ -103,6 +135,7 @@ function runGrid() {
         .attr("y", function(d) { return d.y; })
         .attr("width", function(d) { return d.width; })
         .attr("height", function(d) { return d.height; })
+
         .style("fill", "#fff")
         .style("stroke", "#222");
     
@@ -145,7 +178,7 @@ function runPie() {
                 //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
                 ///gu, g: 전역, u:unicode
                 //[임, 황, -]
-                var bits = hanbak.xyz.match(/[ㄴ^ㄷ]?[\WㄱN]+?[\(\)\/,]*/gu)         
+                var bits = hanbak.xyz.match(/[ㄴ^ㄷㄱ]?[\WㄱN]+?[\(\)\/,]*/gu)         
                 // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
                 // 3
                 var bitsCnt = bits.length;  //park 갯수
@@ -188,7 +221,7 @@ function playControll(lines) {
     })    
 }
 
-var color = ["red", "blue", "pink", "gray"]
+var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 
 function runPie2(data) {
     // set the dimensions and margins of the graph
@@ -210,11 +243,10 @@ function runPie2(data) {
     // Create dummy data
 
     // set the color scale
-    //var color = d3.scaleOrdinal()
-    //    .domain(data)
-    //    .range(d3.schemeSet2);
-    // var color = ["red", "blue", "pink", "gray"]
-
+    var color = d3.scaleOrdinal()
+        .domain(data)
+        .range(d3.schemeSet2);
+    
     // Compute the position of each group on the pie:
     var pie = d3.pie()
         .value(function(d) {return d.value[1]; })
@@ -235,9 +267,10 @@ function runPie2(data) {
         .enter()
         .append('path')
             .attr('d', arcGenerator)
-            .attr('fill', function(d){ return(color[d.data.value[0]]) })
-            // .attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color(d.data.key)) })
-            // .attr('fill', "skyblue")
+            //.attr('fill', function(d){ return(color[d.data.value[0]]) })
+            //.attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color[d.data.key]) })
+            .attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color(d.data.key)) })     
+            //.attr('fill', "skyblue")
             .attr("stroke", "black")
             .style("stroke-width", "2px")
             .style("opacity", 0.7)
