@@ -3,7 +3,7 @@
    <script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
    <style>
       svg text {
-         fill: yellow;
+         fill: royalblue;
          font: 12px sans-serif;
          text-anchor: end;
       }
@@ -12,7 +12,19 @@
 
 <body>
 <script>
-   var data = [5, 5, 5, 5];
+   //var data = [5, 5];
+   //var data = [[21, 25, 25],[22, 25, 25, 30, 20],[25, 25]];
+
+   var data =  [[{x: 1, y: 1, width: 60, height: 60, xyz: 'w:1장'}],
+              [{x: 1, y: 61, width: 60, height: 60, xyz: '林潢-'},
+               {x: 61, y: 61, width: 60, height: 60, xyz: '---/ㄴ/('},
+               {x: 121, y: 61, width: 60, height: 60, xyz: '南'},
+               {x: 181, y: 61, width: 60, height: 60, xyz: '-,'},
+               {x: 241, y: 61, width: 60, height: 60, xyz: '潢/仲/--'},               
+               {x: 301, y: 61, width: 60, height: 60, xyz: '-南-,'}]]
+
+  console.log("data", data);
+
    var color = ["red", "blue", "pink", "gray"]
    
    var width = 500 
@@ -22,26 +34,58 @@
    var graph = d3.select("body")
       .append("svg")
       .attr("width", width)
-      .attr("height", barHeight * data.length);
+     // .attr("height", barHeight * data.length)
+      .attr("height", 500)
+      ;
    
-   var bar = graph.selectAll("g")
+   var row = graph.selectAll(".gRow")
       .data(data)
       .enter()
       .append("g")
-      .attr("class", "gBar")
-      .attr("transform", function(d, i) {
+      .attr("class", "gRow")
+      //.attr("transform", function(d, i) {
       //return "translate(" + d*5 +"," + i * barHeight + ")";
-      return "translate(" + i*100 +", 0 )";
-           
-      });
+      //return "translate(" + i*100 +", 0 )";  })
+      ;
 
-   bar.append("rect")
+      // ok      
+      console.log("row", row);
+        
+   var column = row.selectAll(".barRect")
+      .data(function(d) { console.log("d", d); return d; })
+      .enter();  
+
+   console.log("col", column);
+   column.append("rect")
+      .attr("class", "barRect")
+      .attr("x", function(d) { console.log(d); return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .attr("width", function(d) { return d.width; })
+      .attr("height", function(d) { return d.height; })
+      .style("fill", "#fff")
+      .style("stroke", "#222")
+      ;
+
+   column.append("text")
+      .attr("x", function(d) { return d.x  + d.width/2; })
+      .attr("y", function(d) { return d.y + d.height*1/4; })
+      // .attr("y", height / 2)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.xyz; })
+      .style("text-anchor", "middle")
+      .style("font-size", 18)
+      .style("font-color", "red")
+      ;
+
+   /*   
       .attr("width", 100)   
       .attr("height", 100)
       .style("fill", "skyblue")
-      .style("fill-opacity", 0.1);
+      .style("fill-opacity", 0.5);
+*/
+      
       //.style("fill", function(d,i) { return color[i];});
-   
+/*   
    bar.append("text")
       .attr("x", function(d) { return (d*scaleFactor); })
       .attr("y", barHeight / 2)
@@ -49,32 +93,40 @@
       .attr("dx", "-.50em")
       .text(function(d) { return d; });
 
-    var dataSet = [[21, 25, 25],[22, 25, 25, 30, 20],[25, 25],[50]];
-    //var dataSet = [25, 25, 25, 25]
-    
-    var subBar = d3.selectAll(".gBar")
-      //.data(dataSet)
-      //.enter()
+    //var dataSet = [[21, 25, 25],[22, 25, 25, 30, 20],[25, 25]];
+    //var dataSet = [25, 30, 50, 40]
+    var dataSet = [[["임", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]],
+                   [["중", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]]
+                   ]
+
+    //bar.append("g")
+    //    .attr("class", "gSubbar");
+/*
+    var subar = bar.selectAll(".gSubbar")
+      .data(dataSet)
+      .enter()
       .append("g")
       .attr("class", "gSubbar");
       //.attr("transform", function(d, i) { 
       //return "translate(" + d*5 +"," + i * barHeight + ")";
       //return "translate(" + i*100 +", 0 )"  });  
-
-    subBar.selectAll(".gSubbar")
+    console.log("gSubbar", subar)
+*/
+/*
+    var xx = bar.selectAll("subRect")
       .data(dataSet)
       .enter()
+      //.append("g")
+      //.attr("class", "gSubbar")
       .append("rect")
-      .attr("x", function(d) { return (d*scaleFactor); })
-      .attr("y", function(d) { return (d*scaleFactor); })
+      .attr("class", "subRect")
+      //.attr("x", function(d) { return d[1]; })
+      //.attr("y", function(d) { return d[1]; })
       .attr("width", 25)   
       .attr("height", 25)
       .style("fill", "red");
       //.style("fill", function(d,i) { return color[i];});
-
-
-
-   //console.log(bar)
+    console.log(xx)
   /*
    var xx = graph.selectAll("rect")
       .transition()

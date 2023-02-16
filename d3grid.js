@@ -68,11 +68,13 @@ function txtTodata() {
 	return data;
 }
 
+
 var gridOx = true;
 
 function runGrid() {
     if (!gridOx) return 
     var gridData = txtTodata();
+    // console.log("gridData", gridData)
     gridOx = false;
 
 
@@ -90,9 +92,11 @@ function runGrid() {
         .attr("class", "row");    
     
     var column = row.selectAll(".square")
-        .data(function(d) { return d; })
-        .enter()
-        
+        .data(function(d) { console.log("d", d); return d; })
+        .enter();
+    
+    console.log("col", column);
+
     column.append("rect")
         .attr("class","square")
         .attr("x", function(d) { return d.x; })
@@ -119,6 +123,7 @@ function runPie() {
     // console.log("lines", lines)
     gridOx = false;
 
+     console.log("lines", lines)
     // var data = {임: 1/3, 황: 1/3, "-1":1/6, "-2":1/6}
     // var data = [["임", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]]
     
@@ -159,8 +164,8 @@ function runPie() {
                 // console.log("hanBox", hanBox)
             })
             lineBox.push(hanBox)                
-        }
-        // pieData.push(pieDatasub)        
+        }      
+
     })
     
     playControll(lineBox)    
@@ -169,7 +174,7 @@ function runPie() {
 
 function playControll(lines) {
     // console.log("라인박스",lines)
-
+    console.log("lines", lines)
     lines.forEach(function(line) {
         line.forEach(function(hanbaks) {
             // console.log(hanbaks)
@@ -177,14 +182,15 @@ function playControll(lines) {
                 console.log("hanbak", hanbak)
                 //pie 챠트 적용시
                 // runPie(hanbak); 
-                runPie(hanbak);
+                runPie2(hanbak);
             })
         })
     })    
 }
 
+var color = ["red", "blue", "pink", "gray"]
 
-function runPie(data) {
+function runPie2(data) {
     // set the dimensions and margins of the graph
     var width = 150
         height = 150
@@ -204,13 +210,14 @@ function runPie(data) {
     // Create dummy data
 
     // set the color scale
-    var color = d3.scaleOrdinal()
-        .domain(data)
-        .range(d3.schemeSet2);
+    //var color = d3.scaleOrdinal()
+    //    .domain(data)
+    //    .range(d3.schemeSet2);
+    // var color = ["red", "blue", "pink", "gray"]
 
     // Compute the position of each group on the pie:
     var pie = d3.pie()
-    .value(function(d) {return d.value[1]; })
+        .value(function(d) {return d.value[1]; })
     // .value(function(d) {return d.value; })
     
     var data_ready = pie(d3.entries(data))
@@ -219,34 +226,32 @@ function runPie(data) {
 
     // shape helper to build arcs:
     var arcGenerator = d3.arc()
-    .innerRadius(0)
-    .outerRadius(radius)
+        .innerRadius(0)
+        .outerRadius(radius)
 
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    svg
-    .selectAll('mySlices')
-    .data(data_ready)
-    .enter()
-    .append('path')
-        .attr('d', arcGenerator)
-        .attr('fill', function(d){ return(color(d.data.value[0])) })
-        // .attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color(d.data.key)) })
-        // .attr('fill', "skyblue")
-        .attr("stroke", "black")
-        .style("stroke-width", "2px")
-        .style("opacity", 0.7)
+    svg.selectAll('mySlices')
+        .data(data_ready)
+        .enter()
+        .append('path')
+            .attr('d', arcGenerator)
+            .attr('fill', function(d){ return(color[d.data.value[0]]) })
+            // .attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color(d.data.key)) })
+            // .attr('fill', "skyblue")
+            .attr("stroke", "black")
+            .style("stroke-width", "2px")
+            .style("opacity", 0.7)
 
     // Now add the annotation. Use the centroid method to get the best coordinates
-    svg
-    .selectAll('mySlices')
-    .data(data_ready)
-    .enter()
-    .append('text')
-    .text(function(d){ return d.data.value[0]})
-    // .text(function(d){ return "grp " + d.data.key})
-    .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
-    .style("text-anchor", "middle")
-    .style("font-size", 20)
+    svg.selectAll('mySlices')
+        .data(data_ready)
+        .enter()
+        .append('text')
+        .text(function(d){ return d.data.value[0]})
+        // .text(function(d){ return "grp " + d.data.key})
+            .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+            .style("text-anchor", "middle")
+            .style("font-size", 20)
 
 }
 
@@ -269,7 +274,7 @@ function draw(data, dataTxt) {
 
     // 색깔 초이스
     // (6)['#d53e4f', '#fc8d59', '#fee08b', '#e6f598', '#99d594', '#3288bd']
-    let colors = colorbrewer.Spectral[data.length];
+    //let colors = colorbrewer.Spectral[data.length];
     // console.log("color", colors) 
     
     let sizes = {
@@ -315,7 +320,7 @@ function draw(data, dataTxt) {
         .enter()
         .append("path")
             .attr("d", arc)
-            .style("fill", (d, i) => colors[i]);
+            .style("fill", (d, i) => color[i]);
 
     // https://gist.github.com/cricku/9af3b270bc2ac5d860ecd44da2471dc2
             
