@@ -113,27 +113,23 @@ function runGrid() {
 // I like to log the data to the console for quick debugging
 // console.log(gridData);
 
-    // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
         .attr("width","510px")
         .attr("height","510px");
 
-    //여러줄 생성
-    var gRow = grid.selectAll(".row")
+    var row = grid.selectAll(".row")
         .data(gridData)
         .enter().append("g")
         .attr("class", "row");    
-
-    var gColumn = gRow.selectAll(".column")
+    
+    var column = row.selectAll(".square")
         .data(function(d) { return d; })
-        .enter().append("g")
-        .attr("class", "column"); 
-   
+        .enter();
     
     //console.log("col", column);
 
-    gColumn.append("rect")
+    column.append("rect")
         .attr("class","square")
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
@@ -142,47 +138,21 @@ function runGrid() {
         .style("fill", "#fff")
         .style("stroke", "#222");
     
-    gColumn.append("text")
+    column.append("text")
         .attr("x", function(d) { return d.x  + d.width/2; })
         .attr("y", function(d) { return d.y + d.height*1/4; })
         // .attr("y", height / 2)
         .attr("dy", ".35em")
         .text(function(d) { return d.xyz; })
-        .style("text-anchor", "middle")
-        .style("font-size", 18);
 
-    var gSubcolumn = gColumn.append("g")
-        .attr("class", "subcolumn");
-        
-
-    gSubcolumn.selectAll(".bit")
-        .data(function(d) { return d.xyzbits[0],d; })
-        .enter().append("rect")
-        .attr("class","bit")
-        .attr("x", function(d) { console.log("d100", d); return d.x; })
-        .attr("y", function(d) { return d.y + d.y/2; })
-        .attr("width", function(d) { return d.width/2; })
-        .attr("height", function(d) { return d.height/2; })
-        .style("fill", "red")
-        .style("stroke", "#222");
-    /*  
-        .append("text")
-        .attr("x", function(d) { return d.x  + d.width/2; })
-        .attr("y", function(d) { return d.y + d.height*1/4; })
-        // .attr("y", height / 2)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.xyz; })
         .style("text-anchor", "middle")
-        .style("font-size", 18);
-        ;
-    */
-        
-/*
+        .style("font-size", 18);  
+
     var subRow = column.selectAll(".gsubrow")
         .data(function(d) { console.log(d.xyzbits[0]); return d.xyzbits[0]; })
         .enter().append("g")
         .attr("class", "gsubrow");    
-*/        
+        
 /*
     var subColumn = column.selectAll(".box")
     .data(function(d) { return d.xyzbits[0]; })
