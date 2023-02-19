@@ -1,4 +1,7 @@
 
+// var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
+
+
 $(document).ready(function(){
     getMid()
      
@@ -18,6 +21,9 @@ function wClose() {
   opener.window.document.myform.pwd.focus();
   window.close();
 }
+
+var width = 60;
+var height = 60;
 
 function txtTodata() {
 	var data = new Array();
@@ -47,20 +53,29 @@ function txtTodata() {
 		data.push(new Array());
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
+
+        var title = "";
+        
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
-            if ((!jungGans[row]) || (!jungGans[row][column])) continue; // null 값일 경우 pass
+            // null 값을 경우 pass
+            if ((!jungGans[row]) || (!jungGans[row][column])) continue;
             var rowCol = jungGans[row][column];
 
             //console.log("rowCol", rowCol)
-			data[row].push({
-				x: xpos,
-				y: ypos,
-				width: width,
-				height: height,
-                xyz: jungGans[row][column],
-                xyzbits: bakTobit(rowCol)
-			})
+
+            if (rowCol.startsWith("w" || "W")) { 
+                title = rowCol;
+            } else {   
+                data[row].push({
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    xyz: jungGans[row][column],
+                    xyzbits: bakTobit(rowCol)
+                });
+            }    
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
 		}
@@ -69,7 +84,8 @@ function txtTodata() {
 		// increment the y position for the next row. Move it down 50 (height variable)
 		ypos += height;	
 	}
-	return data;
+    console.log("data", title , data );
+	return title, data;
 }
 
 
@@ -84,16 +100,27 @@ function bakTobit(hanbak) {  //한박시작
     var bits = hanbak.match(/[ㄴ^ㄷ]?[\WㄱN]+?[\(\)\/,]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
-    var bitsCnt = bits.length;  //park 갯수
 
+    var xpos = 0;
+
+    hanbak.indexOf("/") > 0 ? bitsCnt = bits.length - 1 : bitsCnt = bits.length;
+      
     // [임, 1/3],[황, 1/3],[-,1/3]
-    bits.forEach(function(part) {
+    bits.forEach(function(part, i) {
+        var bakja = 0;
+        
         //반박처리할 경우 셋잇단음 기준으로 
-        if (part.indexOf("/") > 0) {
-            bitBox.push([part, 1/bitsCnt/2])
+        (part.indexOf("/") > 0) ? bakja = width/bitsCnt/2 : bakja = width/bitsCnt;
+        // ? xpos = 0 :  xpos += bakja;
+        bitsCnt ==1 ? xpos = width : "" ;        
+
+        if (i == 0) {
+            bitBox.push({"xyz": part, "bakja": bakja, "xpos": 0});
+            xpos += bakja;    
         } else {
-            bitBox.push([part, 1/bitsCnt])
-        }                    
+            bitBox.push({"xyz": part, "bakja": bakja, "xpos": xpos});
+            xpos += bakja;  //반영후에 값을 반영하기
+        }
         // console.log(part, 1 / partcnt)                    
     })
     hanBox.push(bitBox)
@@ -101,17 +128,19 @@ function bakTobit(hanbak) {  //한박시작
     // console.log("hanBox", hanBox)
 }
 
+// 중복 다중 실행 방지 
 var gridOx = true;
+
 
 function runGrid() {
     if (!gridOx) return 
-    var gridData = txtTodata();
+    var title, gridData = txtTodata();
     // console.log("gridData", gridData)
     gridOx = false;
 
-
-// I like to log the data to the console for quick debugging
-// console.log(gridData);
+    var color = d3.scaleOrdinal()
+        .domain(gridData)
+        .range(d3.schemeSet2);
 
     // svg 1개 생성
     var grid = d3.select("#grid")
@@ -129,8 +158,7 @@ function runGrid() {
         .data(function(d) { return d; })
         .enter().append("g")
         .attr("class", "column"); 
-   
-    
+     
     //console.log("col", column);
 
     gColumn.append("rect")
@@ -154,51 +182,20 @@ function runGrid() {
     var gSubcolumn = gColumn.append("g")
         .attr("class", "subcolumn");
         
+    //d3.select(this.parentNode).datum().x 패어런츠의 값을 가져오기
+    //{"xyz": part, "bakja": bakja, "xpos": xpos}
 
     gSubcolumn.selectAll(".bit")
-        .data(function(d) { return d.xyzbits[0],d; })
+        .data(function(d) { console.log("d", d); return d.xyzbits[0]; })
         .enter().append("rect")
         .attr("class","bit")
-        .attr("x", function(d) { console.log("d100", d); return d.x; })
-        .attr("y", function(d) { return d.y + d.y/2; })
-        .attr("width", function(d) { return d.width/2; })
-        .attr("height", function(d) { return d.height/2; })
-        .style("fill", "red")
+        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
+        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
+        .attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
+        .attr("width", function(d) { return d.bakja; } )
+        .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
+        .style("fill", function(d,i) { return color(i); })
         .style("stroke", "#222");
-    /*  
-        .append("text")
-        .attr("x", function(d) { return d.x  + d.width/2; })
-        .attr("y", function(d) { return d.y + d.height*1/4; })
-        // .attr("y", height / 2)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.xyz; })
-        .style("text-anchor", "middle")
-        .style("font-size", 18);
-        ;
-    */
-        
-/*
-    var subRow = column.selectAll(".gsubrow")
-        .data(function(d) { console.log(d.xyzbits[0]); return d.xyzbits[0]; })
-        .enter().append("g")
-        .attr("class", "gsubrow");    
-*/        
-/*
-    var subColumn = column.selectAll(".box")
-    .data(function(d) { return d.xyzbits[0]; })
-    .enter();
-
-    //console.log("col", column);
-
-    subColumn.append("rect")
-        .attr("class","box")
-        .attr("x", function(d) { return d.x; })
-        .attr("y", function(d) { return d.y; })
-        .attr("width", function(d) { return d.width; })
-        .attr("height", function(d) { return d.height; })
-        .style("fill", "#fff")
-        .style("stroke", "#222");
-*/    
 
 }
 
@@ -251,10 +248,8 @@ function runPie() {
             lineBox.push(hanBox)                
         }      
 
-    })
-    
+    })    
     playControll(lineBox)    
-
 }
 
 function playControll(lines) {
@@ -273,7 +268,6 @@ function playControll(lines) {
     })    
 }
 
-var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 
 function runPie2(data) {
     // set the dimensions and margins of the graph
