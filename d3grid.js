@@ -46,16 +46,15 @@ function txtTodata() {
             jungGans.push(gang.split(" "))
         }      
     })
-    
+    var title = "";
     // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
 	// iterate for rows	
-	for (var row = 0; row < jungGans.length; row++) {
+	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
+        
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
-
-        var title = "";
-        
+       
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
@@ -66,8 +65,11 @@ function txtTodata() {
 
             if (rowCol.startsWith("w" || "W")) { 
                 title = rowCol;
+                //console.log(title, data)
             } else {   
-                data[row].push({
+                // row 0이 타이틀로 빠져서 row가 1부터 할당되어 빈열이 자동생성
+                // 되므로 -1을 해서 0부서 생성되게 값을 주어야
+                data[row - 1].push({
                     x: xpos,
                     y: ypos,
                     width: width,
@@ -85,9 +87,9 @@ function txtTodata() {
 		ypos += height;	
 	}
     console.log("data", title , data );
-	return title, data;
+    //console.log("ti", title)
+	return { "title": title, "gridData": data };
 }
-
 
 function bakTobit(hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
@@ -134,8 +136,10 @@ var gridOx = true;
 
 function runGrid() {
     if (!gridOx) return 
-    var title, gridData = txtTodata();
-    // console.log("gridData", gridData)
+    // var gridData = txtTodata();
+    var { title, gridData } = txtTodata();
+    //console.log("title", title)    
+    console.log("gridData", gridData)
     gridOx = false;
 
     var color = d3.scaleOrdinal()
@@ -146,21 +150,30 @@ function runGrid() {
     var grid = d3.select("#grid")
         .append("svg")
         .attr("width","510px")
-        .attr("height","510px");
+        .attr("height","910px");
 
-    //여러줄 생성
+    grid.select("p")
+    .data([title])
+    .enter()
+    .append("text")
+    .text(function(d) { console.log("d", d); return d;
+    })
+            
+    //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
         .data(gridData)
         .enter().append("g")
-        .attr("class", "row");    
+        .attr("class", "row");
 
+
+    //각 줄에 컬럼갯수 만큼 g 생성, function(d) { return d; } 이 중요  
     var gColumn = gRow.selectAll(".column")
         .data(function(d) { return d; })
         .enter().append("g")
         .attr("class", "column"); 
      
     //console.log("col", column);
-
+    // 생성된 g에 rect 갯수 생성 
     gColumn.append("rect")
         .attr("class","square")
         .attr("x", function(d) { return d.x; })
@@ -186,7 +199,7 @@ function runGrid() {
     //{"xyz": part, "bakja": bakja, "xpos": xpos}
 
     gSubcolumn.selectAll(".bit")
-        .data(function(d) { console.log("d", d); return d.xyzbits[0]; })
+        .data(function(d) { return d.xyzbits[0]; })
         .enter().append("rect")
         .attr("class","bit")
         .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
