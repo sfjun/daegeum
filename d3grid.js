@@ -46,23 +46,36 @@ function txtTodata() {
             jungGans.push(gang.split(" "))
         }      
     })
+
     var title = "";
     // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
-	// iterate for rows	
+	// iterate for rows	, 5
+    console.log("j-len", jungGans.length)
+
 	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
-        
+        // console.log("rows", row, jungGans[row])
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
-       
+        var rowCol = "";
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
-            if ((!jungGans[row]) || (!jungGans[row][column])) continue;
-            var rowCol = jungGans[row][column];
+            //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
+            if (!jungGans[row][column]) continue;
+            rowCol = jungGans[row][column];
 
-            //console.log("rowCol", rowCol)
+            //console.log("rowCol", row, column, rowCol)
 
+            data[row].push({
+                x: xpos,
+                y: ypos,
+                width: width,
+                height: height,
+                xyz: jungGans[row][column],
+                xyzbits: bakTobit(rowCol)
+            });
+/*
             if (rowCol.startsWith("w" || "W")) { 
                 title = rowCol;
                 //console.log(title, data)
@@ -77,18 +90,22 @@ function txtTodata() {
                     xyz: jungGans[row][column],
                     xyzbits: bakTobit(rowCol)
                 });
-            }    
+            }
+*/                
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
 		}
 		// reset the x position after a row is complete
 		xpos = 1;
 		// increment the y position for the next row. Move it down 50 (height variable)
-		ypos += height;	
+		//ypos += height + 5;
+        //rowCol.startsWith("w" || "W") ? ypos += height + 20: ypos += height + 5; 
+        ( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
 	}
     console.log("data", title , data );
     //console.log("ti", title)
-	return { "title": title, "gridData": data };
+    return data;
+	//return { "title": title, "gridData": data };
 }
 
 function bakTobit(hanbak) {  //한박시작
@@ -99,7 +116,7 @@ function bakTobit(hanbak) {  //한박시작
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
     //[임, 황, -]
-    var bits = hanbak.match(/[ㄴ^ㄷ]?[\WㄱN]+?[\(\)\/,]*/gu)         
+    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱN]+?[\(\)\/,]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
 
@@ -136,10 +153,10 @@ var gridOx = true;
 
 function runGrid() {
     if (!gridOx) return 
-    // var gridData = txtTodata();
-    var { title, gridData } = txtTodata();
+    var gridData = txtTodata();
+    //var { title, gridData } = txtTodata();
     //console.log("title", title)    
-    console.log("gridData", gridData)
+    //console.log("gridData", gridData)
     gridOx = false;
 
     var color = d3.scaleOrdinal()
@@ -152,12 +169,12 @@ function runGrid() {
         .attr("width","510px")
         .attr("height","910px");
 
-    grid.select("p")
-    .data([title])
-    .enter()
-    .append("text")
-    .text(function(d) { console.log("d", d); return d;
-    })
+    // grid.select("p")
+    // .data([title])
+    // .enter()
+    // .append("text")
+    // .text(function(d) { console.log("d", d); return d;
+    // })
             
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
@@ -174,14 +191,52 @@ function runGrid() {
      
     //console.log("col", column);
     // 생성된 g에 rect 갯수 생성 
+/*
     gColumn.append("rect")
         .attr("class","square")
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
         .attr("width", function(d) { return d.width; })
         .attr("height", function(d) { return d.height; })
-        .style("fill", "#fff")
-        .style("stroke", "#222");
+        .each (function(d) {
+            if (!d.xyz.startsWith("w" || "W")) {    
+                .style("fill", "#fff")
+                .style("stroke", "#222");
+            } else {
+                .style("fill", "#fff")
+                .style("stroke", "#222")
+                ;        
+            }    
+        })
+        
+*/
+
+    gColumn.each(function(d) {
+        console.log("dd", d.xyz, d.xyz.startsWith("w" || "W") );
+        if (!d.xyz.startsWith("w" || "W")) {
+            gColumn.append("rect")
+                .attr("class","square")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y; })
+                .attr("width", function(d) { return d.width; })
+                .attr("height", function(d) { return d.height; })
+                .style("fill", "#fff")
+                .style("stroke", "#222")
+                ;
+
+        } else {
+            gColumn.append("rect")
+                .attr("class","square")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return d.y; })
+                .attr("width", function(d) { return d.width; })
+                .attr("height", function(d) { return d.height; })
+                .style("fill", "red")
+                .style("stroke", "red")
+                ;
+        }    
+
+    })    
     
     gColumn.append("text")
         .attr("x", function(d) { return d.x  + d.width/2; })
