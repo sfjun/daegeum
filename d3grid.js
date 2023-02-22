@@ -1,7 +1,6 @@
 
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 
-
 $(document).ready(function(){
     getMid()
      
@@ -50,7 +49,7 @@ function txtTodata() {
     var title = "";
     // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
 	// iterate for rows	, 5
-    console.log("j-len", jungGans.length)
+    // console.log("j-len", jungGans.length)
 
 	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
@@ -62,10 +61,9 @@ function txtTodata() {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
             //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
+
             if (!jungGans[row][column]) continue;
             rowCol = jungGans[row][column];
-
-            //console.log("rowCol", row, column, rowCol)
 
             data[row].push({
                 x: xpos,
@@ -98,11 +96,11 @@ function txtTodata() {
 		// reset the x position after a row is complete
 		xpos = 1;
 		// increment the y position for the next row. Move it down 50 (height variable)
-		//ypos += height + 5;
+		ypos += height + 5;
         //rowCol.startsWith("w" || "W") ? ypos += height + 20: ypos += height + 5; 
-        ( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
+        //( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
 	}
-    console.log("data", title , data );
+    //console.log("data", title , data );
     //console.log("ti", title)
     return data;
 	//return { "title": title, "gridData": data };
@@ -116,7 +114,7 @@ function bakTobit(hanbak) {  //한박시작
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
     //[임, 황, -]
-    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱN]+?[\(\)\/,]*/gu)         
+    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱN]+?[\(\)\/,\|]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
 
@@ -157,6 +155,8 @@ function runGrid() {
     //var { title, gridData } = txtTodata();
     //console.log("title", title)    
     //console.log("gridData", gridData)
+
+    //중복 방지
     gridOx = false;
 
     var color = d3.scaleOrdinal()
@@ -191,72 +191,50 @@ function runGrid() {
      
     //console.log("col", column);
     // 생성된 g에 rect 갯수 생성 
-/*
+
     gColumn.append("rect")
-        .attr("class","square")
+        .attr("class",function(d) { 
+            if (d.xyz.startsWith("w" || "W")) {
+                return "titleBak"; } else { return "bak"; } })
+        // .attr("class","square")
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
         .attr("width", function(d) { return d.width; })
         .attr("height", function(d) { return d.height; })
-        .each (function(d) {
-            if (!d.xyz.startsWith("w" || "W")) {    
-                .style("fill", "#fff")
-                .style("stroke", "#222");
-            } else {
-                .style("fill", "#fff")
-                .style("stroke", "#222")
-                ;        
-            }    
-        })
+        .style("fill", "#fff")
+        .style("stroke", (function(d) {
+            if (!d.xyz.startsWith("w" || "W")) { return "#222";
+            } else { return "#fff"; }    
+        }))
         
-*/
-
-    gColumn.each(function(d) {
-        console.log("dd", d.xyz, d.xyz.startsWith("w" || "W") );
-        if (!d.xyz.startsWith("w" || "W")) {
-            gColumn.append("rect")
-                .attr("class","square")
-                .attr("x", function(d) { return d.x; })
-                .attr("y", function(d) { return d.y; })
-                .attr("width", function(d) { return d.width; })
-                .attr("height", function(d) { return d.height; })
-                .style("fill", "#fff")
-                .style("stroke", "#222")
-                ;
-
-        } else {
-            gColumn.append("rect")
-                .attr("class","square")
-                .attr("x", function(d) { return d.x; })
-                .attr("y", function(d) { return d.y; })
-                .attr("width", function(d) { return d.width; })
-                .attr("height", function(d) { return d.height; })
-                .style("fill", "red")
-                .style("stroke", "red")
-                ;
-        }    
-
-    })    
-    
     gColumn.append("text")
         .attr("x", function(d) { return d.x  + d.width/2; })
-        .attr("y", function(d) { return d.y + d.height*1/4; })
+        .attr("y", function(d) { 
+            if (d.xyz.startsWith("w" || "W")) { return d.y + d.height*1/2;
+            } else { return d.y + d.height*1/4; } })
         // .attr("y", height / 2)
         .attr("dy", ".35em")
         .text(function(d) { return d.xyz; })
         .style("text-anchor", "middle")
-        .style("font-size", 18);
+        .style("font-size", 15);
 
-    var gSubcolumn = gColumn.append("g")
-        .attr("class", "subcolumn");
+    // var gSubcolumn = gColumn.append("g")
+    //     .attr("class", "subcolumn");
         
     //d3.select(this.parentNode).datum().x 패어런츠의 값을 가져오기
     //{"xyz": part, "bakja": bakja, "xpos": xpos}
 
-    gSubcolumn.selectAll(".bit")
+    var gSubcolumn = gColumn.append("g")
+        .attr("class", "subcolumn")
+        .selectAll(".bit")
         .data(function(d) { return d.xyzbits[0]; })
-        .enter().append("rect")
-        .attr("class","bit")
+        .enter();
+        
+    gSubcolumn.append("rect")
+        .attr("class",function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                return "title"; } else { return "bit"; } })  
+        //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
         .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
         .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
         .attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
@@ -265,6 +243,61 @@ function runGrid() {
         .style("fill", function(d,i) { return color(i); })
         .style("stroke", "#222");
 
+
+ /*   
+    gSubcolumn.selectAll(".bit")
+        .data(function(d) { return d.xyzbits[0]; })
+        .enter().append("rect")
+        .attr("class",function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                return "title"; } else { return "bit"; } })  
+        //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
+        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
+        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
+        .attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
+        .attr("width", function(d) { return d.bakja; } )
+        .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
+        .style("fill", function(d,i) { return color(i); })
+        .style("stroke", "#222");
+*/
+    // title 클래스를 제거하여 title의 bit를 제거
+    gSubcolumn.selectAll(".title").remove();
+      
+  
+    // bit text 추가하기
+    gSubcolumn.append("text")
+        .attr("class",function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                return "titleText"; } else { return "bitText"; } })        
+        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos + d.bakja/2; })
+            
+        .attr("y", function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) { 
+                return d3.select(this.parentNode).datum().y + 
+                    d3.select(this.parentNode).datum().height*3/4; } 
+            else { return d3.select(this.parentNode).datum().y + 
+                d3.select(this.parentNode).datum().height*3/4; } })
+        // .attr("y", height / 2)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.xyz; })
+        .style("text-anchor", "middle")
+        .style("font-size", 10);
+
+    gSubcolumn.selectAll(".titleText").remove();    
+
+} // function end
+
+
+function play() {
+    // alert("시작합니다.");
+    var pBak =d3.select("#grid")
+        .selectAll(".bak")
+        .transition()
+        .delay(function(d,i){ return 1000;}) //순번 * 500밀리초
+        .attr("width",function(d,i){ console.log("d", d,i );
+            return d.width ;
+        })    
+        .style("fill", function(d,i) { return "red"; })
 }
 
 function runPie() {    
@@ -487,7 +520,8 @@ function draw(data, dataTxt) {
             // })
             .attr("dy", ".50em")
             .style("text-anchor", "middle")
-        .text(function(d) { console.log("d", d.xyz)
+        .text(function(d) { 
+           // console.log("d", d.xyz)
             return d.xyz;
         });
 
