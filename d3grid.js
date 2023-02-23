@@ -291,14 +291,24 @@ function runGrid() {
 function play() {
     // alert("시작합니다.");
     var pBak =d3.select("#grid")
-        .selectAll(".bak")
-        .transition()
-        .delay(function(d,i){ return 1000;}) //순번 * 500밀리초
-        .attr("width",function(d,i){ console.log("d", d,i );
-            return d.width ;
-        })    
-        .style("fill", function(d,i) { return "red"; })
+        .selectAll(".column")
+        .append("animate")
+        .attr("attributName", "width")
+        .attr("from", 0)
+        .attr("to", width)
+        .attr("dur", "2s")
+        .attr("fill", "blue");        
 }
+
+
+// .transition()
+//         .delay(function(d,i){ return 1000;}) //순번 * 500밀리초
+        
+//<animate attributeName="width" from="0" to="50" dur="2s" fill="blue" />
+
+
+
+
 
 function runPie() {    
     if (!gridOx) return; 
