@@ -1,84 +1,30 @@
+<!DOCTYPE html>
 <html>
-<head>
-   <script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
-   <style>
-      svg text {
-         fill: royalblue;
-         font: 12px sans-serif;
-         text-anchor: end;
-      }
-   </style>
-</head>
-
-<body>
-<!-- <script>
-   var dataSet = [10, 5, 12, 15];
-   console.log(dataSet)
-
-   var xx = d3.selectAll("button")
-        .on("click",function() {
-         console.log("sfsf");
-
-         d3.select("g")
-            .selectAll("rect")
-            .data(dataSet)
-            .transition()
-            .delay(function(d,i){return i*500;}) //순번 * 500밀리초 
-            .attr("width",function(d,i){
-               return d + "px";
-         }) 
-
-  })
-</script>    -->
-
-<br>
-<button id="update">업데이트</button>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-   width="400" height="200" viewBox="0 0 400 200">
-<g id="gid" transform="scale(1,-1) translate(0,-200)">
-<rect x="50" y="0" fill="red" width="100" height="50">
-<animate attributeName="width" from="0" to="50" dur="2s" fill="red" />
-</rect>
-<rect x="50" y="50" fill="blue" width="100" height="50" delay="4s">
-<animate attributeName="width" from="0" to="50" dur="2s" fill="blue" />
-</rect>
-<rect x="50" y="100" fill="pink" width="100" height="200">
-<animate attributeName="width" from="0" to="300" dur="2s" fill="pink" />
-</rect>
-</g>
-</svg>
-
-
-<!--html lang = "en">
-   <head>
-      <title>SVG rectangle</title>
-      <script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
-      <script type = "text/javascript" src = "jquery-3.6.3.min.js"></script>
-      <style>
-         body { font-family: Arial; }
-      </style>
-   </head>
-
-   <body>
-      <div id = "svgcontainer"></div>
-      사람 사는 세상!!   
-      </div>
-      <script src = "d3-transform.js"></script>
-   </body>
-</html-->
-
-<!--html>
-   <head>
-      <script type = "text/javascript" src = "https://d3js.org/d3.v4.min.js"></script>
-   </head>
-
-   <body>
-      <h3>Simple transitions</h3>
-      <script>
-        // d3.selectAll("h3").transition().style("color","blue").duration(5000);
-        d3.selectAll("h3").transition().style("color","rgb(0,150,120)").duration(5000);
-         d3.selectAll("h3").transition()
-            .style("font-size","28px").delay(2000).duration(2000);
-      </script>
-   </body>
-</html-->
+        <head>
+            <meta charset="utf-8">
+            <title>가로형 막대그래프</title>
+            <style>
+                #myGraph rect {
+                    stroke : rgb( 160, 0, 0 );
+                    stroke-width : 1px;
+                    fill : rgb( 255, 0, 0 );
+                }
+                .axis text {
+                    font-family: sans-serif;
+                    font-size: 11px;
+                }
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: black;
+                }
+            </style>
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        </head>
+        <body>
+            <h1>가로형 막대그래프</h1>
+            <button id="updateButton">데이터 업데이트</button>
+            <svg id="myGraph"></svg>
+            <script src="test.js"></script>
+        </body>
+    </html>

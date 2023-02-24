@@ -1,6 +1,7 @@
 
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 
+
 $(document).ready(function(){
     getMid()
      
@@ -23,6 +24,7 @@ function wClose() {
 
 var width = 60;
 var height = 60;
+var bakjaTime = 1000;
 
 function txtTodata() {
 	var data = new Array();
@@ -51,6 +53,9 @@ function txtTodata() {
 	// iterate for rows	, 5
     // console.log("j-len", jungGans.length)
 
+    //박번호 부여
+    var bakSerial = 0;
+
 	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
         // console.log("rows", row, jungGans[row])
@@ -61,37 +66,24 @@ function txtTodata() {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
             //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
-
+            
             if (!jungGans[row][column]) continue;
             rowCol = jungGans[row][column];
 
+            
             data[row].push({
+                bakno: bakSerial,
                 x: xpos,
                 y: ypos,
                 width: width,
                 height: height,
                 xyz: jungGans[row][column],
-                xyzbits: bakTobit(rowCol)
+                xyzbits: bakTobit(bakSerial, rowCol)
             });
-/*
-            if (rowCol.startsWith("w" || "W")) { 
-                title = rowCol;
-                //console.log(title, data)
-            } else {   
-                // row 0이 타이틀로 빠져서 row가 1부터 할당되어 빈열이 자동생성
-                // 되므로 -1을 해서 0부서 생성되게 값을 주어야
-                data[row - 1].push({
-                    x: xpos,
-                    y: ypos,
-                    width: width,
-                    height: height,
-                    xyz: jungGans[row][column],
-                    xyzbits: bakTobit(rowCol)
-                });
-            }
-*/                
+
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
+            bakSerial ++;
 		}
 		// reset the x position after a row is complete
 		xpos = 1;
@@ -106,7 +98,7 @@ function txtTodata() {
 	//return { "title": title, "gridData": data };
 }
 
-function bakTobit(hanbak) {  //한박시작
+function bakTobit(no, hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
     var hanBox =[]
     var bitBox = []
@@ -132,10 +124,22 @@ function bakTobit(hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;        
 
         if (i == 0) {
-            bitBox.push({"xyz": part, "bakja": bakja, "xpos": 0});
+            bitBox.push({
+                bakno: no,
+                xyz: part, 
+                bakja: bakja, 
+                xpos: 0,
+                bittime : bakjaTime * (0 / width)
+            });
             xpos += bakja;    
         } else {
-            bitBox.push({"xyz": part, "bakja": bakja, "xpos": xpos});
+            bitBox.push({
+                bakno: no,
+                xyz: part, 
+                bakja: bakja, 
+                xpos: xpos,
+                bittime : bakjaTime * (xpos / width)
+            });
             xpos += bakja;  //반영후에 값을 반영하기
         }
         // console.log(part, 1 / partcnt)                    
@@ -148,6 +152,7 @@ function bakTobit(hanbak) {  //한박시작
 // 중복 다중 실행 방지 
 var gridOx = true;
 
+// var gColumn = [];
 
 function runGrid() {
     if (!gridOx) return 
@@ -181,7 +186,6 @@ function runGrid() {
         .data(gridData)
         .enter().append("g")
         .attr("class", "row");
-
 
     //각 줄에 컬럼갯수 만큼 g 생성, function(d) { return d; } 이 중요  
     var gColumn = gRow.selectAll(".column")
@@ -289,25 +293,50 @@ function runGrid() {
 
 
 function play() {
-    // alert("시작합니다.");
-    var pBak =d3.select("#grid")
-        .selectAll(".column")
-        .append("animate")
-        .attr("attributName", "width")
-        .attr("from", 0)
-        .attr("to", width)
-        .attr("dur", "2s")
-        .attr("fill", "blue");        
-}
 
+    const oldTime = Date.now();
 
-// .transition()
-//         .delay(function(d,i){ return 1000;}) //순번 * 500밀리초
+    setInterval(() => {
+        const currentTime = Date.now();
+        // 경과한 밀리초 가져오기
+        const diff = currentTime - oldTime;
         
-//<animate attributeName="width" from="0" to="50" dur="2s" fill="blue" />
+        // 초(second) 단위 변환하기
+        const sec = Math.floor(diff / 1000);
+        
+        // HTML에 문자열 넣기
+        document.querySelector('#timelog').innerHTML = `${sec}초 경과`;
+    }, 1000);
 
+    // alert("시작합니다.");
+    
+    var pBak =d3.select("#grid").selectAll(".bak")
+        .transition()
+        .attr("width", "0")
 
+        .transition()
+        // .duration(function(d,i){ return i * 1000;})
+        .delay(function(d,i){ return d.bakno * 1000;}) 
+        .attr("width", function(d,i){ return d.width;})
+        .style("fill", "skyblue")
+        ;
 
+    var pbit =d3.select("#grid").selectAll(".bit")
+        .transition()
+        .attr("width", "0")
+
+        .transition()
+        // .duration(5000*54)
+        // .delay(function(d,i){ return i * 1000;}) 
+        .delay(function(d,i){ console.log("bakno", d.bakno);
+            return d.bakno * 1000 + d.bittime;            
+         }) 
+        
+        .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
+        .style("fill", "skyblue")
+        ;         
+        
+}
 
 
 function runPie() {    
