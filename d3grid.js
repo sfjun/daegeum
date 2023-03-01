@@ -38,9 +38,9 @@ function wClose() {
 
 var width = 60;
 var height = 60;
-var bakjaTime = 1000;
-// var bakjaTime = $("#bakSec").text();
-// console.log(bakjaTime)
+// var bakjaTime = 1000;
+var bakjaTime ='';
+//console.log(bakjaTime)
 
 function txtTodata() {
 	var data = new Array();
@@ -119,6 +119,8 @@ function bakTobit(no, hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
     var hanBox =[]
     var bitBox = []
+    bakjaTime = document.getElementById('bakSec').value;
+
     // 한박에 대한 정규식 적용 "-" 제외
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
@@ -142,7 +144,9 @@ function bakTobit(no, hanbak) {  //한박시작
             part = part.replace("/", "");
         } else {
             bakja = width/bitsCnt;
-        }    
+        }
+        
+        var durr = (bakja == width) ?  bakjaTime : bakjaTime * bakja/width;        
 
         // ? xpos = 0 :  xpos += bakja;
         bitsCnt ==1 ? xpos = width : "" ;        
@@ -153,6 +157,7 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 bakja: bakja, 
                 xpos: 0,
+                dur: durr,
                 bittime : bakjaTime * (0 / width)
             });
             xpos += bakja;    
@@ -162,6 +167,7 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 bakja: bakja, 
                 xpos: xpos,
+                dur: durr,
                 bittime : bakjaTime * (xpos / width)
             });
             xpos += bakja;  //반영후에 값을 반영하기
@@ -174,7 +180,7 @@ function bakTobit(no, hanbak) {  //한박시작
 }
 
 // 중복 다중 실행 방지 
-var gridOx = true;
+// var gridOx = true;
 
 // var gColumn = [];
 
@@ -200,13 +206,6 @@ function runGrid() {
         .append("svg")
         .attr("width","600px")
         .attr("height","910px");
-
-    // grid.select("p")
-    // .data([title])
-    // .enter()
-    // .append("text")
-    // .text(function(d) { console.log("d", d); return d;
-    // })
             
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
@@ -250,12 +249,6 @@ function runGrid() {
         .style("text-anchor", "middle")
         .style("font-size", 15);
 
-    // var gSubcolumn = gColumn.append("g")
-    //     .attr("class", "subcolumn");
-        
-    //d3.select(this.parentNode).datum().x 패어런츠의 값을 가져오기
-    //{"xyz": part, "bakja": bakja, "xpos": xpos}
-
     var gSubcolumn = gColumn.append("g")
         .attr("class", "subcolumn")
         .selectAll(".bit")
@@ -275,13 +268,13 @@ function runGrid() {
         .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
         // .style("fill", function(d,i) { return color(d.bakno%12); }) // 한박기준으로 컬러링
         // .style("fill", function(d,i) { console.log("i", i); return color((d.bakno +i)%24); }) // bit 기준으로 컬러링
-        .style("fill", function(d,i) { console.log("i", i); return color(Math.random()%24); }) // 랜듬하게 bit 기준으로 컬러링
+        .style("fill", function(d,i) { return color(Math.random()%24); }) // 랜듬하게 bit 기준으로 컬러링
         
         .style("stroke", "#222");
 
     // title 클래스를 제거하여 title의 bit를 제거
     gSubcolumn.selectAll(".title").remove();
-      
+     
   
     // bit text 추가하기
     gSubcolumn.append("text")
@@ -307,73 +300,37 @@ function runGrid() {
 } // function end
 
 var timerId = "";
-
 var interruptIndex = 0
 
 function play() {
 
-    const local = d3.local();
-    const button = d3.select("button");
-    // console.log("button", button);
-    var t = document.getElementById("playId");
-    // console.log("t",t, t.value)
-
-    // const pBitorigin = d3.select("#grid").selectAll(".bit");
-
+    // 1박시간 가져오기
+    var t = document.getElementById('playId');
+    // var t = $('playId');
+    
+    
     if (t.value == "Play") {
-        // console.log("play", t.value);
-        
-//        clearInterval(timerId);
-        transitWidth(); // transiWidth 실행
+        // 플레이 시작       
+        transitWidth();
+        // 버튼 변경
         t.value= "Stop";
 
     } else if (t.value == "Stop") {
-        // console.log("stop", t.value);
-        // selection.selectAll("*").interrupt();
-        // pBit.interrup();
+        // bit, bitText 중지
         d3.select("#grid").selectAll(".bit").interrupt();
-        // pBitText.interrupt();
-        console.log("interruptIndex", interruptIndex);
+        d3.select("#grid").selectAll(".bitText").interrupt();
+        // 버튼 변경
         t.value= "Resume";
 
     } else if (t.value == "Resume") {
-        // d3.select("#grid").selectAll(".bit").interrupt();
+        // 플레이 재시작
         transitWidth();
-        console.log("interruptIndex", interruptIndex);
+        // 버튼 변경
         t.value= "Stop";
     }
 
     function transitWidth(inDex = 0) {    
-    //function start() {
-    //     var i = 400;
-    //     if (i == 400)
-    //     {
-    //         i = 399;
-    //         var digit = document.getElementById("digit"); 
-     
-    //         var elem = document.getElementById("myBar");
-    //         var width = 399;
-    //         var id = setInterval(frame,1000);
-    //         function frame() {
-    //             if (width <= 0) {
-    //                 clearInterval(id);
-    //                 i=400;
-    //                 digit.innerHTML = width + "초";
-     
-    //                 alert("완료되었습니다.");
-    //             } else {
-    //                 digit.innerHTML = width + "초";
-     
-    //                 width--;
-    //                 elem.style.width = width + "px";
-     
-    //             }
-    //         }
-    //     }
-    // //}
-
-
-
+ 
     // const oldTime = Date.now();
 
     // timerId = setInterval(() => {
@@ -388,50 +345,37 @@ function play() {
     //     document.querySelector('#timelog').innerHTML = `${sec}초`;
     // }, 1000);
 
-    // // alert("시작합니다.");
-    
-    // var pBak =d3.select("#grid").selectAll(".bak")
-    //     //.transition()
-    //     // .attr("width", "0")
 
-    //     .transition()
-    //     .duration(1000)
-    //     // .duration(function(d,i){ return i * 1000;})
-    //     .delay(function(d,i) { return d.bakno * 1000;}) 
-    //     // .ease(d3.easeBounce)
-    //     // .ease("elastic")
-    //     .attr("width", function(d,i) { return d.width;})
-    //     .style("fill", "skyblue")
-    //     // .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); console.log("end", d.bakno);});
-    //     // 요소자체를 삭제 여기서는 한박을 삭제
-    //     // .on("end",function() { d3.select(this).remove()});         
-    //     ;
-
+    // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
+    // 플레이안된 것만 가져오기, 
     const pBit = d3.select("#grid").selectAll(".bit");
-        //.transition()
-        // .attr("width", "0")
-    console.log("pBit", pBit, pBit._groups[0])
+    const pBitText = d3.select("#grid").selectAll(".bitText");
 
-    // pBit = pBitorigin.slice([inDex]);
-    // pBit = pBitorigin
-    // .select(function(d,i) { //console.log("func", d);
-    //     if (i >= inDex) { return d; }
-    // });
-    // console.log("pBit", pBit)
-
-    // pBit = pBitorigin;
-    // );
-    // pBit = pBitorigin.selectAll("play")    
-    // // console.log("pBitorigin", typeof pBitorigin, pBitorigin)
-    // console.log("pBitorigin", typeof pBitorigin, pBitorigin)
-        
-
+    bakjaTime = document.getElementById('bakSec').value;
+    console.log("bakjaTime", bakjaTime)
 
     pBit.transition()
-        .duration(bakjaTime)
+        // .duration(bakjaTime)
+        .duration(function(d,i){ // console.log("d", d); 
+            return d.dur;
+            // if (d.bakja == width) {
+            //     // console.log((d.bakno-1) * bakjaTime );
+            //     return bakjaTime ;
+            // } else { 
+            //     // console.log((d.bakno- 1) * bakjaTime + d.bittime);
+            //     return d.bittime;
+            // }    
+         })
+
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
-            return i * bakjaTime + d.bittime;            
+        .delay(function(d,i){ console.log("d", d); 
+            if (d.bakja == width) {
+                console.log((d.bakno-1) * bakjaTime );
+                return d.bakno * bakjaTime ;
+            } else { 
+                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
          }) 
         // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`);})
         .attr("width", function(d,i){ return d.bakja;})
@@ -439,56 +383,46 @@ function play() {
         // .attr("play", "played")
         // .style("fill", "skyblue")
         // .on("end",function() { d3.select(this).remove()});   
-        .on("interrupt", function(d,i) { //console.log("this", this, i);
-            interruptIndex = i;
-            // d3.select(this).attr("classed", "played")
-            // local.set(this, +d3.select(this).attr("width"))
-            // local.set(this, i)
-        })     
-        ;
-        
-    // button.on("click", function() { console.log("pBitnode", pBit.node());
-    //     // if (d3.active(pBit.node())) {
-    //     if (pBit.node) { // console.log("active node2", this);
-    //         pBit.interrupt();
-    //         this.textContent = "Resume";
-    //     } 
-    //     else {
-    //         pBit.transition()
-    //         //.ease(d3.easeLinear)
-    //         .duration(function() { //console.log("active node3", this);
-    //             return 1000 * (560 - local.get(this)) / 560; })
-    //         .attr("width", 100)
-    //         this.textContent = "Stop";
-    //     }
-    // })
-
-
-/*    
-    var pBitText =d3.select("#grid").selectAll(".bitText")
+        // .on("interrupt", function(d,i) { //console.log("this", this, i);
+        //     interruptIndex = i;
+        //     // d3.select(this).attr("classed", "played")
+        //     // local.set(this, +d3.select(this).attr("width"))
+        //     // local.set(this, i)
+        // })
+        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); });     
+        ;       
+    
+    
+    // var pBitText =d3.select("#grid").selectAll(".bitText")
         //.transition()
         // .attr("width", "0")
 
-        .transition()
+    pBitText.transition()
         .duration(bakjaTime)
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ console.log("bakno", d.bakno);
-            return d.bakno * bakjaTime
-             + d.bittime;            
+        .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
+            return i * bakjaTime + d.bittime;            
          }) 
         // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`); console.log("end", d.xyz);})
         // .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
         // .style("fill", "skyblue")
         // .duration(500)
-        .style("font-size", 22)
+        .style("font-size", 18)
+        .attr("class", "played")
         // .on("end",function() { d3.select(this).remove()})
         
         .transition()
         .delay(bakjaTime/bakjaTime)
         .style("font-size", 10)
-        // .on("end",function() { d3.select(this).remove()});             
+        // .on("end",function() { d3.select(this).remove()});  
+        .on("interrupt", function(d,i) { //console.log("this", this, i);
+            interruptIndex = i;
+            // d3.select(this).attr("classed", "played")
+            // local.set(this, +d3.select(this).attr("width"))
+            // local.set(this, i)
+        })           
         ;
-*/
+
     }         
 
 }
