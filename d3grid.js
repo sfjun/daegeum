@@ -368,17 +368,20 @@ function play() {
          })
 
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ console.log("d", d); 
+        .delay(function(d,i){ console.log("d", d.xyzbits); 
             if (d.bakja == width) {
                 console.log((d.bakno-1) * bakjaTime );
-                return d.bakno * bakjaTime ;
+                return (d.bakno-1) * bakjaTime ;
             } else { 
                 console.log((d.bakno- 1) * bakjaTime + d.bittime);
                 return (d.bakno- 1) * bakjaTime + d.bittime;
             }    
          }) 
         // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`);})
-        .attr("width", function(d,i){ return d.bakja;})
+        // .attr("width", function(d,i){ return d.bakja;})
+        .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
+        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
+
         .attr("class", "played")
         // .attr("play", "played")
         // .style("fill", "skyblue")
@@ -398,16 +401,32 @@ function play() {
         // .attr("width", "0")
 
     pBitText.transition()
-        .duration(bakjaTime)
+        // .duration(bakjaTime)
+        .duration(function(d,i){ // console.log("d", d); 
+            return d.dur;
+        })    
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
-            return i * bakjaTime + d.bittime;            
+        // .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
+        //     return i * bakjaTime + d.bittime;            
+        //  })
+        .delay(function(d,i){ console.log("d", d.xyzbits); 
+            if (d.bakja == width) {
+                console.log((d.bakno-1) * bakjaTime );
+                return (d.bakno-1) * bakjaTime ;
+            } else { 
+                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
          }) 
         // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`); console.log("end", d.xyz);})
         // .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
         // .style("fill", "skyblue")
         // .duration(500)
-        .style("font-size", 18)
+        // .style("font-size", 18)
+        .styleTween("font-size", function() { return d3.interpolate(8, 18); })
+        // .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
+        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
+
         .attr("class", "played")
         // .on("end",function() { d3.select(this).remove()})
         
