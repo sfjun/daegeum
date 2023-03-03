@@ -58,6 +58,18 @@
             // 재생
             oscillatorNode.start();
             isPlaying = true;
+
+            //자동 저장
+            /*
+            setTimeout(function() {
+              gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.04)
+            }, 1000/3)
+            */
+            setTimeout(function() {
+              oscillatorNode.stop();
+            }, 1000/2)
+
+
         }else{
             // 정지
             oscillatorNode.stop();

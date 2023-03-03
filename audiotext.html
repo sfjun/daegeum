@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequencies for equal-tempered scale</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <style>
+        tr {
+            line-height: 15px;
+            min-height: 15px;
+            height: 15px;
+        }
+        
+        .tr-of-base-note{
+            background-color:lavender;
+        }
+
+        .td-of-freq {
+            cursor: pointer;
+        }
+        
+
+    </style>
+
+</head>
+
+<body class="container">
+
+    <header>
+        <h2>Frequencies for equal-tempered scale</h2>
+    </header>
+    <nav>
+        <label>A4 = </label>
+        <input type="number" id="input-freq" value="440" min="413" max="460">
+        <button type="button" id="btn-change-freq" class="btn btn-primary btn-sm" >Change A<sub>4</sub></button>
+        <button type="button" id="btn-help" class="btn btn-secondary btn-sm">Help</button>
+        <div id="div-help" class="alert alert-dismissible alert-info" style="display:none;">
+            <p>Enter the frequency value in the Frequency field and click the Change button or press the Enter key to see the changed frequency table.</p>
+
+            <p>Click on each row of the table to hear the note at that frequency. If you are using a mobile device, turn off silent mode.</p>
+        </div>
+    </nav>
+    <article class="wrapper">
+
+        <table id="freq-table" class="table table-hover">
+            <thead>
+                <tr class="table-info">
+                    <th>Note</th>
+                    <th>Frequnecy (Hz)</th>
+                    <th>Wavelength (cm)</th>
+                </tr>
+            </thead>
+            <tbody id="freq-tbody">
+
+            </tbody>
+        </table>
+    </article>
+    <footer>
+<!-- </script> -->
+        Copyright by <a href="http://yoonbumtae.com" target="_blank">BGSMM</a>
+    </footer>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> -->
+
+    <script src="./jquery-3.6.3.min.js"></script>
+
+    <script>
+        var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+        var osc, gn;
+        var isNowPlaying = false;
+
+        var NOTES = {
+            names: ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"],
+            altNames: {
+                "C♯": "D♭",
+                "D♯": "E♭",
+                "F♯": "G♭",
+                "G♯": "A♭",
+                "A♯": "B♭"
+            },
+            baseNote: "A",
+            baseOctave: 4,
+            speedOfSound: 34500
+        }
+        var EXP = Math.pow(2, 1 / 12)
+
+
+        var noteStart = 1
+        var noteEnd = 7
+        var distanceFromBaseToLowest = NOTES.names.length * (NOTES.baseOctave - noteStart) +
+            NOTES.names.indexOf("A")
+        //alert(distanceFromBaseToLowest)
+        console.log(audioCtx)
+        drawTable()
+
+        $("#btn-change-freq").on("click", function() {
+            drawTable($("#input-freq").val())
+        })
+
+        $("#input-freq").on("keyup", function(e) {
+            if (e.keyCode === 13) {
+                drawTable($("#input-freq").val())
+            }
+        })
+        
+        $("#btn-help").on("click", function(e){
+            $("#div-help").toggle()
+        })
+
+        function playOneNote(freq, ms, opt_type) {
+
+            if (osc && gn) {
+                gn.disconnect(audioCtx.destination)
+                osc.disconnect(gn)
+            }
+
+            osc = audioCtx.createOscillator()
+            osc.type = opt_type || "sine"
+            osc.frequency.value = freq
+
+            gn = audioCtx.createGain()
+            console.log(osc, gn)
+            osc.connect(gn)
+            gn.connect(audioCtx.destination)
+            osc.start()
+
+            setTimeout(function() {
+                gn.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.04)
+            }, ms)
+
+        }
+
+        function drawTable(freq) {
+            freq = freq || 440
+            var tbody = $("#freq-tbody").html("")
+            var distIndex = 0
+            // draw initial table
+            for (var i = noteStart; i <= noteEnd; i++) {
+                for (var j in NOTES.names) {
+                    var td1 = $("<td/>")
+                    var noteName = makeNoteStr(NOTES.names[j]) + "<sub>" + i + "</sub>"
+                    if(NOTES.altNames[NOTES.names[j]]){
+                        noteName += " / " + makeNoteStr(NOTES.altNames[NOTES.names[j]]) + "<sub>" + i + "</sub>"
+                    }
+                    td1.html(noteName)
+
+                    var dist = distanceFromBaseToLowest * -1 + parseInt(distIndex++)
+                    var eachFreq = freq * Math.pow(EXP, dist)
+
+                    var td2 = $("<td/>", {
+                        text: eachFreq.toFixed(2),
+                        class: "td-of-freq",
+                        "data-dist": dist
+                    })
+                    var td3 = $("<td/>", {
+                        text: (NOTES.speedOfSound / eachFreq).toFixed(2)
+                    })
+
+                    var tr = $("<tr/>", {
+                        "onclick": "playOneNote(" + eachFreq + ", 1000, 'triangle')"
+                    })
+                    if (dist == 0) {
+                        tr.addClass("tr-of-base-note")
+                    }
+                    tr.append(td1, td2, td3)
+                    tbody.append(tr)
+
+                }
+
+            }
+        }
+        
+        function makeNoteStr(str){
+            return str.substr(0, 1) + "<sup>" + str.substr(1, 1) + "</sup>"
+        }
+
+    </script>
+</body>
+
+</html>
