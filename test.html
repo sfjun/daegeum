@@ -9,30 +9,50 @@
   <title>Document</title>
 </head>
 <body>
- <input type="button" value="play" onclick= "playNote()"/>
- <script>
-  function playNote() {  
+<input type="button" value="play" onclick="playNote()"/>
+</body>
+<script>
+function playNote() {  
   var ac = new (window.AudioContext || window.webkitAudioContext);
-  console.log("ac",ac)
   // C4, E4, G4
-var freqs = [440, 880, 220];
-var oscs = [];
-// initialize the oscillators
-for(var i=0;i<freqs.length;i++) {
-    var o = ac.createOscillator();
-    o.frequency.value = freqs[i];
-    o.connect(ac.destination);
-    oscs.push(o);
-}
-// schedule noteOn and noteOff (deprecated: the methods will be renamed to start() and   stop() soon)
+  var freqs = [261.63, 329.63, 392.00];
+  var oscs = [];
 
-  console.log("oscs",oscs)
+  const gainNode = ac.createGain();
+  gainNode.gain.value = 0.2;
+
+  //gainNode.gain.setValueAtTime(0, ac.currentTime);
+  //gainNode.gain.setValueAtTime(1, ac.currentTime);
+      
+  const smoothingInterval = 0.02;
+  const beepLengthInSeconds = 0.5;
+
+  // initialize the oscillators
+  for(var i=0;i<freqs.length;i++) {
+      var o = ac.createOscillator();
+      o.frequency.value = freqs[i];
+      //oscillatorNode.connect(gainNode).connect(audioContext.destination);
+      //o.connect(gainNode).connect(ac.destination);
+      //o.connect(ac.destination);
+      //console.log("o",o)
+      oscs.push(o);
+  }
+  // schedule noteOn and noteOff (deprecated: the methods will be renamed to start() and   stop() soon)
   for (i = 0; i < oscs.length; i +=1) {
-      oscs[i].start(0);
-      oscs[i].stop(1);
+      console.log("oscs", oscs[i])
+      //console.log("ac destination", ac.destination)
+      // gainNode: 볼륨, destination: 스피커 선택
+      const now = ac.currentTime;
+      gainNode.gain.setTargetAtTime(1, now, smoothingInterval);
+      gainNode.gain.setTargetAtTime(0, now + beepLengthInSeconds, smoothingInterval);
+
+      oscs[i].connect(gainNode).connect(ac.destination);
+            //oscs[i].connect(gainNode).connect(2000)
+      oscs[i].start(ac.currentTime);
+      //oscs[i].stop();
   }
 }
 </script>
-</body>
+
 </html>
 
