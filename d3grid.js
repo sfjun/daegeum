@@ -314,6 +314,7 @@ function play() {
         transitWidth();
         // 버튼 변경
         t.value= "Stop";
+        // playNote();
 
     } else if (t.value == "Stop") {
         // bit, bitText 중지
@@ -357,15 +358,7 @@ function play() {
     pBit.transition()
         // .duration(bakjaTime)
         .duration(function(d,i){ // console.log("d", d); 
-            return d.dur;
-            // if (d.bakja == width) {
-            //     // console.log((d.bakno-1) * bakjaTime );
-            //     return bakjaTime ;
-            // } else { 
-            //     // console.log((d.bakno- 1) * bakjaTime + d.bittime);
-            //     return d.bittime;
-            // }    
-         })
+            return d.dur; })
 
         // .delay(function(d,i){ return i * 1000;}) 
         .delay(function(d,i){ console.log("d", d.xyzbits); 
@@ -377,38 +370,16 @@ function play() {
                 return (d.bakno- 1) * bakjaTime + d.bittime;
             }    
          }) 
-        // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`);})
-        // .attr("width", function(d,i){ return d.bakja;})
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
-        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
-
         .attr("class", "played")
-        // .attr("play", "played")
-        // .style("fill", "skyblue")
-        // .on("end",function() { d3.select(this).remove()});   
-        // .on("interrupt", function(d,i) { //console.log("this", this, i);
-        //     interruptIndex = i;
-        //     // d3.select(this).attr("classed", "played")
-        //     // local.set(this, +d3.select(this).attr("width"))
-        //     // local.set(this, i)
-        // })
         .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); });     
-        ;       
+             
+        
     
-    
-    // var pBitText =d3.select("#grid").selectAll(".bitText")
-        //.transition()
-        // .attr("width", "0")
-
     pBitText.transition()
         // .duration(bakjaTime)
         .duration(function(d,i){ // console.log("d", d); 
-            return d.dur;
-        })    
-        // .delay(function(d,i){ return i * 1000;}) 
-        // .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
-        //     return i * bakjaTime + d.bittime;            
-        //  })
+            return d.dur; })    
         .delay(function(d,i){ console.log("d", d.xyzbits); 
             if (d.bakja == width) {
                 console.log((d.bakno-1) * bakjaTime );
@@ -418,28 +389,15 @@ function play() {
                 return (d.bakno- 1) * bakjaTime + d.bittime;
             }    
          }) 
-        // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`); console.log("end", d.xyz);})
-        // .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
-        // .style("fill", "skyblue")
-        // .duration(500)
-        // .style("font-size", 18)
         .styleTween("font-size", function() { return d3.interpolate(8, 18); })
-        // .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
-        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
-
         .attr("class", "played")
         // .on("end",function() { d3.select(this).remove()})
         
-        .transition()
-        .delay(bakjaTime/bakjaTime)
-        .style("font-size", 10)
-        // .on("end",function() { d3.select(this).remove()});  
-        .on("interrupt", function(d,i) { //console.log("this", this, i);
-            interruptIndex = i;
-            // d3.select(this).attr("classed", "played")
-            // local.set(this, +d3.select(this).attr("width"))
-            // local.set(this, i)
-        })           
+        // .transition()
+        // .delay(bakjaTime/bakjaTime)
+        // .style("font-size", 10)
+        // .on("interrupt", function(d,i) { //console.log("this", this, i);
+        // })           
         ;
 
     }         
@@ -447,260 +405,52 @@ function play() {
 }
 
 
-function runPie() {    
-    if (!gridOx) return; 
-    var lines = txtTodata();
-    // console.log("lines", lines)
-    gridOx = false;
+var ac = new (window.AudioContext || window.webkitAudioContext);
+  // C4, E4, G4
+  //var freqs = [261.63, 329.63, 392.00];
+  var freqs = [261, 440, 880];
 
-    // console.log("lines", lines)
-    // var data = {임: 1/3, 황: 1/3, "-1":1/6, "-2":1/6}
-    // var data = [["임", 1/3], ["황", 1/3], ["-", 1/6], ["-", 1/6]]
-    
-    // [음, %] 자료 저장
-    var lineBox = [];
-    // console.log("gridData, 갯수", lines.length, lines) // 5라인
-    lines.forEach(function(line) {
-        // console.log("linexyz", line[0]);
-        // console.log("linexyz", line[0].xyz);
-        var hanBox = [];
-        if (line[0].xyz.startsWith("w")) {  //w시작하는 문서 찾기
-            $('#piTitle').text(line[0].xyz) // 제목으로 div에 처리
-        } else {
-            //임황-, ---, ---- 
-            line.forEach(function(hanbak) {  //한박시작
-                // console.log("feeLen", hanbaksub.xyz)
-                var bitBox = []
-                // 한박에 대한 정규식 적용 "-" 제외
-                //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
-                ///gu, g: 전역, u:unicode
-                //[임, 황, -]
-                var bits = hanbak.xyz.match(/[ㄴ^ㄷㄱ]?[\WㄱN]+?[\(\)\/,]*/gu)         
-                // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
-                // 3
-                var bitsCnt = bits.length;  //park 갯수
+//   var freqs = [32.7, 34.65, 36.71, 38.89, 41.2, 43.65, 46.25, 49, 51.91, 55, 58.27,
+//                61.74, 65.41, 69.3, 73.42, 77.78, 82.41, 87.31, 92.5, 98, 103.83, 110,
+//                116.54, 123.47, 130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185, 196,
+//                207.65, 220,	233.08, 246.94, 261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 
+//                369.99, 392, 415.3, 440, 466.16, 493.88, 523.25, 554.37, 587.33, 622.25, 659.26,
+//                698.46, 739.99, 783.99, 830.61, 880, 932.33, 987.77, 1046.5, 1108.73, 1174.66, 1244.51,
+//                1318.51,	1396.91, 1479.98, 1567.98, 1661.22, 1760, 1864.66, 1975.53, 2093, 2217.46, 2349.32,
+//                2489.02, 2637.02, 2793.83, 2959.96, 3135.96, 3322.44, 3520, 3729.31, 3951.07];
+  
+  var oscs = [];
 
-                // [임, 1/3],[황, 1/3],[-,1/3]
-                bits.forEach(function(part) {
-                    //반박처리할 경우 셋잇단음 기준으로 
-                    if (part.indexOf("/") > 0) {
-                        bitBox.push([part, 1/bitsCnt/2])
-                    } else {
-                        bitBox.push([part, 1/bitsCnt])
-                    }                    
-                    // console.log(part, 1 / partcnt)                    
-                })
-                hanBox.push([bitBox])
-                // console.log("hanBox", hanBox)
-            })
-            lineBox.push(hanBox)                
-        }      
+  const gainNode = ac.createGain();
+  gainNode.gain.value = 0.2;
 
-    })    
-    playControll(lineBox)    
+  //gainNode.gain.setValueAtTime(0, ac.currentTime);
+  //gainNode.gain.setValueAtTime(1, ac.currentTime);
+      
+  const smoothingInterval = 0.02;
+  const beepLengthInSeconds = 0.5;
+
+function playFreq(freq, dur = 1) {
+  var o = ac.createOscillator();
+  //o.frequency.value = freq;
+  console.log("freq,dur", freq, dur);
+  o.connect(gainNode).connect(ac.destination);  
+  o.frequency.value = freq;  
+  const now = ac.currentTime;
+  o.start(now);
+  o.stop(now + dur);
+  //clearTimeout(setTimeid);
+  
+};
+
+
+function playNote() {
+  for(var i = 0; i < freqs.length; i++) {
+    console.log("시작", freqs[i])
+    // 지연시간을 단계적으로 부여하여, 실행함수 ()없이해야 호출만, 주파수, 지속시간 
+    const setTimeid = setTimeout(playFreq, i * 1000, freqs[i], 2);
+    console.log("id", setTimeid)
+    //clearTimeout(setTimeid);
+    //requestAnimationFrame(step)
+  }
 }
-
-function playControll(lines) {
-    // console.log("라인박스",lines)
-    //console.log("lines", lines)
-    lines.forEach(function(line) {
-        line.forEach(function(hanbaks) {
-            // console.log(hanbaks)
-            hanbaks.forEach(function(hanbak) {
-               // console.log("hanbak", hanbak)
-                //pie 챠트 적용시
-                // runPie(hanbak); 
-                runPie2(hanbak);
-            })
-        })
-    })    
-}
-
-
-function runPie2(data) {
-    // set the dimensions and margins of the graph
-    var width = 150
-        height = 150
-        margin = 10
-
-    // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-    var radius = Math.min(width, height) / 2 - margin
-
-    // append the svg object to the div called 'my_dataviz'
-
-    var svg = d3.select("#my_dataviz")
-        .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-        .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    // Create dummy data
-
-    // set the color scale
-    var color = d3.scaleOrdinal()
-        .domain(data)
-        .range(d3.schemeSet2);
-    
-    // Compute the position of each group on the pie:
-    var pie = d3.pie()
-        .value(function(d) {return d.value[1]; })
-    // .value(function(d) {return d.value; })
-    
-    var data_ready = pie(d3.entries(data))
-    // console.log("data_ready",data_ready)
-    // Now I know that group A goes from 0 degrees to x degrees and so on.
-
-    // shape helper to build arcs:
-    var arcGenerator = d3.arc()
-        .innerRadius(0)
-        .outerRadius(radius)
-
-    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    svg.selectAll('mySlices')
-        .data(data_ready)
-        .enter()
-        .append('path')
-            .attr('d', arcGenerator)
-            //.attr('fill', function(d){ return(color[d.data.value[0]]) })
-            //.attr('fill', function(d){ console.log("d.data.key", d.data.key); return(color[d.data.key]) })
-            .attr('fill', function(d){ return(color(d.data.key)) })     
-            //.attr('fill', "skyblue")
-            .attr("stroke", "black")
-            .style("stroke-width", "2px")
-            .style("opacity", 0.7)
-
-    // Now add the annotation. Use the centroid method to get the best coordinates
-    svg.selectAll('mySlices')
-        .data(data_ready)
-        .enter()
-        .append('text')
-        .text(function(d){ return d.data.value[0]})
-        // .text(function(d){ return "grp " + d.data.key})
-            .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
-            .style("text-anchor", "middle")
-            .style("font-size", 20)
-
-}
-
-
-function runChart() {
-    // var data = [0.33, 0.33, 0.33];
-    var dataOri = [['林', 0.3333333333333333], ['潢', 0.3333333333333333], ['-', 0.3333333333333333]]
-    var data =[]
-    var dataTxt = [];
-    
-    dataOri.forEach(function(cur) {
-        data.push(cur[1])
-        dataTxt.push(cur[0])
-    });    
-    // console.log(data, dataOri)
-    draw(data, dataTxt);
-}
-
-function draw(data, dataTxt) {
-
-    // 색깔 초이스
-    // (6)['#d53e4f', '#fc8d59', '#fee08b', '#e6f598', '#99d594', '#3288bd']
-    //let colors = colorbrewer.Spectral[data.length];
-    // console.log("color", colors) 
-    
-    let sizes = {
-        innerRadius: 50,
-        outerRadius: 100
-    };
-    
-    // 박자관점으로 한박에 2초
-    let durations = {
-        entryAnimation: 2000
-    };
-
-    //기존항목 지우기?
-    d3.select("#chart").html("");
-
-    let generator = d3.pie()
-        .sort(null);        
-    // console.log("gen", generator)
-
-    // 각 조각별로 startAngle, endAngle 생성 됨
-    // {data:, value:, startAngle:0, endAngle:} 
-    let chart = generator(data);
-    // console.log("chart", chart)
-    
-    //텍스트 값추가하기
-    // {data:, value:, startAngle:0, endAngle:, xyz:} 
-    dataTxt.forEach(function(txt, i) {
-        chart[i]['xyz'] = txt;
-        
-    })
-    // console.log("chart", chart)
-
-    let arc = d3.arc();
-    //console.log(arc)
-
-    // path 생성, 색깔지정 
-    let arcs = d3.select("#chart")
-        .append("g")
-            .attr("class", "gClass")
-            .attr("transform", "translate(100, 100)")
-        .selectAll("path")
-        .data(chart)
-        .enter()
-        .append("path")
-            .attr("d", arc)
-            .style("fill", (d, i) => color[i]);
-
-    // https://gist.github.com/cricku/9af3b270bc2ac5d860ecd44da2471dc2
-            
-    let arcsSs = d3.select("#chart")
-        .append("g")
-              .attr("transform", "translate(100, 100)")
-        .selectAll("path")
-        .data(chart)
-        .enter()
-        .append("text")
-            // .attr("transform", function(d) { return "translate(" + arcs.centroid(d) + ")";  })
-            // .attr("transform", function(d) {
-            //     var _d = arc.centroid(d);
-            //     _d[0] *= 1.5;	//multiply by a constant factor
-            //     _d[1] *= 1.5;	//multiply by a constant factor
-            //     return "translate(" + _d + ")";
-            // })
-            .attr("dy", ".50em")
-            .style("text-anchor", "middle")
-        .text(function(d) { 
-           // console.log("d", d.xyz)
-            return d.xyz;
-        });
-
-    // console.log("arcs", arcs)
-
-    let angleInterpolation = d3.interpolate(generator.startAngle()(), generator.endAngle()());
-    // console.log("각인터폴", angleInterpolation)
-    let innerRadiusInterpolation = d3.interpolate(0, sizes.innerRadius);
-    let outerRadiusInterpolation = d3.interpolate(0, sizes.outerRadius);
-
-    
-    arcs.transition()
-        .duration(durations.entryAnimation)
-        .attrTween("d", d => {
-            let originalEnd = d.endAngle;
-            return t => {
-                let currentAngle = angleInterpolation(t);
-                if (currentAngle < d.startAngle) {
-                    return "";
-                }
-                d.endAngle = Math.min(currentAngle, originalEnd);
-                return arc(d);
-            };
-        });
-
-    d3.select("#chart")
-        .transition()
-        .duration(durations.entryAnimation)
-        .tween("arcRadii", () => {
-        return t => arc
-            .innerRadius(innerRadiusInterpolation(t))
-            .outerRadius(outerRadiusInterpolation(t));
-        });
-
-}    

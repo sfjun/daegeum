@@ -3,12 +3,26 @@
 
 
 $(document).ready(function(){
+    // 부모창에서 값가져오기
     getMid()
+
      
 });
 
 function getMid() {
-  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
+//  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
+
+  childForm.xyzOutput.value = 
+ `w:1장
+林潢- ---/ㄴ/( 南 -, 潢/仲/-- -南-, 
+汰 ---/N/ 潢 -, 南汰- ---/ㄱ/ 南)林- -,
+潢南- - ^南 -), 林潢- -( 林 -,
+南)林- --ㄱ/南/, 潢 - - -
+
+w:2장
+林潢- ^汰 --/N/Z 南 - - -)-林, 潢 --/N/南,
+ㄷ汰 --/N/潢, ㄷ林 --/ㄱ/南,
+ㄷ汰 --/N/潢,  南潢汰潢 ㅅ潢 -`
   
 }
 
@@ -24,14 +38,16 @@ function wClose() {
 
 var width = 60;
 var height = 60;
-var bakjaTime = 1000;
+// var bakjaTime = 1000;
+var bakjaTime ='';
+//console.log(bakjaTime)
 
 function txtTodata() {
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
-	var width = 60;
-	var height = 60;
+	// var width = 60;
+	// var height = 60;
 
     // typeof = string
     // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
@@ -68,8 +84,8 @@ function txtTodata() {
             //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
             
             if (!jungGans[row][column]) continue;
+            // console.log("bakSerial", bakSerial);
             rowCol = jungGans[row][column];
-
             
             data[row].push({
                 bakno: bakSerial,
@@ -80,6 +96,7 @@ function txtTodata() {
                 xyz: jungGans[row][column],
                 xyzbits: bakTobit(bakSerial, rowCol)
             });
+            // console.log("data", data)
 
 			// increment the x position. I.e. move it over by 50 (width variable)
 			xpos += width;
@@ -102,16 +119,18 @@ function bakTobit(no, hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
     var hanBox =[]
     var bitBox = []
+    bakjaTime = document.getElementById('bakSec').value;
+
     // 한박에 대한 정규식 적용 "-" 제외
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
     //[임, 황, -]
-    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱN]+?[\(\)\/,\|]*/gu)         
+    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ]+?[\(\)\/,\|]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
 
     var xpos = 0;
-
+    // 한박 나누기 처리 / 있으면 반박으로 bitsCnt 갯수를 줄여함, 나중 //에 대한 반영은 미포함
     hanbak.indexOf("/") > 0 ? bitsCnt = bits.length - 1 : bitsCnt = bits.length;
       
     // [임, 1/3],[황, 1/3],[-,1/3]
@@ -119,7 +138,16 @@ function bakTobit(no, hanbak) {  //한박시작
         var bakja = 0;
         
         //반박처리할 경우 셋잇단음 기준으로 
-        (part.indexOf("/") > 0) ? bakja = width/bitsCnt/2 : bakja = width/bitsCnt;
+        // (part.indexOf("/") > 0) ? bakja = width/bitsCnt/2 : bakja = width/bitsCnt;
+        if (part.indexOf("/") > 0) {
+            bakja = width/bitsCnt/2;
+            part = part.replace("/", "");
+        } else {
+            bakja = width/bitsCnt;
+        }
+        
+        var durr = (bakja == width) ?  bakjaTime : bakjaTime * bakja/width;        
+
         // ? xpos = 0 :  xpos += bakja;
         bitsCnt ==1 ? xpos = width : "" ;        
 
@@ -129,6 +157,7 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 bakja: bakja, 
                 xpos: 0,
+                dur: durr,
                 bittime : bakjaTime * (0 / width)
             });
             xpos += bakja;    
@@ -138,6 +167,7 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 bakja: bakja, 
                 xpos: xpos,
+                dur: durr,
                 bittime : bakjaTime * (xpos / width)
             });
             xpos += bakja;  //반영후에 값을 반영하기
@@ -150,20 +180,23 @@ function bakTobit(no, hanbak) {  //한박시작
 }
 
 // 중복 다중 실행 방지 
-var gridOx = true;
+// var gridOx = true;
 
 // var gColumn = [];
 
 function runGrid() {
-    if (!gridOx) return 
+    // if (!gridOx) return 
     var gridData = txtTodata();
-    //var { title, gridData } = txtTodata();
-    //console.log("title", title)    
-    //console.log("gridData", gridData)
+    // //var { title, gridData } = txtTodata();
+    // //console.log("title", title)    
+    // //console.log("gridData", gridData)
 
-    //중복 방지
-    gridOx = false;
+    // //중복 방지
+    // gridOx = false;
 
+    // svg  판 클리어
+    d3.select("#grid").selectAll("*").remove();
+    
     var color = d3.scaleOrdinal()
         .domain(gridData)
         .range(d3.schemeSet2);
@@ -171,15 +204,8 @@ function runGrid() {
     // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
-        .attr("width","510px")
+        .attr("width","600px")
         .attr("height","910px");
-
-    // grid.select("p")
-    // .data([title])
-    // .enter()
-    // .append("text")
-    // .text(function(d) { console.log("d", d); return d;
-    // })
             
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
@@ -203,6 +229,7 @@ function runGrid() {
         // .attr("class","square")
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
+        // .attr("width", function(d) { return d.width; })
         .attr("width", function(d) { return d.width; })
         .attr("height", function(d) { return d.height; })
         .style("fill", "#fff")
@@ -222,12 +249,6 @@ function runGrid() {
         .style("text-anchor", "middle")
         .style("font-size", 15);
 
-    // var gSubcolumn = gColumn.append("g")
-    //     .attr("class", "subcolumn");
-        
-    //d3.select(this.parentNode).datum().x 패어런츠의 값을 가져오기
-    //{"xyz": part, "bakja": bakja, "xpos": xpos}
-
     var gSubcolumn = gColumn.append("g")
         .attr("class", "subcolumn")
         .selectAll(".bit")
@@ -241,32 +262,19 @@ function runGrid() {
         //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
         .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
         .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
-        .attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
-        .attr("width", function(d) { return d.bakja; } )
+        //.attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
+        .attr("width", function(d) { return 0.3; }) //시작값을 죽여서        
+        // .attr("width", function(d) { return d.bakja; } )
         .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
-        .style("fill", function(d,i) { return color(i); })
+        // .style("fill", function(d,i) { return color(d.bakno%12); }) // 한박기준으로 컬러링
+        // .style("fill", function(d,i) { console.log("i", i); return color((d.bakno +i)%24); }) // bit 기준으로 컬러링
+        .style("fill", function(d,i) { return color(Math.random()%24); }) // 랜듬하게 bit 기준으로 컬러링
+        
         .style("stroke", "#222");
 
-
- /*   
-    gSubcolumn.selectAll(".bit")
-        .data(function(d) { return d.xyzbits[0]; })
-        .enter().append("rect")
-        .attr("class",function(d) { 
-            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
-                return "title"; } else { return "bit"; } })  
-        //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
-        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
-        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
-        .attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
-        .attr("width", function(d) { return d.bakja; } )
-        .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
-        .style("fill", function(d,i) { return color(i); })
-        .style("stroke", "#222");
-*/
     // title 클래스를 제거하여 title의 bit를 제거
     gSubcolumn.selectAll(".title").remove();
-      
+     
   
     // bit text 추가하기
     gSubcolumn.append("text")
@@ -292,64 +300,149 @@ function runGrid() {
 } // function end
 
 var timerId = "";
+var interruptIndex = 0
 
 function play() {
 
-    var t = document.getElementById("playId");
+    // 1박시간 가져오기
+    var t = document.getElementById('playId');
+    // var t = $('playId');
+    
+    
+    if (t.value == "Play") {
+        // 플레이 시작       
+        transitWidth();
+        // 버튼 변경
+        t.value= "Stop";
 
-    if (t.value == "play") {
-        t.value="stop";
-//        clearInterval(timerId);
+    } else if (t.value == "Stop") {
+        // bit, bitText 중지
+        d3.select("#grid").selectAll(".bit").interrupt();
+        d3.select("#grid").selectAll(".bitText").interrupt();
+        // 버튼 변경
+        t.value= "Resume";
 
-    } else if (t.value == "stop") {
-        t.value="play";
+    } else if (t.value == "Resume") {
+        // 플레이 재시작
+        transitWidth();
+        // 버튼 변경
+        t.value= "Stop";
     }
 
-    const oldTime = Date.now();
+    function transitWidth(inDex = 0) {    
+ 
+    // const oldTime = Date.now();
 
-    timerId = setInterval(() => {
-        const currentTime = Date.now();
-        // 경과한 밀리초 가져오기
-        const diff = currentTime - oldTime;
+    // timerId = setInterval(() => {
+    //     const currentTime = Date.now();
+    //     // 경과한 밀리초 가져오기
+    //     const diff = currentTime - oldTime;
         
-        // 초(second) 단위 변환하기
-        const sec = Math.floor(diff / 1000);
+    //     // 초(second) 단위 변환하기
+    //     const sec = Math.floor(diff / 1000);
         
-        // HTML에 문자열 넣기
-        document.querySelector('#timelog').innerHTML = `${sec}초`;
-    }, 1000);
+    //     // HTML에 문자열 넣기
+    //     document.querySelector('#timelog').innerHTML = `${sec}초`;
+    // }, 1000);
 
-    // alert("시작합니다.");
-    
-    var pBak =d3.select("#grid").selectAll(".bak")
-        .transition()
-        .attr("width", "0")
 
-        .transition()
-        // .duration(function(d,i){ return i * 1000;})
-        .delay(function(d,i){ return d.bakno * 1000;}) 
-        .attr("width", function(d,i){ return d.width;})
-        .style("fill", "skyblue")
-        ;
+    // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
+    // 플레이안된 것만 가져오기, 
+    const pBit = d3.select("#grid").selectAll(".bit");
+    const pBitText = d3.select("#grid").selectAll(".bitText");
 
-    var pBit =d3.select("#grid").selectAll(".bit")
-        .transition()
-        .attr("width", "0")
+    bakjaTime = document.getElementById('bakSec').value;
+    console.log("bakjaTime", bakjaTime)
 
-        .transition()
-        // .duration(5000*54)
+    pBit.transition()
+        // .duration(bakjaTime)
+        .duration(function(d,i){ // console.log("d", d); 
+            return d.dur;
+            // if (d.bakja == width) {
+            //     // console.log((d.bakno-1) * bakjaTime );
+            //     return bakjaTime ;
+            // } else { 
+            //     // console.log((d.bakno- 1) * bakjaTime + d.bittime);
+            //     return d.bittime;
+            // }    
+         })
+
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ console.log("bakno", d.bakno);
-            return d.bakno * 1000 + d.bittime;            
+        .delay(function(d,i){ console.log("d", d.xyzbits); 
+            if (d.bakja == width) {
+                console.log((d.bakno-1) * bakjaTime );
+                return (d.bakno-1) * bakjaTime ;
+            } else { 
+                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
          }) 
-        
-        .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
-        .style("fill", "skyblue")
-        ;
+        // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`);})
+        // .attr("width", function(d,i){ return d.bakja;})
+        .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
+        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
+
+        .attr("class", "played")
+        // .attr("play", "played")
+        // .style("fill", "skyblue")
+        // .on("end",function() { d3.select(this).remove()});   
+        // .on("interrupt", function(d,i) { //console.log("this", this, i);
+        //     interruptIndex = i;
+        //     // d3.select(this).attr("classed", "played")
+        //     // local.set(this, +d3.select(this).attr("width"))
+        //     // local.set(this, i)
+        // })
+        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); });     
+        ;       
     
-    pBit(function() {
-        clearInterval(timerId);
-    })
+    
+    // var pBitText =d3.select("#grid").selectAll(".bitText")
+        //.transition()
+        // .attr("width", "0")
+
+    pBitText.transition()
+        // .duration(bakjaTime)
+        .duration(function(d,i){ // console.log("d", d); 
+            return d.dur;
+        })    
+        // .delay(function(d,i){ return i * 1000;}) 
+        // .delay(function(d,i){ //console.log("d.bakno", i, i * bakjaTime + d.bittime); 
+        //     return i * bakjaTime + d.bittime;            
+        //  })
+        .delay(function(d,i){ console.log("d", d.xyzbits); 
+            if (d.bakja == width) {
+                console.log((d.bakno-1) * bakjaTime );
+                return (d.bakno-1) * bakjaTime ;
+            } else { 
+                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
+         }) 
+        // .on("start", function(d,i) { $('#baklog').text(`${d.xyz}`); console.log("end", d.xyz);})
+        // .attr("width", function(d,i){ console.log("d", d); return d.bakja;})
+        // .style("fill", "skyblue")
+        // .duration(500)
+        // .style("font-size", 18)
+        .styleTween("font-size", function() { return d3.interpolate(8, 18); })
+        // .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
+        // .style("width", function(d,i){ return d.bakja;}) //스타일은 아니고
+
+        .attr("class", "played")
+        // .on("end",function() { d3.select(this).remove()})
+        
+        .transition()
+        .delay(bakjaTime/bakjaTime)
+        .style("font-size", 10)
+        // .on("end",function() { d3.select(this).remove()});  
+        .on("interrupt", function(d,i) { //console.log("this", this, i);
+            interruptIndex = i;
+            // d3.select(this).attr("classed", "played")
+            // local.set(this, +d3.select(this).attr("width"))
+            // local.set(this, i)
+        })           
+        ;
+
+    }         
 
 }
 

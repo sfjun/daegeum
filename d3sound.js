@@ -1,20 +1,4 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-<input type="button" value="play" onclick="playNote()"/>
-</body>
-<script>
-
-  
-  var ac = new (window.AudioContext || window.webkitAudioContext);
+var ac = new (window.AudioContext || window.webkitAudioContext);
   // C4, E4, G4
   //var freqs = [261.63, 329.63, 392.00];
   //var freqs = [261, 440, 880];
@@ -39,7 +23,7 @@
   const smoothingInterval = 0.02;
   const beepLengthInSeconds = 0.5;
 
-function play(freq, dur = 1) {
+function playFreq(freq, dur = 1) {
   var o = ac.createOscillator();
   //o.frequency.value = freq;
   console.log("freq,dur", freq, dur);
@@ -57,14 +41,9 @@ function playNote() {
   for(var i = 0; i < freqs.length; i++) {
     console.log("시작", freqs[i])
     // 지연시간을 단계적으로 부여하여, 실행함수 ()없이해야 호출만, 주파수, 지속시간 
-    const setTimeid = setTimeout(play, i * 1000, freqs[i], 2);
+    const setTimeid = setTimeout(playFreq, i * 1000, freqs[i], 2);
     console.log("id", setTimeid)
     //clearTimeout(setTimeid);
     //requestAnimationFrame(step)
   }
-} 
-
-</script>
-
-</html>
-
+}
