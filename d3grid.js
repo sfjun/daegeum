@@ -2,6 +2,8 @@
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 
 
+var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
+
 $(document).ready(function(){
     // 부모창에서 값가져오기
     getMid()
@@ -155,6 +157,7 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
+                freq: xyzFreq(part),
                 bakja: bakja, 
                 xpos: 0,
                 dur: durr,
@@ -165,6 +168,7 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
+                freq: xyzFreq(part),
                 bakja: bakja, 
                 xpos: xpos,
                 dur: durr,
@@ -177,6 +181,11 @@ function bakTobit(no, hanbak) {  //한박시작
     hanBox.push(bitBox)
     return hanBox;
     // console.log("hanBox", hanBox)
+}
+
+function xyzFreq(xy) {
+    console.log("freq", xyzFreqArr.keys());
+    return xyzFreqArr[xy];
 }
 
 // 중복 다중 실행 방지 
@@ -357,22 +366,26 @@ function play() {
 
     pBit.transition()
         // .duration(bakjaTime)
-        .duration(function(d,i){ // console.log("d", d); 
+        .duration(function(d,i){ console.log("dDur", d); 
             return d.dur; })
 
         // .delay(function(d,i){ return i * 1000;}) 
         .delay(function(d,i){ console.log("d", d.xyzbits); 
             if (d.bakja == width) {
-                console.log((d.bakno-1) * bakjaTime );
+                // console.log((d.bakno-1) * bakjaTime );
                 return (d.bakno-1) * bakjaTime ;
             } else { 
-                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
                 return (d.bakno- 1) * bakjaTime + d.bittime;
             }    
-         }) 
+         })
+         // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
+        .on("start", function(d,i) { playFreq(440, d.dur/1000); }) 
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
-        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); });     
+        // .on("start", function(d,i) { playFreq(440, 2); })
+        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); })
+        ;     
              
         
     
@@ -382,10 +395,10 @@ function play() {
             return d.dur; })    
         .delay(function(d,i){ console.log("d", d.xyzbits); 
             if (d.bakja == width) {
-                console.log((d.bakno-1) * bakjaTime );
+                // console.log((d.bakno-1) * bakjaTime );
                 return (d.bakno-1) * bakjaTime ;
             } else { 
-                console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
                 return (d.bakno- 1) * bakjaTime + d.bittime;
             }    
          }) 
