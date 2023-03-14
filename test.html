@@ -9,7 +9,7 @@
   <title>Document</title>
 </head>
 <body>
-<input type="button" value="play" onclick="playNote()"/>
+<!-- <input type="button" value="play" onclick="playNote()"/> -->
 </body>
 <script>
 
@@ -19,15 +19,39 @@
   //var freqs = [261.63, 329.63, 392.00];
   //var freqs = [261, 440, 880];
 
-  var freqs = [32.7, 34.65, 36.71, 38.89, 41.2, 43.65, 46.25, 49, 51.91, 55, 58.27,
-               61.74, 65.41, 69.3, 73.42, 77.78, 82.41, 87.31, 92.5, 98, 103.83, 110,
-               116.54, 123.47, 130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185, 196,
-               207.65, 220,	233.08, 246.94, 261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 
-               369.99, 392, 415.3, 440, 466.16, 493.88, 523.25, 554.37, 587.33, 622.25, 659.26,
-               698.46, 739.99, 783.99, 830.61, 880, 932.33, 987.77, 1046.5, 1108.73, 1174.66, 1244.51,
-               1318.51,	1396.91, 1479.98, 1567.98, 1661.22, 1760, 1864.66, 1975.53, 2093, 2217.46, 2349.32,
-               2489.02, 2637.02, 2793.83, 2959.96, 3135.96, 3322.44, 3520, 3729.31, 3951.07];
-  
+  //var freqs = [{侇: 207.45, no: 2},        {㑲: 218.55, no: 3},        {㒇: 233.35, no: 4},        {㒣: 245.85, no: 5},        {黃: 259, no: 6},        {大: 276.6, no: 7},        {太: 291.4, no: 8},        {夾: 311.2, no: 9},        {姑: 327.8, no: 10},        {仲: 350, no: 11},        {㽔: 368.8, no: 12},        {林: 388.5, no: 13},        {夷: 414.9, no: 14},        {南: 437.1, no: 15},        {無: 466.7, no: 16},        {應: 491.7, no: 17},        {潢: 518, no: 18},        {汏: 553.2, no: 19},        {汰: 582.8, no: 20},        {浹: 622.4, no: 21},        {㴌: 655.6, no: 22},        {㳞: 700, no: 23},        {㶋: 737.6, no: 24},        {淋: 777, no: 25},        {洟: 829.8, no: 26},        {湳: 874.2, no: 27},        {潕: 933.4, no: 28},        {㶐: 983.4, no: 29},        {㶂: 518, no: 30}, {㑣: 194.25, no: 1},       {𣴘: 553.2, no: 31},        {㳲: 582.8, no: 32}];
+
+  var freqs = [{xyz: '㑣', freq: 194.25, no: 1},        {xyz: '侇', freq: 207.45, no: 2},        {xyz: '㑲', freq: 218.55, no: 3},        {xyz: '㒇', freq: 233.35, no: 4},        {xyz: '㒣', freq: 245.85, no: 5},        {xyz: '黃', freq: 259, no: 6},        {xyz: '大', freq: 276.6, no: 7},        {xyz: '太', freq: 291.4, no: 8},        {xyz: '夾', freq: 311.2, no: 9},        {xyz: '姑', freq: 327.8, no: 10},        {xyz: '仲', freq: 350, no: 11},        {xyz: '㽔', freq: 368.8, no: 12},        {xyz: '林', freq: 388.5, no: 13},        {xyz: '夷', freq: 414.9, no: 14},        {xyz: '南', freq: 437.1, no: 15},        {xyz: '無', freq: 466.7, no: 16},        {xyz: '應', freq: 491.7, no: 17},        {xyz: '潢', freq: 518, no: 18},        {xyz: '汏', freq: 553.2, no: 19},        {xyz: '汰', freq: 582.8, no: 20},        {xyz: '浹', freq: 622.4, no: 21},        {xyz: '㴌', freq: 655.6, no: 22},        {xyz: '㳞', freq: 700, no: 23},        {xyz: '㶋', freq: 737.6, no: 24},        {xyz: '淋', freq: 777, no: 25},        {xyz: '洟', freq: 829.8, no: 26},        {xyz: '湳', freq: 874.2, no: 27},        {xyz: '潕', freq: 933.4, no: 28},        {xyz: '㶐', freq: 983.4, no: 29},        {xyz: '㶂', freq: 518, no: 30},        {xyz: '𣴘', freq: 553.2, no: 31},        {xyz: '㳲', freq: 582.8, no: 32}]
+
+  //var freqs = {㑲: 218.55,	㶂: 518, 林: 388.5,		㳞: 700,}
+  //const sortable = Object.entries(freqs)
+  //.sort(([, a], [, b]) => a - b);
+
+  var sortFreq= freqs.sort(function(a, b) {
+    return a.no - b.no;
+  });
+  console.log("sortable", sortFreq);
+
+  sortFreq.forEach( function(xy) {
+    
+    if (xy.xyz == '㳲'){
+      console.log("xt", xy.freq); 
+    }  
+  })
+
+  var val = '^-㳲㶂/ㄷ,';
+    
+  //var xx = 15000
+  //console.log('xxx',String.fromCharCode(xx))
+
+  var valx = val.match(/[\W]+?/gu);
+  for (var i =0; i < valx.length; i++) {
+      var xx = valx[i];
+      console.log('sfsf',valx[i], valx[i].charCodeAt() )
+  }
+  //console.log(valx)
+
+  /*
   var oscs = [];
 
   const gainNode = ac.createGain();
@@ -64,6 +88,8 @@ function playNote() {
   }
 } 
 
+
+*/
 </script>
 
 </html>

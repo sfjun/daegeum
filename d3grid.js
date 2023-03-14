@@ -4,17 +4,18 @@
 
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
-var xyzFreqArr = {㑣: 194.25,	侇: 207.45,	㑲: 218.55,	㒇: 233.35,	㒣: 245.85,	黃: 259,	大: 276.6,	太: 291.4,	夾: 311.2,	姑: 327.8,	仲: 350,	㽔: 368.8,	林: 388.5,	夷: 414.9,	南: 437.1,	無: 466.7,	應: 491.7,	潢: 518,	汏: 553.2,	汰: 582.8,	浹: 622.4,	㴌: 655.6,	㳞: 700,	㶋: 737.6,	淋: 777,	洟: 829.8,	湳: 874.2,	潕: 933.4,	㶐: 983.4,	㶂: 518,	𣴘: 553.2,	㳲: 582.8}
+var xyzFreqArr = [{xyz: '㑣', freq: 194.25, no: 1},        {xyz: '侇', freq: 207.45, no: 2},        {xyz: '㑲', freq: 218.55, no: 3},        {xyz: '㒇', freq: 233.35, no: 4},        {xyz: '㒣', freq: 245.85, no: 5},        {xyz: '黃', freq: 259, no: 6},        {xyz: '大', freq: 276.6, no: 7},        {xyz: '太', freq: 291.4, no: 8},        {xyz: '夾', freq: 311.2, no: 9},        {xyz: '姑', freq: 327.8, no: 10},        {xyz: '仲', freq: 350, no: 11},        {xyz: '㽔', freq: 368.8, no: 12},        {xyz: '林', freq: 388.5, no: 13},        {xyz: '夷', freq: 414.9, no: 14},        {xyz: '南', freq: 437.1, no: 15},        {xyz: '無', freq: 466.7, no: 16},        {xyz: '應', freq: 491.7, no: 17},        {xyz: '潢', freq: 518, no: 18},        {xyz: '汏', freq: 553.2, no: 19},        {xyz: '汰', freq: 582.8, no: 20},        {xyz: '浹', freq: 622.4, no: 21},        {xyz: '㴌', freq: 655.6, no: 22},        {xyz: '㳞', freq: 700, no: 23},        {xyz: '㶋', freq: 737.6, no: 24},        {xyz: '淋', freq: 777, no: 25},        {xyz: '洟', freq: 829.8, no: 26},        {xyz: '湳', freq: 874.2, no: 27},        {xyz: '潕', freq: 933.4, no: 28},        {xyz: '㶐', freq: 983.4, no: 29},        {xyz: '㶂', freq: 518, no: 30},        {xyz: '𣴘', freq: 553.2, no: 31},        {xyz: '㳲', freq: 582.8, no: 32}]
+
 
 $(document).ready(function(){
     // 부모창에서 값가져오기
     getMid()
 
-     
 });
 
 function getMid() {
 //  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
+
 
   childForm.xyzOutput.value = 
  `w:1장
@@ -153,13 +154,32 @@ function bakTobit(no, hanbak) {  //한박시작
         var durr = (bakja == width) ?  bakjaTime : bakjaTime * bakja/width;        
 
         // ? xpos = 0 :  xpos += bakja;
-        bitsCnt ==1 ? xpos = width : "" ;        
+        bitsCnt ==1 ? xpos = width : "" ;    
 
+
+        var valx = part.match(/[\W]+?/gu);
+        
+        var partFreq ='';
+        console.log("len", valx.length) 
+        for (var i =0; i < valx.length; i++) {
+            console.log('sfsf',valx[i] )
+            var parVal = valx[i].charCodeAt()
+
+            if (parVal > 15000) {
+                partFreq = xyzFreq(part);
+            }
+        }
+
+
+        // var partFreq = xyzFreq(part);
+        // console.log("실행", part, partFreq);
+        
         if (i == 0) {
             bitBox.push({
                 bakno: no,
                 xyz: part, 
-                freq: xyzFreq(part),
+                // freq: xyzFreq(part),
+                freq: partFreq,                
                 bakja: bakja, 
                 xpos: 0,
                 dur: durr,
@@ -170,7 +190,8 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
-                freq: xyzFreq(part),
+                // freq: xyzFreq(part),
+                freq: partFreq,                
                 bakja: bakja, 
                 xpos: xpos,
                 dur: durr,
@@ -182,12 +203,29 @@ function bakTobit(no, hanbak) {  //한박시작
     })
     hanBox.push(bitBox)
     return hanBox;
-    // console.log("hanBox", hanBox)
+    console.log("hanBox", hanBox)
 }
-
-function xyzFreq(xy) {
-    console.log("freq", xyzFreqArr[xy]);
-    return xyzFreqArr[xy];
+/*
+function xyzFreq(pxy) {
+    // console.log("xyz", pxy);
+    xyzFreqArr.forEach( function(xyzarr) {
+        if (xyzarr.xyz == pxy) {
+            // console.log("freq", xyzarr.freq);
+            return xyzarr.freq;
+        }
+    })
+    
+}
+*/
+function xyzFreq(pxy) {
+    // console.log("xyz", pxy);
+    for (var i=0; i < xyzFreqArr.length; i++) {
+    // xyzFreqArr.forEach( function(xyzarr) {
+        if (xyzFreqArr[i].xyz == pxy) {
+            // console.log("freq", xyzarr.freq);
+            return xyzFreqArr[i].freq;
+        }
+    }    
 }
 
 // 중복 다중 실행 방지 
@@ -372,7 +410,7 @@ function play() {
             return d.dur; })
 
         // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ console.log("d", d.xyzbits); 
+        .delay(function(d,i){ //console.log("d", d.xyzbits); 
             if (d.bakja == width) {
                 // console.log((d.bakno-1) * bakjaTime );
                 return (d.bakno-1) * bakjaTime ;
@@ -382,7 +420,7 @@ function play() {
             }    
          })
          // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
-        .on("start", function(d,i) { playFreq(440, d.dur/1000); }) 
+        .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
@@ -445,7 +483,7 @@ var ac = new (window.AudioContext || window.webkitAudioContext);
   const smoothingInterval = 0.02;
   const beepLengthInSeconds = 0.5;
 
-function playFreq(freq, dur = 1) {
+function playFreq(freq=440, dur = 1) {
   var o = ac.createOscillator();
   //o.frequency.value = freq;
   console.log("freq,dur", freq, dur);
