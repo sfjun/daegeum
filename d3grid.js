@@ -137,7 +137,9 @@ function bakTobit(no, hanbak) {  //한박시작
     var xpos = 0;
     // 한박 나누기 처리 / 있으면 반박으로 bitsCnt 갯수를 줄여함, 나중 //에 대한 반영은 미포함
     hanbak.indexOf("/") > 0 ? bitsCnt = bits.length - 1 : bitsCnt = bits.length;
-      
+    
+    var nowBit ="";
+
     // [임, 1/3],[황, 1/3],[-,1/3]
     bits.forEach(function(part, i) {
         var bakja = 0;
@@ -157,18 +159,35 @@ function bakTobit(no, hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;    
 
 
-        var valx = part.match(/[\W]+?/gu);
+        var partMat = part.match(/[\WNZ]+?/gu);
         
         var partFreq ='';
-        console.log("len", valx.length) 
-        for (var i =0; i < valx.length; i++) {
-            console.log('sfsf',valx[i] )
-            var parVal = valx[i].charCodeAt()
+        
+        // console.log("partMat", partMat.length) 
 
-            if (parVal > 15000) {
-                partFreq = xyzFreq(part);
-            }
-        }
+        if (partMat.length == 1) { 
+            var partVal = partMat[0].charCodeAt()
+            if (partVal > 15000 && partVal < 50000) {
+                nowBit = partMat[0];
+                console.log("현음", nowBit )
+                partFreq = xyzFreq(part) 
+            } else {       
+                partFreq = xyzFreq(nowBit)    
+            }            
+            
+        }    
+
+        // for (var i =0; i < partMat.length; i++) {
+        //     var partVal = partMat[i].charCodeAt()
+           
+        //     if (partVal > 15000) {
+        //         if (partVal > 50000) return;
+        //         console.log('partMat[i]',partMat[i], partVal)
+                
+        //         partFreq = xyzFreq(part);
+        //     }
+
+        // };
 
 
         // var partFreq = xyzFreq(part);
@@ -178,7 +197,7 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
-                // freq: xyzFreq(part),
+                //freq: xyzFreq(part),
                 freq: partFreq,                
                 bakja: bakja, 
                 xpos: 0,
@@ -190,7 +209,7 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
-                // freq: xyzFreq(part),
+                freq: xyzFreq(part),
                 freq: partFreq,                
                 bakja: bakja, 
                 xpos: xpos,
@@ -425,8 +444,7 @@ function play() {
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
         .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); })
-        ;     
-             
+        ;               
         
     
     pBitText.transition()
