@@ -7,16 +7,45 @@
     <title>Document</title>
 </head>
 <body>
-
+  <button id="playButton">play</button>
     <script src="d3.v4.js"></script>
 
     <script>
-        d3.select("body")
-        .style("color", "green") // make the body green
-      .transition()
-        .style("color", "red"); // then transition to red  
-      </script>
+      const audioContext = new AudioContext();
+      const now = () => audioContext.currentTime;
+      const smoothingInterval = 0.02;
+      const beepLengthInSeconds = 0.5;
+      const beeps = [220,440,880].map(Hz => createBeeper(Hz));
+      
+      playButton.addEventListener(`click`, () => {
+        const note = (beeps.length * Math.random()) | 0;
+        beeps[note].play();
+      });
+      
+      function createBeeper(Hz=220, duration=beepLengthInSeconds) {
+        const gainNode = audioContext.createGain();
+        gainNode.connect(audioContext.destination);
+        gainNode.gain.setValueAtTime(0, now());
+      
+        const osc = audioContext.createOscillator();
+        osc.frequency.value = Hz;
+        osc.connect(gainNode);
+        osc.start();
+      
+        return {
+          play: (howLong=duration) => {
+            console.log(`playing ${Hz}Hz for ${howLong}s`);
+            trigger(gainNode.gain, howLong);
+          }
+        };
+      }
+      
+      function trigger(parameter, howLong) {
+        parameter.setTargetAtTime(1, now(), smoothingInterval);
+        parameter.setTargetAtTime(0, now() + howLong, smoothingInterval);
+      }      </script>
              
     
 </body>
+
 </html>

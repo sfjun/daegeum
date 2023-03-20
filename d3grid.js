@@ -165,17 +165,16 @@ function bakTobit(no, hanbak) {  //한박시작
         
         // console.log("partMat", partMat.length) 
 
-        if (partMat.length == 1) { 
-            var partVal = partMat[0].charCodeAt()
-            if (partVal > 15000 && partVal < 50000) {
-                nowBit = partMat[0];
-                console.log("현음", nowBit )
-                partFreq = xyzFreq(part) 
-            } else {       
-                partFreq = xyzFreq(nowBit)    
-            }            
+        var partVal = partMat[0].charCodeAt()
+        if (partVal > 15000 && partVal < 50000) {
+            nowBit = partMat[0];
+            console.log("현음", nowBit )
+            partFreq = xyzFreq(part) 
+        } else {       
+            partFreq = xyzFreq(nowBit)    
+        }            
+        
             
-        }    
 
         // for (var i =0; i < partMat.length; i++) {
         //     var partVal = partMat[i].charCodeAt()
@@ -443,7 +442,7 @@ function play() {
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
-        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박`); })
+        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박${d.freq}주파수`); })
         ;               
         
     
