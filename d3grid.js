@@ -119,7 +119,7 @@ function txtTodata() {
     return data;
 	//return { "title": title, "gridData": data };
 }
-
+var nowBit ="";
 function bakTobit(no, hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
     var hanBox =[]
@@ -138,8 +138,7 @@ function bakTobit(no, hanbak) {  //한박시작
     // 한박 나누기 처리 / 있으면 반박으로 bitsCnt 갯수를 줄여함, 나중 //에 대한 반영은 미포함
     hanbak.indexOf("/") > 0 ? bitsCnt = bits.length - 1 : bitsCnt = bits.length;
     
-    var nowBit ="";
-
+    
     // [임, 1/3],[황, 1/3],[-,1/3]
     bits.forEach(function(part, i) {
         var bakja = 0;
@@ -159,19 +158,22 @@ function bakTobit(no, hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;    
 
 
-        var partMat = part.match(/[\WNZ]+?/gu);
-        
+        var partMat = part.match(/[\WNZ\/()ㄱㄴ]+?/gu);
+        console.log("partMat", partMat);
         var partFreq ='';
         
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
+
+
         if (partVal > 15000 && partVal < 50000) {
             nowBit = partMat[0];
-            console.log("현음", nowBit )
+            console.log("nowBit", nowBit )
             partFreq = xyzFreq(part) 
         } else {       
-            partFreq = xyzFreq(nowBit)    
+            console.log("nowBit, partMat", nowBit, partMat[0] )
+            partFreq = xyzFreq2(nowBit, partMat[0])   
         }            
         
             
@@ -208,7 +210,7 @@ function bakTobit(no, hanbak) {  //한박시작
             bitBox.push({
                 bakno: no,
                 xyz: part, 
-                freq: xyzFreq(part),
+                // freq: xyzFreq(part),
                 freq: partFreq,                
                 bakja: bakja, 
                 xpos: xpos,
@@ -241,7 +243,21 @@ function xyzFreq(pxy) {
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz == pxy) {
             // console.log("freq", xyzarr.freq);
-            return xyzFreqArr[i].freq;
+            return [xyzFreqArr[i].freq];
+        }
+    }    
+}
+
+function xyzFreq2(pxy, deco) {
+    // console.log("xyz", pxy);
+    for (var i=0; i < xyzFreqArr.length; i++) {
+    // xyzFreqArr.forEach( function(xyzarr) {
+        if (xyzFreqArr[i].xyz == pxy) {
+            // console.log("freq", xyzarr.freq);
+            return (deco == 'ㄴ') ? [xyzFreqArr[i+1].freq] : 
+                   (deco == 'ㄱ') ? [xyzFreqArr[i-1].freq] :
+                   (deco == 'N') ? [xyzFreqArr[i+1].freq, xyzFreqArr[i].freq] :
+                   [xyzFreqArr[i].freq]; 
         }
     }    
 }
@@ -504,14 +520,30 @@ function playFreq(freq=440, dur = 1) {
   var o = ac.createOscillator();
   //o.frequency.value = freq;
   console.log("freq,dur", freq, dur);
-  o.connect(gainNode).connect(ac.destination);  
-  o.frequency.value = freq;  
+  o.connect(gainNode).connect(ac.destination); 
+  o.frequency.value = freq[0];  
   const now = ac.currentTime;
   o.start(now);
   o.stop(now + dur);
   //clearTimeout(setTimeid);
   
 };
+
+// function playFreq(freq=[440], dur = 1) {
+//     for (x=0; x < freq.legnth; x++) {
+    
+//         var o = ac.createOscillator();
+//         //o.frequency.value = freq;
+//         console.log("freq,dur", freq[x], dur);
+//         o.connect(gainNode).connect(ac.destination); 
+//         o.frequency.value = freq[x];  
+//         const now = ac.currentTime;
+//         o.start(now);
+//         o.stop(now + dur);
+//     }    
+//     //clearTimeout(setTimeid);
+    
+//   };
 
 
 function playNote() {
