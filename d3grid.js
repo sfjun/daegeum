@@ -170,7 +170,7 @@ function bakTobit(no, hanbak) {  //한박시작
         if (partVal > 15000 && partVal < 50000) {
             nowBit = partMat[0];
             console.log("nowBit", nowBit )
-            partFreq = xyzFreq(part) 
+            partFreq = xyzFreq(partMat[0]) 
         } else {       
             console.log("nowBit, partMat", nowBit, partMat[0] )
             partFreq = xyzFreq2(nowBit, partMat[0])   
@@ -238,11 +238,11 @@ function xyzFreq(pxy) {
 }
 */
 function xyzFreq(pxy) {
-    // console.log("xyz", pxy);
+    console.log("xyz", pxy);
     for (var i=0; i < xyzFreqArr.length; i++) {
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz == pxy) {
-            // console.log("freq", xyzarr.freq);
+            console.log("freq", xyzFreqArr[i].freq);
             return [xyzFreqArr[i].freq];
         }
     }    
@@ -270,6 +270,7 @@ function xyzFreq2(pxy, deco) {
 function runGrid() {
     // if (!gridOx) return 
     var gridData = txtTodata();
+    t.value= "Play"
     // //var { title, gridData } = txtTodata();
     // //console.log("title", title)    
     // //console.log("gridData", gridData)
@@ -384,11 +385,12 @@ function runGrid() {
 
 var timerId = "";
 var interruptIndex = 0
+var t = document.getElementById('playId');
 
 function play() {
 
     // 1박시간 가져오기
-    var t = document.getElementById('playId');
+//    var t = document.getElementById('playId');
     // var t = $('playId');
     
     
