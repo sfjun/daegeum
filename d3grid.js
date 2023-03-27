@@ -145,6 +145,7 @@ function bakTobit(no, hanbak) {  //한박시작
         
         //반박처리할 경우 셋잇단음 기준으로 
         // (part.indexOf("/") > 0) ? bakja = width/bitsCnt/2 : bakja = width/bitsCnt;
+        console.log("part", part)
         if (part.indexOf("/") > 0) {
             bakja = width/bitsCnt/2;
             part = part.replace("/", "");
@@ -161,19 +162,37 @@ function bakTobit(no, hanbak) {  //한박시작
         var partMat = part.match(/[\WNZ\/()ㄱㄴ]+?/gu);
         console.log("partMat", partMat);
         var partFreq ='';
+        var partDur ='';
         
+        //if (partMat == ':') { return } 
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
-
+        console.log("codeCheck",partMat[0], partVal)  
+            
 
         if (partVal > 15000 && partVal < 50000) {
             nowBit = partMat[0];
             console.log("nowBit", nowBit )
-            partFreq = xyzFreq(partMat[0]) 
+            var returnCode = xyzFreq(partMat[0])
+            console.log("returnCode", returnCode)
+            console.log("returnCode11", returnCode[0], returnCode[1])
+            partfreq = returnCode[0]
+            console.log("partfreq", partfreq)            
+            partDur = returnCode[1]
+
+        } else if (partMat[0] ==':' || partVal > 50000) {  
+            console.log("returnCode3", partVal)  
+            partFreq = [0]
+            partDur = [0.5]
         } else {       
             console.log("nowBit, partMat", nowBit, partMat[0] )
-            partFreq = xyzFreq2(nowBit, partMat[0])   
+            var returnCode2 = xyzFreq2(nowBit, partMat[0])
+            console.log("returnCode2", returnCode2 )
+            console.log("returnCode22", returnCode2[0], returnCode2[1])
+            
+            partFreq = returnCode2[0]
+            partDur = returnCode2[1]   
         }            
         
             
@@ -199,7 +218,8 @@ function bakTobit(no, hanbak) {  //한박시작
                 bakno: no,
                 xyz: part, 
                 //freq: xyzFreq(part),
-                freq: partFreq,                
+                freq: partFreq,  
+                partdur: partDur,              
                 bakja: bakja, 
                 xpos: 0,
                 dur: durr,
@@ -211,7 +231,8 @@ function bakTobit(no, hanbak) {  //한박시작
                 bakno: no,
                 xyz: part, 
                 // freq: xyzFreq(part),
-                freq: partFreq,                
+                freq: partFreq,
+                partdur: partDur,              
                 bakja: bakja, 
                 xpos: xpos,
                 dur: durr,
@@ -243,7 +264,7 @@ function xyzFreq(pxy) {
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz == pxy) {
             console.log("freq", xyzFreqArr[i].freq);
-            return [xyzFreqArr[i].freq];
+            return [[xyzFreqArr[i].freq],[1]];
         }
     }    
 }
@@ -254,10 +275,10 @@ function xyzFreq2(pxy, deco) {
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz == pxy) {
             // console.log("freq", xyzarr.freq);
-            return (deco == 'ㄴ') ? [xyzFreqArr[i+1].freq] : 
-                   (deco == 'ㄱ') ? [xyzFreqArr[i-1].freq] :
-                   (deco == 'N') ? [xyzFreqArr[i+1].freq, xyzFreqArr[i].freq] :
-                   [xyzFreqArr[i].freq]; 
+            return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1]] : 
+                   (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1]] :
+                   (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
+                   [[xyzFreqArr[i].freq], [1]]; 
         }
     }    
 }
