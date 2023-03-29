@@ -145,7 +145,7 @@ function bakTobit(no, hanbak) {  //한박시작
         
         //반박처리할 경우 셋잇단음 기준으로 
         // (part.indexOf("/") > 0) ? bakja = width/bitsCnt/2 : bakja = width/bitsCnt;
-        console.log("part", part)
+        // console.log("part", part)
         if (part.indexOf("/") > 0) {
             bakja = width/bitsCnt/2;
             part = part.replace("/", "");
@@ -160,7 +160,7 @@ function bakTobit(no, hanbak) {  //한박시작
 
 
         var partMat = part.match(/[\WNZ\/()ㄱㄴ]+?/gu);
-        console.log("partMat", partMat);
+        // console.log("partMat", partMat);
         var partFreq ='';
         var partDur ='';
         
@@ -168,29 +168,28 @@ function bakTobit(no, hanbak) {  //한박시작
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
-        console.log("codeCheck",partMat[0], partVal)  
+        // console.log("codeCheck",partMat[0], partVal)  
             
 
         if (partVal > 15000 && partVal < 50000) {
             nowBit = partMat[0];
-            console.log("nowBit", nowBit )
+            // console.log("nowBit", nowBit )
             var returnCode = xyzFreq(partMat[0])
-            console.log("returnCode", returnCode)
-            console.log("returnCode11", returnCode[0], returnCode[1])
-            partfreq = returnCode[0]
-            console.log("partfreq", partfreq)            
+            // console.log("returnCode", returnCode)
+            // console.log("returnCode11", returnCode[0], returnCode[1])
+            partFreq = returnCode[0]
+            // console.log("partfreq", partFreq)            
             partDur = returnCode[1]
 
         } else if (partMat[0] ==':' || partVal > 50000) {  
-            console.log("returnCode3", partVal)  
+            // console.log("returnCode3", partVal)  
             partFreq = [0]
             partDur = [0.5]
         } else {       
-            console.log("nowBit, partMat", nowBit, partMat[0] )
+            // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(nowBit, partMat[0])
-            console.log("returnCode2", returnCode2 )
-            console.log("returnCode22", returnCode2[0], returnCode2[1])
-            
+            // console.log("returnCode2", returnCode2 )
+            // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]   
         }            
@@ -459,7 +458,7 @@ function play() {
     const pBitText = d3.select("#grid").selectAll(".bitText");
 
     bakjaTime = document.getElementById('bakSec').value;
-    console.log("bakjaTime", bakjaTime)
+    // console.log("bakjaTime", bakjaTime)
 
     pBit.transition()
         // .duration(bakjaTime)
@@ -477,7 +476,9 @@ function play() {
             }    
          })
          // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
-        .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
+        // .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
+        .on("start", function(d,i) { playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); }) 
+        
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
@@ -489,7 +490,7 @@ function play() {
         // .duration(bakjaTime)
         .duration(function(d,i){ // console.log("d", d); 
             return d.dur; })    
-        .delay(function(d,i){ console.log("d", d.xyzbits); 
+        .delay(function(d,i){ 
             if (d.bakja == width) {
                 // console.log((d.bakno-1) * bakjaTime );
                 return (d.bakno-1) * bakjaTime ;
@@ -515,19 +516,8 @@ function play() {
 
 
 var ac = new (window.AudioContext || window.webkitAudioContext);
-  // C4, E4, G4
-  //var freqs = [261.63, 329.63, 392.00];
-  var freqs = [261, 440, 880];
-
-//   var freqs = [32.7, 34.65, 36.71, 38.89, 41.2, 43.65, 46.25, 49, 51.91, 55, 58.27,
-//                61.74, 65.41, 69.3, 73.42, 77.78, 82.41, 87.31, 92.5, 98, 103.83, 110,
-//                116.54, 123.47, 130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185, 196,
-//                207.65, 220,	233.08, 246.94, 261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 
-//                369.99, 392, 415.3, 440, 466.16, 493.88, 523.25, 554.37, 587.33, 622.25, 659.26,
-//                698.46, 739.99, 783.99, 830.61, 880, 932.33, 987.77, 1046.5, 1108.73, 1174.66, 1244.51,
-//                1318.51,	1396.91, 1479.98, 1567.98, 1661.22, 1760, 1864.66, 1975.53, 2093, 2217.46, 2349.32,
-//                2489.02, 2637.02, 2793.83, 2959.96, 3135.96, 3322.44, 3520, 3729.31, 3951.07];
-  
+//   var freqs = [261, 440, 880];
+ 
   var oscs = [];
 
   const gainNode = ac.createGain();
@@ -552,21 +542,41 @@ function playFreq(freq=440, dur = 1) {
   
 };
 
-// function playFreq(freq=[440], dur = 1) {
-//     for (x=0; x < freq.legnth; x++) {
+function playFreq2(xyz, freq=[440], pdur, dur = 1) {
+    console.log("freq,parduo, dur", xyz, freq, pdur,dur )
+    var o = ac.createOscillator();
+    //     //o.frequency.value = freq;
+    //     // console.log("freq,dur", freq[x], pdur[x]);
+    o.connect(gainNode).connect(ac.destination); 
+    // o.frequency.value = 440;
+    // const now = ac.currentTime;
+    // o.start(now);
+    //     // o.stop(now + pdur[x]*dur);
+    //     o.stop(now + dur);
+    // console.log("now", freq);    
+    // var ac = new (window.AudioContext || window.webkitAudioContext);
+    for (x=0; x < freq.length; x++) {
+        
+        // const gainNode = ac.createGain();
+        // gainNode.gain.value = 0.2;
+        // var o = ac.createOscillator();
+        // //o.frequency.value = freq;
+        // console.log("freq,dur", freq[x], pdur[x]);
+        // o.connect(gainNode).connect(ac.destination); 
+
+        o.frequency.value = freq[x]; 
+        // console.log("시작")
+        // o.frequency.value = 440; 
+         
+        const now = ac.currentTime;
+        o.start(now);
+        o.stop(now + pdur[x]*dur);
+        // o.stop(now + 1);
+        console.log("now", now)
+    }    
+    //clearTimeout(setTimeid);
     
-//         var o = ac.createOscillator();
-//         //o.frequency.value = freq;
-//         console.log("freq,dur", freq[x], dur);
-//         o.connect(gainNode).connect(ac.destination); 
-//         o.frequency.value = freq[x];  
-//         const now = ac.currentTime;
-//         o.start(now);
-//         o.stop(now + dur);
-//     }    
-//     //clearTimeout(setTimeid);
-    
-//   };
+  };
 
 
 function playNote() {
