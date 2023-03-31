@@ -119,7 +119,7 @@ function txtTodata() {
     return data;
 	//return { "title": title, "gridData": data };
 }
-var nowBit ="";
+var baseBit ="";
 function bakTobit(no, hanbak) {  //한박시작
     // console.log("feeLen", hanbaksub.xyz)
     var hanBox =[]
@@ -168,11 +168,11 @@ function bakTobit(no, hanbak) {  //한박시작
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
-        // console.log("codeCheck",partMat[0], partVal)  
+        console.log("partMat[0], partVal",partMat[0], partVal, partMat)  
             
 
         if (partVal > 15000 && partVal < 50000) {
-            nowBit = partMat[0];
+            baseBit = partMat[0];
             // console.log("nowBit", nowBit )
             var returnCode = xyzFreq(partMat[0])
             // console.log("returnCode", returnCode)
@@ -184,10 +184,17 @@ function bakTobit(no, hanbak) {  //한박시작
         } else if (partMat[0] ==':' || partVal > 50000) {  
             // console.log("returnCode3", partVal)  
             partFreq = [0]
-            partDur = [0.5]
+            partDur = [1]
+        } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ'] ) {       
+            // console.log("nowBit, partMat", nowBit, partMat[0] )
+            var returnCode2 = xyzFreq2(baseBit, partMat[0])
+            // console.log("returnCode2", returnCode2 )
+            // console.log("returnCode22", returnCode2[0], returnCode2[1])
+            partFreq = returnCode2[0]
+            partDur = returnCode2[1]   
         } else {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
-            var returnCode2 = xyzFreq2(nowBit, partMat[0])
+            var returnCode2 = xyzFreq2(baseBit, partMat[0])
             // console.log("returnCode2", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
@@ -277,6 +284,9 @@ function xyzFreq2(pxy, deco) {
             return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1]] : 
                    (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1]] :
                    (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
+                   (deco == 'Z') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
+                   (deco == '^') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.1, 0.9]] :
+                   
                    [[xyzFreqArr[i].freq], [1]]; 
         }
     }    
