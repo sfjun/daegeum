@@ -164,7 +164,7 @@ function bakTobit(no, hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;    
 
 
-        var partMat = part.match(/[\WNZ\/()ㄱㄴ]+?/gu);
+        var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ]+?/gu);
         // console.log("partMat", partMat);
         var partFreq ='';
         var partDur ='';
@@ -197,8 +197,8 @@ function bakTobit(no, hanbak) {  //한박시작
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]   
-        } else if (partMat[0] in ['^'] ) {       
-            // console.log("nowBit, partMat", nowBit, partMat[0] )
+        } else if (partMat[0] in ['^','ㄷ', 'ㅅ'] ) {       
+            console.log("3", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(partMat[1], partMat[0])
             // console.log("returnCode2", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
@@ -269,7 +269,10 @@ function xyzFreq2(pxy, deco) {
                    (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1]] :
                    (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
                    (deco == 'Z') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
-                   (deco == '^') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
+                   (deco == '^') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
+                   (deco == 'ㅅ') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
+                   (deco == 'ㄷ') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.2, 0.6]] :
+
                    
                    [[xyzFreqArr[i].freq], [1]]; 
         }
