@@ -41,8 +41,8 @@ function wClose() {
   window.close();
 }
 
-var width = 60;
-var height = 60;
+var width = 50;
+var height = 50;
 // var bakjaTime = 1000;
 var bakjaTime ='';
 //console.log(bakjaTime)
@@ -306,7 +306,7 @@ function runGrid() {
     var grid = d3.select("#grid")
         .append("svg")
         .attr("width","600px")
-        .attr("height","1000px");
+        .attr("height","1500px");
             
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
@@ -362,7 +362,7 @@ function runGrid() {
                 return "title"; } else { return "bit"; } })  
         //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
         .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
-        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 30 ; })
+        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 25 ; })
         //.attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
         .attr("width", function(d) { return 0.3; }) //시작값을 죽여서        
         // .attr("width", function(d) { return d.bakja; } )

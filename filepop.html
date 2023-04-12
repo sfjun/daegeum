@@ -29,9 +29,10 @@
 </style>
 </head>
 
+<p>저사랑 국악회</p>
 <form name="childForm">
-  <p>이곳은 새창입니다.</p>
-  <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p>
+  
+  <!-- <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p> -->
   <textarea id="txtOutput" name="xyzOutput" rows="15" cols="60"></textarea><br><br>
 
   <!-- <p><input type="button" value="xyz >>> abc" onclick="f_xyztoabc()"/></p>
@@ -39,12 +40,12 @@
   <p><input type="button" value="부모창으로 값 보내기" onclick="setMid()"/></p>
   <p><input type="button" value="창닫기" onclick="wClose()"/></p>   -->
 </form>
+-1박(1초=1000)<input type="number" id = "bakSec" min="1000" max="3000" step="1000" value="1000" /><br>
 
-<input type="button" value="그리드전환" onclick= "runGrid()"/>
+<input type="button" value="악보보기" onclick= "runGrid()"/>
 <input id= "playId" type="button" value="Play" onclick="play()"/>
 <div id='timelog'></div><div id='baklog'></div>
 <!-- <div id="myProgress"><div id="myBar"></div></div> -->
--1박 기준(초)<input type="number" id = "bakSec" min="1000" max="3000" step="1000" value="1000" />
 <!-- <button>Stop</button> -->
 <div id="grid"></div>
 
