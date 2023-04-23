@@ -1,12 +1,20 @@
 
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
-
-
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
-var xyzFreqArr = [{xyz: '㑣', freq: 194.25, no: 1},        {xyz: '侇', freq: 207.45, no: 2},        {xyz: '㑲', freq: 218.55, no: 3},        {xyz: '㒇', freq: 233.35, no: 4},        {xyz: '㒣', freq: 245.85, no: 5},        {xyz: '黃', freq: 259, no: 6},        {xyz: '大', freq: 276.6, no: 7},        {xyz: '太', freq: 291.4, no: 8},        {xyz: '夾', freq: 311.2, no: 9},        {xyz: '姑', freq: 327.8, no: 10},        {xyz: '仲', freq: 350, no: 11},        {xyz: '㽔', freq: 368.8, no: 12},        {xyz: '林', freq: 388.5, no: 13},        {xyz: '夷', freq: 414.9, no: 14},        {xyz: '南', freq: 437.1, no: 15},        {xyz: '無', freq: 466.7, no: 16},        {xyz: '應', freq: 491.7, no: 17},        {xyz: '潢', freq: 518, no: 18},        {xyz: '汏', freq: 553.2, no: 19},        {xyz: '汰', freq: 582.8, no: 20},        {xyz: '浹', freq: 622.4, no: 21},        {xyz: '㴌', freq: 655.6, no: 22},        {xyz: '㳞', freq: 700, no: 23},        {xyz: '㶋', freq: 737.6, no: 24},        {xyz: '淋', freq: 777, no: 25},        {xyz: '洟', freq: 829.8, no: 26},        {xyz: '湳', freq: 874.2, no: 27},        {xyz: '潕', freq: 933.4, no: 28},        {xyz: '㶐', freq: 983.4, no: 29},        {xyz: '㶂', freq: 518, no: 30},        {xyz: '𣴘', freq: 553.2, no: 31},        {xyz: '㳲', freq: 582.8, no: 32}]
+var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
+                  {xyz: '㒇', freq: 233.35, no: 4}, {xyz: '㒣', freq: 245.85, no: 5}, {xyz: '黃', freq: 259, no: 6}, 
+                  {xyz: '大', freq: 276.6, no: 7}, {xyz: '太', freq: 291.4, no: 8}, {xyz: '夾', freq: 311.2, no: 9}, 
+                  {xyz: '姑', freq: 327.8, no: 10}, {xyz: '仲', freq: 350, no: 11}, {xyz: '㽔', freq: 368.8, no: 12},
+                  {xyz: '林', freq: 388.5, no: 13}, {xyz: '夷', freq: 414.9, no: 14}, {xyz: '南', freq: 437.1, no: 15},
+                  {xyz: '無', freq: 466.7, no: 16}, {xyz: '應', freq: 491.7, no: 17}, {xyz: '潢', freq: 518, no: 18},
+                  {xyz: '汏', freq: 553.2, no: 19}, {xyz: '汰', freq: 582.8, no: 20}, {xyz: '浹', freq: 622.4, no: 21},
+                  {xyz: '㴌', freq: 655.6, no: 22}, {xyz: '㳞', freq: 700, no: 23}, {xyz: '㶋', freq: 737.6, no: 24}, 
+                  {xyz: '淋', freq: 777, no: 25}, {xyz: '洟', freq: 829.8, no: 26}, {xyz: '湳', freq: 874.2, no: 27}, 
+                  {xyz: '潕', freq: 933.4, no: 28}, {xyz: '㶐', freq: 983.4, no: 29}, {xyz: '㶂', freq: 1010, no: 30}]
 
-
+var xyzFreqArr =[]
+// var xyzSet = new Set();
 $(document).ready(function(){
     // 부모창에서 값가져오기
     getMid()
@@ -17,7 +25,7 @@ function getMid() {
 //  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
 
 
-  childForm.xyzOutput.value = 
+//   childForm.xyzOutput.value = 
 //  `w:1장
 // 林潢- ---/ㄴ/( 南 -, 潢/仲/-- -南-, 
 // 汰 ---/N/ 潢 -, 南汰- ---/ㄱ/ 南)林- -,
@@ -29,6 +37,7 @@ function getMid() {
 // ㄷ汰 --/N/潢, ㄷ林 --/ㄱ/南,
 // ㄷ汰 --/N/潢,  南潢汰潢 ㅅ潢 -`
 
+var song_Choukje = 
 `w:축제
 南 - 潢 汰 - 㴌(, 南 南林 姑 南潢 南 -△
 潢 -) 南 汰 - 㴌(, 南 南林 姑 南潢 南 -△
@@ -36,7 +45,7 @@ function getMid() {
 
 南 - 潢 汰 - 㴌(, 南 南林 姑 南潢 南 -△
 潢 潢 汰( 南 - 潢, 汰 -潢 南 汰㴌 汰 -△
-㴌 - - 淋 - 湳(, 㴌3 - - - - △
+㴌 - - 淋 - 湳(, 㴌子 - - - - △
 
 㴌 淋 湳淋 㴌 - 淋, 湳 -淋 㴌 湳 - △
 㴌 湳 - 湳 -淋 㴌, 㶂 - 㶐) 湳 - △
@@ -44,10 +53,26 @@ function getMid() {
 
 淋 淋 湳( 㴌 㴌 淋, 汰 -潢 南 汰㴌 汰 -△
 南 - 潢 汰 - 㴌(, 湳 -) 淋3 㴌 - △
-汰 - 㴌( 潢 -㴌 潢), 㴌 -汰 潢) 南 - △`
+汰 - 㴌( 潢 -㴌 潢), 㴌 -汰 潢) 南 - △
+`
+childForm.xyzOutput.value = song_Choukje
 
+var xyList = song_Choukje.match(/[\W]/gu)
+// console.log(xx)
+const xySet = new Set(xyList)
+console.log(xySet);
+
+    for (let xy of xySet) {
+        for (let item of xyzFreqArr_ori) {
+            if (item.xyz == xy) {
+                xyzFreqArr.push(item)
+            }
+        }
+    }
 
 }
+
+
 
 function setMid() {
   opener.window.document.myform.mid.value = childForm.mid.value;
@@ -77,14 +102,21 @@ function txtTodata() {
     var gakString = document.getElementById('txtOutput').value; 
     
     // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
-    var gangString = gakString.split("\n")  // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로  
+    // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
+    var gangString = gakString.split("\n")    
     var jungGans = [];
     
-    // " "가 박자 구분이라 박자별로 절단하여 배열화
+    // " "가 박자 구분자라 박자별로 나눠서 배열화
     gangString.forEach(function(gang) {
-        if (gang) {
-            jungGans.push(gang.split(" "))
-        }      
+
+        // console.log("gang", gang)
+
+        (gang.startsWith("w")) ? jungGans.push([gang]) : jungGans.push(gang.split(" ")) ;
+        
+        // if (gang) {
+        //     jungGans.push(gang.split(" "))
+        // }      
+        // console.log("junGans", jungGans)
     })
 
     var title = "";
@@ -94,13 +126,14 @@ function txtTodata() {
 
     //박번호 부여
     var bakSerial = 0;
-
+    
 	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
         // console.log("rows", row, jungGans[row])
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
         var rowCol = "";
+
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
@@ -109,16 +142,32 @@ function txtTodata() {
             if (!jungGans[row][column]) continue;
             // console.log("bakSerial", bakSerial);
             rowCol = jungGans[row][column];
-            
-            data[row].push({
-                bakno: bakSerial,
-                x: xpos,
-                y: ypos,
-                width: width,
-                height: height,
-                xyz: jungGans[row][column],
-                xyzbits: bakTobit(bakSerial, rowCol)
-            });
+                        
+            if (rowCol.startsWith("w")) { 
+
+                data[row].push({
+                    bakno: bakSerial,
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    xyz: jungGans[row][column],
+                    //title을 한박처리 하기 위해
+                    xyzbits: [{bakno: bakSerial}]
+                });
+
+            } else {    
+
+                data[row].push({
+                    bakno: bakSerial,
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    xyz: jungGans[row][column],
+                    xyzbits: bakTobit(bakSerial, rowCol)
+                });
+            }    
             // console.log("data", data)
 
 			// increment the x position. I.e. move it over by 50 (width variable)
@@ -132,11 +181,12 @@ function txtTodata() {
         //rowCol.startsWith("w" || "W") ? ypos += height + 20: ypos += height + 5; 
         //( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
 	}
-    //console.log("data", title , data );
+    //console.log("data", data );
     //console.log("ti", title)
     return data;
 	//return { "title": title, "gridData": data };
 }
+
 var baseBit ="";
 
 function bakTobit(no, hanbak) {  //한박시작
@@ -149,10 +199,10 @@ function bakTobit(no, hanbak) {  //한박시작
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
     //[임, 황, -]
-    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ]+?[\(\)\/,\|]*/gu)         
+    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△]+?[\(\)\/,子3\|]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
-
+    
     var xpos = 0;
     // 한박 나누기 처리, 두개 / 있으면 반박으로 bitsCnt 갯수를 줄여함, 나중 //에 대한 반영은 미포함
     //hanbak.indexOf("/") > 0 ? bitsCnt = bits.length - 1 : bitsCnt = bits.length;
@@ -182,7 +232,7 @@ function bakTobit(no, hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;    
 
 
-        var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ]+?/gu);
+        var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ△3]+?/gu);
         // console.log("partMat", partMat);
         var partFreq ='';
         var partDur ='';
@@ -194,21 +244,44 @@ function bakTobit(no, hanbak) {  //한박시작
         console.log("partMat[0], partVal",partMat[0], partVal, partMat)  
             
 
-        if (partVal > 15000 && partVal < 50000) {
+        if (partVal > 10000) {
+            
             baseBit = partMat[0];
-            // console.log("nowBit", nowBit )
-            var returnCode = xyzFreq(partMat[0])
-            // console.log("returnCode", returnCode)
-            // console.log("returnCode11", returnCode[0], returnCode[1])
-            partFreq = returnCode[0]
-            // console.log("partfreq", partFreq)            
-            partDur = returnCode[1]
+            // xyzSet.add(baseBit);
+            // console.log("xyzSet", xyzSet )
+            if (partMat.length == 1) {
+                var returnCode = xyzFreq(partMat[0])
+                console.log("returnCode", returnCode)
+                // console.log("returnCode11", returnCode[0], returnCode[1])
+                partFreq = returnCode[0]
+                // console.log("partfreq", partFreq)            
+                partDur = returnCode[1]
+            // } else (partMat[1] in ['子', 3 ] ) {
+            } else {    
+                // console.log("nowBit, partMat", nowBit, partMat[0] )
+                var returnCode2 = xyzFreq2(partMat[0], partMat[1])
+                // console.log("returnCode2", returnCode2 )
+                // console.log("returnCode22", returnCode2[0], returnCode2[1])
+                partFreq = returnCode2[0]
+                partDur = returnCode2[1]   
+            // } else {
+            //     var returnCode = xyzFreq(partMat[0])
+            //     console.log("returnCode", returnCode)
+            //     // console.log("returnCode11", returnCode[0], returnCode[1])
+            //     partFreq = returnCode[0]
+            //     // console.log("partfreq", partFreq)            
+            //     partDur = returnCode[1]
 
-        } else if (partMat[0] ==':' || partVal > 50000) {  
-            // console.log("returnCode3", partVal)  
-            partFreq = [0]
-            partDur = [1]
-        } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z'] ) {       
+            }
+//        }    
+
+
+
+        // } else if (partMat[0] ==':' || partVal > 50000) {  
+        //     // console.log("returnCode3", partVal)  
+        //     partFreq = [0]
+        //     partDur = [1]
+        } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△'] ) {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
             // console.log("returnCode2", returnCode2 )
@@ -222,6 +295,13 @@ function bakTobit(no, hanbak) {  //한박시작
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]   
+        // } else if (partMat[1] in ['子', 3 ] ) {       
+        //     // console.log("nowBit, partMat", nowBit, partMat[0] )
+        //     var returnCode2 = xyzFreq2(partMat[0], partMat[1])
+        //     // console.log("returnCode2", returnCode2 )
+        //     // console.log("returnCode22", returnCode2[0], returnCode2[1])
+        //     partFreq = returnCode2[0]
+        //     partDur = returnCode2[1]   
         } else {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
@@ -261,17 +341,21 @@ function bakTobit(no, hanbak) {  //한박시작
         }
         // console.log(part, 1 / partcnt)                    
     })
+    console.log("bitBox", bitBox)
     hanBox.push(bitBox)
+
     return hanBox;
-    console.log("hanBox", hanBox)
+    
 }
 
 function xyzFreq(pxy) {
     console.log("xyz", pxy);
+    console.log("xyz22", xyzFreqArr);
+    
     for (var i=0; i < xyzFreqArr.length; i++) {
+        // console.log("i10000", xyzFreqArr[i].xyz)
     // xyzFreqArr.forEach( function(xyzarr) {
-        if (xyzFreqArr[i].xyz == pxy) {
-            console.log("freq", xyzFreqArr[i].freq);
+        if (xyzFreqArr[i].xyz === pxy) {
             return [[xyzFreqArr[i].freq],[1]];
         }
     }    
@@ -290,7 +374,11 @@ function xyzFreq2(pxy, deco) {
                    (deco == '^') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
                    (deco == 'ㅅ') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
                    (deco == 'ㄷ') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.2, 0.6]] :
-
+                   (deco == '△') ? [[0],[1]] :
+                   (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3]] :
+                   (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33]] :
+                    
+                   
                    
                    [[xyzFreqArr[i].freq], [1]]; 
         }
@@ -340,8 +428,9 @@ function runGrid() {
      
     //console.log("col", column);
     // 생성된 g에 rect 갯수 생성 
-
+    //한박그리기
     gColumn.append("rect")
+        //title과 박자박과 class 분리
         .attr("class",function(d) { 
             if (d.xyz.startsWith("w" || "W")) {
                 return "titleBak"; } else { return "bak"; } })
@@ -353,6 +442,7 @@ function runGrid() {
         .attr("height", function(d) { return d.height; })
         .style("fill", "#fff")
         .style("stroke", (function(d) {
+            //title은 색깔 없게
             if (!d.xyz.startsWith("w" || "W")) { return "#222";
             } else { return "#fff"; }    
         }))
@@ -360,6 +450,7 @@ function runGrid() {
     gColumn.append("text")
         .attr("x", function(d) { return d.x  + d.width/2; })
         .attr("y", function(d) { 
+            //title은 위치를 가운데로 
             if (d.xyz.startsWith("w" || "W")) { return d.y + d.height*1/2;
             } else { return d.y + d.height*1/4; } })
         // .attr("y", height / 2)
@@ -368,12 +459,14 @@ function runGrid() {
         .style("text-anchor", "middle")
         .style("font-size", 15);
 
+    //한박내 bit그리기
     var gSubcolumn = gColumn.append("g")
         .attr("class", "subcolumn")
         .selectAll(".bit")
         .data(function(d) { return d.xyzbits[0]; })
         .enter();
-        
+
+    //bit 박스 그리기    
     gSubcolumn.append("rect")
         .attr("class",function(d) { 
             if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
@@ -414,8 +507,14 @@ function runGrid() {
         .style("text-anchor", "middle")
         .style("font-size", 10);
 
-    gSubcolumn.selectAll(".titleText").remove();    
+    gSubcolumn.selectAll(".titleText").remove(); 
+    
+    
+    // xyzSet.forEach(function () )
+    // for (let item of xyzSet) {
+    //     console.log("mySet", item);
 
+    // }    
 } // function end
 
 var timerId = "";
@@ -539,15 +638,14 @@ function playFreq(freq=440, dur = 1) {
   
 };
 
+//playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); }) 
 function playFreq2(xyz, freq=[440], pdur, dur = 1) {
-    
     for (x=0; x < freq.length; x++) {
         var o = ac.createOscillator();
         o.connect(gainNode).connect(ac.destination); 
-    
         o.frequency.value = freq[x]; 
-         
         const now = ac.currentTime;
+        console.log("freq,dur",x, freq[x], pdur[x]);
         o.start(now);
         o.stop(now + pdur[x]*dur);
         // o.stop(now + 1);
