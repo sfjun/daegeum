@@ -37,7 +37,11 @@ function getMid() {
 // ㄷ汰 --/N/潢, ㄷ林 --/ㄱ/南,
 // ㄷ汰 --/N/潢,  南潢汰潢 ㅅ潢 -`
 
-var song_Choukje = 
+
+    var songIs = document.getElementById('txtOutput').value; 
+    
+    if (!songIs) {    
+songIs = 
 `w:축제
 南 - 潢 汰 - 㴌(, 南 南林 姑 南潢 南 -△
 潢 -) 南 汰 - 㴌(, 南 南林 姑 南潢 南 -△
@@ -55,20 +59,21 @@ var song_Choukje =
 南 - 潢 汰 - 㴌(, 湳 -) 淋3 㴌 - △
 汰 - 㴌( 潢 -㴌 潢), 㴌 -汰 潢) 南 - △
 `
-childForm.xyzOutput.value = song_Choukje
+        childForm.xyzOutput.value = songIs
+    }        
 
-var xyList = song_Choukje.match(/[\W]/gu)
-// console.log(xx)
-const xySet = new Set(xyList)
-console.log(xySet);
+    var xyList = songIs.match(/[\W]/gu)
+    // console.log(xx)
+    const xySet = new Set(xyList)
+    console.log(xySet);
 
-    for (let xy of xySet) {
-        for (let item of xyzFreqArr_ori) {
-            if (item.xyz == xy) {
-                xyzFreqArr.push(item)
+        for (let xy of xySet) {
+            for (let item of xyzFreqArr_ori) {
+                if (item.xyz == xy) {
+                    xyzFreqArr.push(item)
+                }
             }
         }
-    }
 
 }
 
@@ -91,6 +96,7 @@ var bakjaTime ='';
 //console.log(bakjaTime)
 
 function txtTodata() {
+    getMid()
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
@@ -456,7 +462,10 @@ function runGrid() {
         // .attr("y", height / 2)
         .attr("dy", ".35em")
         .text(function(d) { return d.xyz; })
-        .style("text-anchor", "middle")
+        .style("text-anchor", function(d) { 
+            //title은 위치를 가운데로 
+            if (d.xyz.startsWith("w" || "W")) { return "left";
+            } else { return "middle"; } })
         .style("font-size", 15);
 
     //한박내 bit그리기
