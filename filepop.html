@@ -26,6 +26,31 @@
     height: 400px;
     width: 400px;
   }
+
+  #grid {
+    display: block;
+    position: relative;
+    z-index: 3;
+  }
+
+
+  #countdown {
+    position: relative;
+    margin: auto;
+    margin-top: 100px;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    display: none;
+    z-index: 1;
+  }
+
+  #countdown-number {
+    color: red;
+    display: none;
+    line-height: 40px;
+  }
+
 </style>
 </head>
 
@@ -49,6 +74,13 @@
 <!-- <button>Stop</button> -->
 <div id="grid"></div>
 
+<div id="countdown">
+<!-- <div id="countdown-number"> -->
+  <svg>
+    <circle r="50" cx="100" cy="100"></circle>
+  </svg>
+<!-- </div> -->
+</div>
 <!-- <p><input type="button" value="파이전환" onclick= "runPie()"/></p>
 <div id="my_dataviz"><p id="piTitle">각 제목</p></div>
 

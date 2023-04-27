@@ -2,6 +2,7 @@
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
+
 var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
                   {xyz: '㒇', freq: 233.35, no: 4}, {xyz: '㒣', freq: 245.85, no: 5}, {xyz: '黃', freq: 259, no: 6}, 
                   {xyz: '大', freq: 276.6, no: 7}, {xyz: '太', freq: 291.4, no: 8}, {xyz: '夾', freq: 311.2, no: 9}, 
@@ -20,6 +21,7 @@ $(document).ready(function(){
     getMid()
 
 });
+
 
 function getMid() {
 //  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
@@ -252,6 +254,7 @@ function bakTobit(no, hanbak) {  //한박시작
         // console.log("partMat", partMat);
         var partFreq ='';
         var partDur ='';
+        var partColor = '';
         
         //if (partMat == ':') { return } 
         // console.log("partMat", partMat.length) 
@@ -267,19 +270,21 @@ function bakTobit(no, hanbak) {  //한박시작
             // console.log("xyzSet", xyzSet )
             if (partMat.length == 1) {
                 var returnCode = xyzFreq(partMat[0])
-                console.log("returnCode", returnCode)
+                console.log("returnCode#1", returnCode)
                 // console.log("returnCode11", returnCode[0], returnCode[1])
                 partFreq = returnCode[0]
                 // console.log("partfreq", partFreq)            
                 partDur = returnCode[1]
+                partColor = returnCode[2]
             // } else (partMat[1] in ['子', 3 ] ) {
             } else {    
                 // console.log("nowBit, partMat", nowBit, partMat[0] )
                 var returnCode2 = xyzFreq2(partMat[0], partMat[1])
-                // console.log("returnCode2", returnCode2 )
+                console.log("returnCode#2", returnCode2 )
                 // console.log("returnCode22", returnCode2[0], returnCode2[1])
                 partFreq = returnCode2[0]
-                partDur = returnCode2[1]   
+                partDur = returnCode2[1]
+                partColor = returnCode2[2]   
             // } else {
             //     var returnCode = xyzFreq(partMat[0])
             //     console.log("returnCode", returnCode)
@@ -300,17 +305,19 @@ function bakTobit(no, hanbak) {  //한박시작
         } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△'] ) {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
-            // console.log("returnCode2", returnCode2 )
+            console.log("returnCode#3", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
-            partDur = returnCode2[1]   
+            partDur = returnCode2[1]
+            partColor = returnCode2[2]   
         } else if (partMat[0] in ['^','ㄷ', 'ㅅ'] ) {       
             console.log("3", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(partMat[1], partMat[0])
-            // console.log("returnCode2", returnCode2 )
+            console.log("returnCode#4", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
-            partDur = returnCode2[1]   
+            partDur = returnCode2[1]
+            partColor = returnCode2[2]   
         // } else if (partMat[1] in ['子', 3 ] ) {       
         //     // console.log("nowBit, partMat", nowBit, partMat[0] )
         //     var returnCode2 = xyzFreq2(partMat[0], partMat[1])
@@ -321,10 +328,11 @@ function bakTobit(no, hanbak) {  //한박시작
         } else {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
-            // console.log("returnCode2", returnCode2 )
+            console.log("returnCode#5", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
-            partDur = returnCode2[1]   
+            partDur = returnCode2[1]
+            partColor = returnCode2[2]   
         }
 
         
@@ -334,7 +342,8 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 //freq: xyzFreq(part),
                 freq: partFreq,  
-                partdur: partDur,              
+                partdur: partDur, 
+                partCol: partColor,             
                 bakja: bakja, 
                 xpos: 0,
                 dur: durr,
@@ -347,7 +356,8 @@ function bakTobit(no, hanbak) {  //한박시작
                 xyz: part, 
                 // freq: xyzFreq(part),
                 freq: partFreq,
-                partdur: partDur,              
+                partdur: partDur, 
+                partCol: partColor,             
                 bakja: bakja, 
                 xpos: xpos,
                 dur: durr,
@@ -372,7 +382,7 @@ function xyzFreq(pxy) {
         // console.log("i10000", xyzFreqArr[i].xyz)
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz === pxy) {
-            return [[xyzFreqArr[i].freq],[1]];
+            return [[xyzFreqArr[i].freq],[1], i];
         }
     }    
 }
@@ -383,20 +393,18 @@ function xyzFreq2(pxy, deco) {
     // xyzFreqArr.forEach( function(xyzarr) {
         if (xyzFreqArr[i].xyz == pxy) {
             // console.log("freq", xyzarr.freq);
-            return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1]] : 
-                   (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1]] :
-                   (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
-                   (deco == 'Z') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.5, 0.5]] :
-                   (deco == '^') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
-                   (deco == 'ㅅ') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.2, 0.8]] :
-                   (deco == 'ㄷ') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.2, 0.6]] :
-                   (deco == '△') ? [[0],[1]] :
-                   (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3]] :
-                   (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33]] :
-                    
-                   
-                   
-                   [[xyzFreqArr[i].freq], [1]]; 
+            return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1], i+1] : 
+                   (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1], i-1] :
+                   (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5], i] :
+                   (deco == 'Z') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.5, 0.5], i] :
+                   (deco == '^') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.8], i] :
+                   (deco == 'ㅅ') ? [[xyzFreqArr[i+2].freq, xyzFreqArr[i].freq],[0.2, 0.8], i] :
+                   (deco == 'ㄷ') ? [[xyzFreqArr[i-1].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.2, 0.2, 0.6], i] :
+                   (deco == '△') ? [[0],[1], i] :
+                   (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3], i] :
+                   (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33], i] :
+
+                   [[xyzFreqArr[i].freq], [1], i]; 
         }
     }    
 }
@@ -499,7 +507,7 @@ function runGrid() {
         .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
         // .style("fill", function(d,i) { return color(d.bakno%12); }) // 한박기준으로 컬러링
         // .style("fill", function(d,i) { console.log("i", i); return color((d.bakno +i)%24); }) // bit 기준으로 컬러링
-        .style("fill", function(d,i) { return color(Math.random()%24); }) // 랜듬하게 bit 기준으로 컬러링
+        .style("fill", function(d,i) { return color(d.partCol); }) // 랜듬하게 bit 기준으로 컬러링
         
         .style("stroke", "#222");
 
@@ -546,10 +554,33 @@ function play() {
 //    var t = document.getElementById('playId');
     // var t = $('playId');
     
+
+    function preCount() {
+
+        var countdownNumberEl = document.getElementById('countdown');
+        var countdown = 3;
+        countdownNumberEl.style.display = "block";
+
+        countdownNumberEl.textContent = countdown;
+
+        const intervalId = setInterval(function() {
+            countdown = --countdown == 0 ? clearInterval(intervalId) : countdown;
+        // --countdown;
+
+        countdownNumberEl.textContent = countdown;
+        }, 1000);
+        countdownNumberEl.style.display = "none";
+    } 
+
+
+
     
     if (t.value == "Play") {
+        preCount();
+
+        setTimeout(transitWidth, 3000);
         // 플레이 시작       
-        transitWidth();
+        // transitWidth();
         // 버튼 변경
         t.value= "Stop";
         // playNote();
