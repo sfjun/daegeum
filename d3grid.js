@@ -554,7 +554,6 @@ function play() {
 //    var t = document.getElementById('playId');
     // var t = $('playId');
     
-
     function preCount() {
 
         var countdownNumberEl = document.getElementById('countdown');
