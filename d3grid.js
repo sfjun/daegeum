@@ -3,16 +3,31 @@
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
 
-var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
-                  {xyz: '㒇', freq: 233.35, no: 4}, {xyz: '㒣', freq: 245.85, no: 5}, {xyz: '黃', freq: 259, no: 6}, 
-                  {xyz: '大', freq: 276.6, no: 7}, {xyz: '太', freq: 291.4, no: 8}, {xyz: '夾', freq: 311.2, no: 9}, 
-                  {xyz: '姑', freq: 327.8, no: 10}, {xyz: '仲', freq: 350, no: 11}, {xyz: '㽔', freq: 368.8, no: 12},
-                  {xyz: '林', freq: 388.5, no: 13}, {xyz: '夷', freq: 414.9, no: 14}, {xyz: '南', freq: 437.1, no: 15},
-                  {xyz: '無', freq: 466.7, no: 16}, {xyz: '應', freq: 491.7, no: 17}, {xyz: '潢', freq: 518, no: 18},
-                  {xyz: '汏', freq: 553.2, no: 19}, {xyz: '汰', freq: 582.8, no: 20}, {xyz: '浹', freq: 622.4, no: 21},
-                  {xyz: '㴌', freq: 655.6, no: 22}, {xyz: '㳞', freq: 700, no: 23}, {xyz: '㶋', freq: 737.6, no: 24}, 
-                  {xyz: '淋', freq: 777, no: 25}, {xyz: '洟', freq: 829.8, no: 26}, {xyz: '湳', freq: 874.2, no: 27}, 
-                  {xyz: '潕', freq: 933.4, no: 28}, {xyz: '㶐', freq: 983.4, no: 29}, {xyz: '㶂', freq: 1010, no: 30}]
+//아악, 정악, 당악
+// var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
+//                   {xyz: '㒇', freq: 233.35, no: 4}, {xyz: '㒣', freq: 245.85, no: 5}, {xyz: '黃', freq: 259, no: 6}, 
+//                   {xyz: '大', freq: 276.6, no: 7}, {xyz: '太', freq: 291.4, no: 8}, {xyz: '夾', freq: 311.2, no: 9}, 
+//                   {xyz: '姑', freq: 327.8, no: 10}, {xyz: '仲', freq: 350, no: 11}, {xyz: '㽔', freq: 368.8, no: 12},
+//                   {xyz: '林', freq: 388.5, no: 13}, {xyz: '夷', freq: 414.9, no: 14}, {xyz: '南', freq: 437.1, no: 15},
+//                   {xyz: '無', freq: 466.7, no: 16}, {xyz: '應', freq: 491.7, no: 17}, {xyz: '潢', freq: 518, no: 18},
+//                   {xyz: '汏', freq: 553.2, no: 19}, {xyz: '汰', freq: 582.8, no: 20}, {xyz: '浹', freq: 622.4, no: 21},
+//                   {xyz: '㴌', freq: 655.6, no: 22}, {xyz: '㳞', freq: 700, no: 23}, {xyz: '㶋', freq: 737.6, no: 24}, 
+//                   {xyz: '淋', freq: 777, no: 25}, {xyz: '洟', freq: 829.8, no: 26}, {xyz: '湳', freq: 874.2, no: 27}, 
+//                   {xyz: '潕', freq: 933.4, no: 28}, {xyz: '㶐', freq: 983.4, no: 29}, {xyz: '㶂', freq: 1010, no: 30}]
+
+//향악
+var xyzFreqArr_ori = [{xyz: '㑣', freq: 233.25, no: 1}, {xyz: '侇', freq: 249.1, no: 2}, {xyz: '㑲', freq: 262.4, no: 3},
+                  {xyz: '㒇', freq: 280.2, no: 4}, {xyz: '㒣', freq: 295.2, no: 5}, {xyz: '黃', freq: 311, no: 6},
+                  {xyz: '大', freq: 332.1, no: 7}, {xyz: '太', freq: 349.9, no: 8}, {xyz: '夾', freq: 373.6, no: 9},
+                  {xyz: '姑', freq: 393.6, no: 10}, {xyz: '仲', freq: 420.3, no: 11}, {xyz: '㽔', freq: 442.8, no: 12},
+                  {xyz: '林', freq: 466.5, no: 13}, {xyz: '夷', freq: 498.2, no: 14}, {xyz: '南', freq: 524.8, no: 15},
+                  {xyz: '無', freq: 560.4, no: 16}, {xyz: '應', freq: 590.4, no: 17}, {xyz: '潢', freq: 622, no: 18},
+                  {xyz: '汏', freq: 664.2, no: 19}, {xyz: '汰', freq: 699.8, no: 20}, {xyz: '浹', freq: 747.2, no: 21},
+                  {xyz: '㴌', freq: 787.2, no: 22}, {xyz: '㳞', freq: 840.6, no: 23}, {xyz: '㶋', freq: 885.6, no: 24},
+                  {xyz: '淋', freq: 933, no: 25}, {xyz: '洟', freq: 996.4, no: 26}, {xyz: '湳', freq: 1049.6, no: 27},
+                  {xyz: '潕', freq: 1120.8, no: 28}, {xyz: '㶐', freq: 1180.8, no: 29}, {xyz: '㶂', freq: 1244, no: 30},
+                  {xyz: '𣴘', freq: 1328.4, no: 31}, {xyz: '㳲', freq: 1399.6, no: 32}]
+
 
 var xyzFreqArr =[]
 // var xyzSet = new Set();
@@ -548,6 +563,9 @@ var timerId = "";
 var interruptIndex = 0
 var t = document.getElementById('playId');
 
+var countdownNumberEl = document.getElementById('countdown');
+countdownNumberEl.style.display = "none";
+
 function play() {
 
     // 1박시간 가져오기
@@ -556,9 +574,16 @@ function play() {
     
     function preCount() {
 
-        var countdownNumberEl = document.getElementById('countdown');
+        // var countdownNumberEl = document.getElementById('countdown');
         var countdown = 3;
-        countdownNumberEl.style.display = "block";
+        // alert(countdownNumberEl.style)
+        // countdownNumberEl.style.display = "block";
+        $('#countdown').css('display', 'block');
+        $('#countdown').css('zIndex', 0);
+        $('#grid').css('position: relative', 3);
+        // style="position: relative;
+        
+        
 
         countdownNumberEl.textContent = countdown;
 
@@ -568,7 +593,7 @@ function play() {
 
         countdownNumberEl.textContent = countdown;
         }, 1000);
-        countdownNumberEl.style.display = "none";
+        // countdownNumberEl.style.display = "none";
     } 
 
 
