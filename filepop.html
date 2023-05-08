@@ -31,7 +31,7 @@ html, body{
 }
 
 #countdown {
-    position: absolute;
+    position: fixed;
     margin: auto;
     margin-top: 100px;
     height: 40px;
@@ -40,17 +40,18 @@ html, body{
     border: 1px solid gray;
     top: 30%;
     left: 5%;
-    background-color: yellow;
+     background-color: yellow;
 
 }
   
 #countdown-number {
-    color: white;
+    color: black;
     display: inline-block;
     line-height: 40px;
+    
 }
 
-#countdown-number svg {
+div div svg {
     position: relative;
     top: 0;
     right: 0;
@@ -59,7 +60,7 @@ html, body{
     transform: rotateY(-180deg) rotateZ(-90deg);
 }
 
-svg circle {
+div div svg circle {
     stroke-dasharray: 113px;
     stroke-dashoffset: 0px;
     stroke-linecap: round;
@@ -100,7 +101,7 @@ svg circle {
 <!-- <button value="Play" onclick="play()">Play</button> -->
 <!-- </div> -->
 
-<div id='timelog'></div><div id='baklog'></div>
+<div id='timelog'></div><div id='baklog'>박자,주파수</div>
 <!-- <div id="myProgress"><div id="myBar"></div></div> -->
 <!-- <button>Stop</button> -->
 
