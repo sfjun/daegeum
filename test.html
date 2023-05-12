@@ -8,95 +8,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<style>
+  body { background-color: #222; }
+
+  .circle_progress_wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  .circle_progress { transform: rotate(-90deg); }
+  .frame, .bar { fill: none; }
+  .frame { stroke: #e6e6e6; }
+  .bar {
+    stroke: #03c75a;
+    stroke-linecap: round;
+  }
+  .value {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    line-height: 120px;
+  }
+
+</style>
 <body>
-<input type="button" value="play" onclick="playNote()"/>
+<div class="circle_progress_wrap">
+	<svg class="circle_progress" width="120" height="120" viewBox="0 0 120 120">
+		<circle class="frame" cx="60" cy="60" r="54" stroke-width="12" />
+		<circle class="bar" cx="60" cy="60" r="54" stroke-width="12" />
+	</svg>
+	<input id="control" type="range" value="60" />
+  <input id="control2" type="button" value="3초후 플레이" />
+  <strong class="value"></strong>
+</div>
 </body>
 <script>
+  var control = document.getElementById('control');
+  var bar = document.querySelector('.bar');
+  var value = document.querySelector('.value');
+  var control2 = document.getElementById('control2');
 
+  var RADIUS = 54;
+  var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
   
-  var ac = new (window.AudioContext || window.webkitAudioContext);
-  // C4, E4, G4
-  //var freqs = [261.63, 329.63, 392.00];
-  // var freqs = [261, 440, 880];
-  var freqs = [440];
+  function progress(per) {
+    var progress = per / 100;
+    var dashoffset = CIRCUMFERENCE * (1 - progress);
+    
+    value.innerHTML=per +'%';
+    bar.style.strokeDashoffset = dashoffset;
+  }
   
-
-  //var freqs = [{侇: 207.45, no: 2},        {㑲: 218.55, no: 3},        {㒇: 233.35, no: 4},        {㒣: 245.85, no: 5},        {黃: 259, no: 6},        {大: 276.6, no: 7},        {太: 291.4, no: 8},        {夾: 311.2, no: 9},        {姑: 327.8, no: 10},        {仲: 350, no: 11},        {㽔: 368.8, no: 12},        {林: 388.5, no: 13},        {夷: 414.9, no: 14},        {南: 437.1, no: 15},        {無: 466.7, no: 16},        {應: 491.7, no: 17},        {潢: 518, no: 18},        {汏: 553.2, no: 19},        {汰: 582.8, no: 20},        {浹: 622.4, no: 21},        {㴌: 655.6, no: 22},        {㳞: 700, no: 23},        {㶋: 737.6, no: 24},        {淋: 777, no: 25},        {洟: 829.8, no: 26},        {湳: 874.2, no: 27},        {潕: 933.4, no: 28},        {㶐: 983.4, no: 29},        {㶂: 518, no: 30}, {㑣: 194.25, no: 1},       {𣴘: 553.2, no: 31},        {㳲: 582.8, no: 32}];
-
-  //var freqs = [{xyz: '㑣', freq: 194.25, no: 1},        {xyz: '侇', freq: 207.45, no: 2},        {xyz: '㑲', freq: 218.55, no: 3},        {xyz: '㒇', freq: 233.35, no: 4},        {xyz: '㒣', freq: 245.85, no: 5},        {xyz: '黃', freq: 259, no: 6},        {xyz: '大', freq: 276.6, no: 7},        {xyz: '太', freq: 291.4, no: 8},        {xyz: '夾', freq: 311.2, no: 9},        {xyz: '姑', freq: 327.8, no: 10},        {xyz: '仲', freq: 350, no: 11},        {xyz: '㽔', freq: 368.8, no: 12},        {xyz: '林', freq: 388.5, no: 13},        {xyz: '夷', freq: 414.9, no: 14},        {xyz: '南', freq: 437.1, no: 15},        {xyz: '無', freq: 466.7, no: 16},        {xyz: '應', freq: 491.7, no: 17},        {xyz: '潢', freq: 518, no: 18},        {xyz: '汏', freq: 553.2, no: 19},        {xyz: '汰', freq: 582.8, no: 20},        {xyz: '浹', freq: 622.4, no: 21},        {xyz: '㴌', freq: 655.6, no: 22},        {xyz: '㳞', freq: 700, no: 23},        {xyz: '㶋', freq: 737.6, no: 24},        {xyz: '淋', freq: 777, no: 25},        {xyz: '洟', freq: 829.8, no: 26},        {xyz: '湳', freq: 874.2, no: 27},        {xyz: '潕', freq: 933.4, no: 28},        {xyz: '㶐', freq: 983.4, no: 29},        {xyz: '㶂', freq: 518, no: 30},        {xyz: '𣴘', freq: 553.2, no: 31},        {xyz: '㳲', freq: 582.8, no: 32}]
-
-  //var freqs = {㑲: 218.55,	㶂: 518, 林: 388.5,		㳞: 700,}
-  //const sortable = Object.entries(freqs)
-  //.sort(([, a], [, b]) => a - b);
-
-  var sortFreq= freqs.sort(function(a, b) {
-    return a.no - b.no;
+  control.addEventListener('input', function(event) {
+    progress(event.target.valueAsNumber);
   });
-  console.log("sortable", sortFreq);
+  control.addEventListener('change', function(event){
+    progress(event.target.valueAsNumber);
+  });
+  control2.addEventListener('click', function(event){
+    // progress(event.target.valueAsNumber);
+    setTimeout(progress(50), 3000);
+  });
 
-  sortFreq.forEach( function(xy) {
-    
-    if (xy.xyz == '㳲'){
-      console.log("xt", xy.freq); 
-    }  
-  })
-
-  var val = '^-㳲㶂/ㄷ,';
-    
-  //var xx = 15000
-  //console.log('xxx',String.fromCharCode(xx))
-/*
-  var valx = val.match(/[\W]+?/gu);
-  for (var i =0; i < valx.length; i++) {
-      var xx = valx[i];
-      console.log('sfsf',valx[i], valx[i].charCodeAt() )
-  }
-  //console.log(valx)
-
-*/
-  var oscs = [];
-
-  const gainNode = ac.createGain();
-  gainNode.gain.value = 0.5;
-
-  //gainNode.gain.setValueAtTime(0, ac.currentTime);
-  //gainNode.gain.setValueAtTime(1, ac.currentTime);
-      
-  const smoothingInterval = 0.02;
-  const beepLengthInSeconds = 0.5;
-
- 
-
-
-function play(freq, dur = 1) {
-  var o = ac.createOscillator();
-  //o.frequency.value = freq;
-  console.log("freq,dur", freq, dur);
-  o.connect(gainNode).connect(ac.destination);  
-  o.frequency.value = freq;  
-  const now = ac.currentTime;
-
-  // gainNode.gain.setTargetAtTime(1, now, smoothingInterval);
-  // gainNode.gain.setTargetAtTime(0, now + beepLengthInSeconds, smoothingInterval);
-
-  o.start(now);
-  o.stop(now + dur);
-  //clearTimeout(setTimeid);
-  
-};
-
-
-function playNote() {
-  for(var i = 0; i < freqs.length; i++) {
-    console.log("시작", freqs[i])
-    // 지연시간을 단계적으로 부여하여, 실행함수 ()없이 호출해야, 주파수, 지속시간
-    // setTimeout(호출함수, 시간, freq=주파수값, dur= 지속시간 ) 
-    const setTimeid = setTimeout(play, i * 1000, freqs[i], i+1);
-    console.log("id", setTimeid)
-    
-  }
-} 
-
+  bar.style.strokeDasharray = CIRCUMFERENCE;
+  progress(0);
 
 
 </script>

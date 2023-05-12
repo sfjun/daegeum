@@ -6,46 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
-  <button id="playButton">play</button>
-    <script src="d3.v4.js"></script>
+<style>
+  body {
+    height: 100%;
+    width: 100%;
+    background-color: #333;
+  }
 
-    <script>
-      const audioContext = new AudioContext();
-      const now = () => audioContext.currentTime;
-      const smoothingInterval = 0.02;
-      const beepLengthInSeconds = 0.5;
-      const beeps = [220,440,880].map(Hz => createBeeper(Hz));
-      
-      playButton.addEventListener(`click`, () => {
-        const note = (beeps.length * Math.random()) | 0;
-        beeps[note].play();
-      });
-      
-      function createBeeper(Hz=220, duration=beepLengthInSeconds) {
-        const gainNode = audioContext.createGain();
-        gainNode.connect(audioContext.destination);
-        gainNode.gain.setValueAtTime(0, now());
-      
-        const osc = audioContext.createOscillator();
-        osc.frequency.value = Hz;
-        osc.connect(gainNode);
-        osc.start();
-      
-        return {
-          play: (howLong=duration) => {
-            console.log(`playing ${Hz}Hz for ${howLong}s`);
-            trigger(gainNode.gain, howLong);
-          }
-        };
-      }
-      
-      function trigger(parameter, howLong) {
-        parameter.setTargetAtTime(1, now(), smoothingInterval);
-        parameter.setTargetAtTime(0, now() + howLong, smoothingInterval);
-      }      </script>
-             
+  #countdown {
+    position: relative;
+    margin: auto;
+    margin-top: 100px;
+    height: 80px;
+    width: 80px;
+    text-align: center;
+    background-color:red;
+  }
+
+  #countdown-number {
+    color: blue; 
+    display: inline-block;
+    line-height: 80px;
+  }
+  
+  svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    transform: rotateY(-180deg) rotateZ(-180deg);
+  }
+  
+  svg circle {
+    stroke-dasharray: 113px;
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke: white;
+    fill: none;
+    animation: countdown 1s linear infinite forwards;
+  }
+  
+  @keyframes countdown {
+    from {
+      stroke-dashoffset: 0px;
+    }
+    to {
+      stroke-dashoffset: 113px;
+    }
+  }
     
+</style>
+<body>
+  <div id="countdown">
+    <div id="countdown-number"></div>
+    <svg>
+      <circle r="38" cx="40" cy="40"></circle>
+    </svg>
+  </div>
 </body>
+<script>
+  var countdownNumberEl = document.getElementById('countdown-number');
+var countdown = 3;
+
+countdownNumberEl.textContent = countdown;
+
+setInterval(function() {
+  countdown = --countdown <= 0 ? 3 : countdown;
+
+  countdownNumberEl.textContent = countdown;
+}, 1000);
+</script>
 
 </html>
