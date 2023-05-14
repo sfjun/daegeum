@@ -16,6 +16,11 @@
     width: 120px;
     height: 120px;
   }
+
+  #control2 {
+    height: 60px;
+  }
+
   .circle_progress { transform: rotate(-90deg); }
   .frame, .bar { fill: none; }
   .frame { stroke: #e6e6e6; }
@@ -23,6 +28,7 @@
     stroke: #03c75a;
     stroke-linecap: round;
   }
+
   .value {
     position: absolute;
     left: 0;
@@ -73,6 +79,9 @@
   control2.addEventListener('click', function(event){
     // progress(event.target.valueAsNumber);
     setTimeout(progress(50), 3000);
+
+
+    
   });
 
   bar.style.strokeDasharray = CIRCUMFERENCE;

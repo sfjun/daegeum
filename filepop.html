@@ -10,7 +10,6 @@
 <script type = "text/javascript" src = "colorbrewer.v1.min.js"></script>
 
 <style>
-
 html, body{
     width : 100%;
     height : 100%;
@@ -28,6 +27,12 @@ html, body{
 
 #grid {
     position: relative;    
+}
+
+
+#gridId, #playId {
+    height: 50px;
+    width: 225px;    
 }
 
 #countdown {
@@ -95,7 +100,7 @@ div div svg circle {
 </form>
 -1박(1초=1000)<input type="number" id = "bakSec" min="800" max="3000" step="100" value="1000" /><br>
 <!-- <div class="btn-grp"> -->
-<input type="button" value="악보보기" onclick= "runGrid()"/>
+<input type="button" id= "gridId" value="악보보기" onclick= "runGrid()"/>
 <input type="button" id= "playId"  value="Play" onclick="play()"/>
 <!-- <button value="악보보기" onclick= "runGrid()">악보보기</button> -->
 <!-- <button value="Play" onclick="play()">Play</button> -->

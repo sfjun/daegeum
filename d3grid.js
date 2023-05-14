@@ -72,19 +72,39 @@ function getMid() {
 // 汰 - 㴌( 潢 -㴌 潢), 㴌 -汰 潢) 南 - △
 // `
 
+
+// `w:장작불1
+// 汰 潢 南-潢 南 - -, 汰-㴌 汰-潢 汰 㳞/汰/-- - -
+// 㴌 㴌 -汰 潢 -潢 潢㴌, 汰 - - - - △
+
+// 汰-汰 汰-潢 南南- 林-南 南 -, 潢) -(㴌 汰潢 汰 潢 南
+// 林-林 林-仲 林 南-汰 南 -, 㴌-㴌 㴌-汰 潢-㴌 汰 -, 汰-汰
+
+// 淋淋 淋淋 淋-湳 㳞㳞- 㳞-㴌 汰, 淋-淋 淋-淋 淋-湳 㳞㳞㳞 㳞-㴌 汰
+// 潢-潢 潢 潢-南 潢-㴌 汰汰- -, 㴌-㴌 㴌-汰 潢-㴌 汰 - -
+// `
+
     var songIs = document.getElementById('txtOutput').value; 
     
     if (!songIs) {    
 songIs = 
-`w:장작불1
-汰 潢 南-潢 南 - -, 汰-㴌 汰-潢 汰 㳞/汰/-- - -
-㴌 㴌 -汰 潢 -潢 潢㴌, 汰 - - - - △
+`w:소리길
+㽔 - 太 南 - 㽔 林 - 㽔 林 - -
+南 - 㽔 南 - 林 㽔 - - 太 - -
+太 - - 南 -林 㽔, 林 - - ^林 - -,
 
-汰-汰 汰-潢 南南- 林-南 南 -, 潢) -(㴌 汰潢 汰 潢 南
-林-林 林-仲 林 南-汰 南 -, 㴌-㴌 㴌-汰 潢-㴌 汰 -, 汰-汰
+南 - 姑 南 - 林, 㽔 - 林㽔 太 - -,
+太 - - 南 -林 㽔, 林 - - ^林 - -,
+南 - 姑 南 - 林, 㽔 - 林㽔 太 - -,
 
-淋淋 淋淋 淋-湳 㳞㳞- 㳞-㴌 汰, 淋-淋 淋-淋 淋-湳 㳞㳞㳞 㳞-㴌 汰
-潢-潢 潢 潢-南 潢-㴌 汰汰- -, 㴌-㴌 㴌-汰 潢-㴌 汰 - -
+㽔 - - 南 -林 㽔 林-/南/ 林 -, 南 -,
+太㽔 南 - 㽔 南 - -,
+應/南/應 - 南 應 - 姑 南 - - - - -,
+太 - 㽔 南 - 㽔, 姑 - - 姑 - -,
+南 - 姑 南 - 林㽔 太 - - - - -
+
+㽔 - 太 南 - - 林 - - 姑 - -
+林 - 姑 南 - 林 㽔 - - 太 - -
 `
         childForm.xyzOutput.value = songIs
     }        
@@ -584,9 +604,7 @@ function play() {
         $('#countdown').css('display', 'block');
         // $('#countdown').css('zIndex', 0);
         // $('#grid').css('position: relative', 3);
-        // style="position: relative;
-        
-        
+        // style="position: relative;      
 
         countdownNumberEl.textContent = countdown;
 
@@ -599,10 +617,7 @@ function play() {
         // countdownNumberEl.style.display = "none";
         // $('#countdown').css('display', 'none');
     } 
-
-
-
-    
+   
     if (t.value == "Play") {
         preCount();
 
