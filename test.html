@@ -9,84 +9,47 @@
   <title>Document</title>
 </head>
 <style>
-  body { background-color: #222; }
+  .moving-outline circle {
+    stroke-dasharray: 596;
+    animation: dash 1s linear 3;
+    /*name duration timing-function delay iteration-count direction fill-mode;*/
+    }
+    @keyframes dash {
+    from {
+      stroke-dashoffset: 596;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+    }
 
-  .circle_progress_wrap {
-    position: relative;
-    width: 120px;
-    height: 120px;
-  }
 
-  #control2 {
-    height: 60px;
-  }
 
-  .circle_progress { transform: rotate(-90deg); }
-  .frame, .bar { fill: none; }
-  .frame { stroke: #e6e6e6; }
-  .bar {
-    stroke: #03c75a;
-    stroke-linecap: round;
-  }
-
-  .value {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    text-align: center;
-    color: #888;
-    font-size: 16px;
-    line-height: 120px;
-  }
 
 </style>
 <body>
-<div class="circle_progress_wrap">
-	<svg class="circle_progress" width="120" height="120" viewBox="0 0 120 120">
-		<circle class="frame" cx="60" cy="60" r="54" stroke-width="12" />
-		<circle class="bar" cx="60" cy="60" r="54" stroke-width="12" />
-	</svg>
-	<input id="control" type="range" value="60" />
-  <input id="control2" type="button" value="3초후 플레이" />
-  <strong class="value"></strong>
-</div>
+
+  <div class="circle_box">
+    <svg class="moving-outline" width="200" height="200" viewBox="0 0 200 200" fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <!--viewbox="시작점x 시작점y 넓이 높이"-->
+      <circle cx="100" cy="100" r="95" stroke="#C89EC4" stroke-width="10" class="circle"/>
+      <!--cx,xy 는 원의 중심좌표, 넓이와 높이의 중간지점으로 잡음. 지름은 stroke/2를 뺌-->
+    </svg>
+  </div>
+
 </body>
 <script>
-  var control = document.getElementById('control');
-  var bar = document.querySelector('.bar');
-  var value = document.querySelector('.value');
-  var control2 = document.getElementById('control2');
+  var cl = document.querySelector(".circle");
+  function circleLine(el) {
+    var line = el.getTotalLength();
+    el.style.strokeDasharray = line;
+    el.style.strokeDashoffset = line;
 
-  var RADIUS = 54;
-  var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-  
-  function progress(per) {
-    var progress = per / 100;
-    var dashoffset = CIRCUMFERENCE * (1 - progress);
-    
-    value.innerHTML=per +'%';
-    bar.style.strokeDashoffset = dashoffset;
+    console.log(line)
   }
-  
-  control.addEventListener('input', function(event) {
-    progress(event.target.valueAsNumber);
-  });
-  control.addEventListener('change', function(event){
-    progress(event.target.valueAsNumber);
-  });
-  control2.addEventListener('click', function(event){
-    // progress(event.target.valueAsNumber);
-    setTimeout(progress(50), 3000);
 
-
-    
-  });
-
-  bar.style.strokeDasharray = CIRCUMFERENCE;
-  progress(0);
-
+  circleLine(cl);
 
 </script>
 

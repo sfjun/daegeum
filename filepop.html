@@ -25,9 +25,9 @@ html, body{
     width: 400px;
 }
 
-#grid {
+<!-- #grid {
     position: relative;    
-}
+} -->
 
 
 #gridId, #playId {
@@ -39,41 +39,43 @@ html, body{
     position: fixed;
     margin: auto;
     margin-top: 100px;
-    height: 40px;
-    width: 40px;
+    height: 80px;
+    width: 80px;
     text-align: center;
-    border: 1px solid gray;
     top: 30%;
     left: 5%;
-     background-color: yellow;
+    
 
 }
   
 #countdown-number {
-    color: black;
-    display: inline-block;
-    line-height: 40px;
+    color: red;
+    line-height: 50px;
     
 }
 
-div div svg {
-    position: relative;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
+#countdown svg {
+    position: fixed;
+    margin: auto;
+    margin-top: 100px;
+    height: 80px;
+    width: 80px;
+    text-align: center;
+    top: 25.7%;
+    left: 2.4%;
     transform: rotateY(-180deg) rotateZ(-90deg);
 }
 
-div div svg circle {
+svg .circle {
     stroke-dasharray: 113px;
     stroke-dashoffset: 0px;
     stroke-linecap: round;
     stroke-width: 2px;
-    stroke: white;
+    stroke: black;
     fill: none;
-    animation: countdown 3s linear infinite forwards;
+    animation: countdown 1s linear 3 forwards;
 }
+
 
 @keyframes countdown {
     from {
@@ -114,7 +116,7 @@ div div svg circle {
 <div id="countdown">
     <div id="countdown-number"></div>
     <svg>
-        <circle r="18" cx="20" cy="20"></circle>
+        <circle class="circle11" r="18" cx="20" cy="20"></circle>
     </svg>
 </div> 
 

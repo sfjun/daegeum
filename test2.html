@@ -39,13 +39,13 @@
   }
   
   svg circle {
-    stroke-dasharray: 113px;
+    stroke-dasharray: 238.64px;
     stroke-dashoffset: 0px;
     stroke-linecap: round;
     stroke-width: 2px;
     stroke: white;
     fill: none;
-    animation: countdown 1s linear infinite forwards;
+    animation: countdown 1s linear 3 forwards;
   }
   
   @keyframes countdown {
@@ -53,7 +53,7 @@
       stroke-dashoffset: 0px;
     }
     to {
-      stroke-dashoffset: 113px;
+      stroke-dashoffset: 238.64px;
     }
   }
     
@@ -72,11 +72,19 @@ var countdown = 3;
 
 countdownNumberEl.textContent = countdown;
 
-setInterval(function() {
-  countdown = --countdown <= 0 ? 3 : countdown;
+timer = setInterval(function() {
+//  countdown = --countdown <= 0 ? 3 : countdown;
+
+  countdown = --countdown <= 0 ? clearInterval(timer) : countdown;
 
   countdownNumberEl.textContent = countdown;
 }, 1000);
+
+if (countdown == 0) {
+clearInterval(timer);
+}
+
+
 </script>
 
 </html>

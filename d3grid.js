@@ -583,8 +583,10 @@ var timerId = "";
 var interruptIndex = 0
 var t = document.getElementById('playId');
 
-var countdownNumberEl = document.getElementById('countdown');
-countdownNumberEl.style.display = "none";
+// var countdownNumberEl = document.getElementById('countdown');
+// countdownNumberEl.style.display = "none";
+$('#countdown').css('display', 'none');
+
 var scoreIs = false
 
 function play() {
@@ -597,11 +599,13 @@ function play() {
 
     function preCount() {
 
-        // var countdownNumberEl = document.getElementById('countdown');
+        var countdownNumberEl = document.getElementById('countdown-number');
         var countdown = 3;
         // alert(countdownNumberEl.style)
         // countdownNumberEl.style.display = "block";
         $('#countdown').css('display', 'block');
+        // $('circle').css('display', 'block');
+        $('circle').attr('class', 'circle');
         // $('#countdown').css('zIndex', 0);
         // $('#grid').css('position: relative', 3);
         // style="position: relative;      
@@ -612,7 +616,7 @@ function play() {
             countdown = --countdown == 0 ? clearInterval(intervalId) : countdown;
         // --countdown;
 
-        countdownNumberEl.textContent = countdown;
+            countdownNumberEl.textContent = countdown;
         }, 1000);
         // countdownNumberEl.style.display = "none";
         // $('#countdown').css('display', 'none');
