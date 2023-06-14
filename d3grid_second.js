@@ -1,4 +1,3 @@
-
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
@@ -54,41 +53,27 @@ function getMid() {
 // ㄷ汰 --/N/潢, ㄷ林 --/ㄱ/南,
 // ㄷ汰 --/N/潢,  南潢汰潢 ㅅ潢 -`
 
-// `w:축제
-// 南 - 潢 汰 - 㴌(, 南 南林 姑 南潢 南 -△
-// 潢 -) 南 汰 - 㴌(, 南 南林 姑 南潢 南 -△
-// 汰 -潢 南 汰 汰 -, 南 潢 汰㴌 汰 - △
-
-// 南 - 潢 汰 - 㴌(, 南 南林 姑 南潢 南 -△
-// 潢 潢 汰( 南 - 潢, 汰 -潢 南 汰㴌 汰 -△
-// 㴌 - - 淋 - 湳(, 㴌子 - - - - △
-
-// 㴌 淋 湳淋 㴌 - 淋, 湳 -淋 㴌 湳 - △
-// 㴌 湳 - 湳 -淋 㴌, 㶂 - 㶐) 湳 - △
-// 淋 - 湳( 㴌 - 淋, 湳 - - - - △
-
-// 淋 淋 湳( 㴌 㴌 淋, 汰 -潢 南 汰㴌 汰 -△
-// 南 - 潢 汰 - 㴌(, 湳 -) 淋3 㴌 - △
-// 汰 - 㴌( 潢 -㴌 潢), 㴌 -汰 潢) 南 - △
-// `
-
     var songIs = document.getElementById('txtOutput').value; 
     
-    if (!songIs) {    
-songIs = 
-`w:장작불1
-汰 潢 南-潢 南 - -, 汰-㴌 汰-潢 汰 㳞/汰/-- - -
-㴌 㴌 -汰 潢 -潢 潢㴌, 汰 - - - - △
+    if (!songIs) {  
 
-汰-汰 汰-潢 南南- 林-南 南 -, 潢) -(㴌 汰潢 汰 潢 南
-林-林 林-仲 林 南-汰 南 -, 㴌-㴌 㴌-汰 潢-㴌 汰 -, 汰-汰
+    songIs = 
+`w:청산은 깊어 좋아라3
+湳 湳 -湳 淋湳, 潕淋 㳞 - -, 潢-/潢/ 㶂 -㶂 㶐㶂, 潕湳 淋 - -,
+潢-/潢/ 湳 - 淋湳, 潕湳 淋 - -, 潢 淋 淋淋 湳湳, 潕湳 㳞 - -,
 
-淋淋 淋淋 淋-湳 㳞㳞- 㳞-㴌 汰, 淋-淋 淋-淋 淋-湳 㳞㳞㳞 㳞-㴌 汰
-潢-潢 潢 潢-南 潢-㴌 汰汰- -, 㴌-㴌 㴌-汰 潢-㴌 汰 - -
+湳 湳 -湳 淋湳 潕淋 㳞 - -, 潢-/潢/ 㶂 -㶂 㶐㶂 潕湳 淋 - - 
+潢-/潢/ 湳 - 淋湳 潕湳 淋 - -, 潢 淋 淋淋 湳湳 潕湳 㳞 - - 
+
+㳞-/㴌/ 汰 - - 汰㴌㳞 淋㳞 㴌 -, 潢-/潢/ 湳 - 淋湳 潕淋 㶂 - - 
+潢 湳 -湳 淋湳 潕湳 淋 - -, 潢 淋 淋淋 湳湳 潕湳 㳞 - - 
 `
         childForm.xyzOutput.value = songIs
     }        
 
+
+
+    
     var xyList = songIs.match(/[\W]/gu)
     // console.log(xx)
     const xySet = new Set(xyList)
@@ -450,9 +435,11 @@ function runGrid() {
     // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
-        .attr("width","900px")
-        .attr("height","1000px");
-            
+        // .attr("width","100%")
+        // .attr("height","1000px");
+        .attr("width", window.innerWidth)
+        .attr("height",window.innerHeight);
+                    
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
         .data(gridData)
@@ -563,8 +550,10 @@ var timerId = "";
 var interruptIndex = 0
 var t = document.getElementById('playId');
 
-var countdownNumberEl = document.getElementById('countdown');
-countdownNumberEl.style.display = "none";
+// var countdownNumberEl = document.getElementById('countdown');
+// countdownNumberEl.style.display = "none";
+$('#countdown').css('display', 'none');
+
 var scoreIs = false
 
 function play() {
@@ -577,16 +566,16 @@ function play() {
 
     function preCount() {
 
-        // var countdownNumberEl = document.getElementById('countdown');
+        var countdownNumberEl = document.getElementById('countdown-number');
         var countdown = 3;
         // alert(countdownNumberEl.style)
         // countdownNumberEl.style.display = "block";
         $('#countdown').css('display', 'block');
+        // $('circle').css('display', 'block');
+        $('circle').attr('class', 'circle');
         // $('#countdown').css('zIndex', 0);
         // $('#grid').css('position: relative', 3);
-        // style="position: relative;
-        
-        
+        // style="position: relative;      
 
         countdownNumberEl.textContent = countdown;
 
@@ -594,15 +583,12 @@ function play() {
             countdown = --countdown == 0 ? clearInterval(intervalId) : countdown;
         // --countdown;
 
-        countdownNumberEl.textContent = countdown;
+            countdownNumberEl.textContent = countdown;
         }, 1000);
         // countdownNumberEl.style.display = "none";
         // $('#countdown').css('display', 'none');
     } 
-
-
-
-    
+   
     if (t.value == "Play") {
         preCount();
 
@@ -629,15 +615,29 @@ function play() {
 
     function transitWidth(inDex = 0) {    
         $('#countdown').css('display', 'none');
-    // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
-    // 플레이안된 것만 가져오기, 
-    const pBit = d3.select("#grid").selectAll(".bit");
-    const pBitText = d3.select("#grid").selectAll(".bitText");
+        // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
+        // 플레이안된 것만 가져오기, 
+        const pBit = d3.select("#grid").selectAll(".bit");
+        const pBitText = d3.select("#grid").selectAll(".bitText");
 
-    bakjaTime = document.getElementById('bakSec').value;
-    // console.log("bakjaTime", bakjaTime)
+        bakjaTime = document.getElementById('bakSec').value;
+        // console.log("bakjaTime", bakjaTime)
 
-    pBit.transition()
+
+        // document.querySelector(`.bit`).animate(
+        //     [
+        //         { transform: 'scale(1)' },
+        //         { transform: 'scale(3)' }
+        //     ],
+        //     {
+        //         duration: 1000,
+        //         iterations: 1,
+        //         direction: 'alternate'
+        //     }
+        // );
+
+
+        pBit.transition()
         // .duration(bakjaTime)
         .duration(function(d,i){ console.log("dDur", d); 
             return d.dur; })
@@ -660,10 +660,10 @@ function play() {
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
         .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박${d.freq}주파수`); })
-        ;               
+        ;
         
     
-    pBitText.transition()
+        pBitText.transition()
         // .duration(bakjaTime)
         .duration(function(d,i){ // console.log("d", d); 
             return d.dur; })    
