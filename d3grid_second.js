@@ -58,20 +58,19 @@ function getMid() {
     if (!songIs) {  
 
     songIs = 
-`w:청산은 깊어 좋아라3
-湳 湳 -湳 淋湳, 潕淋 㳞 - -, 潢-/潢/ 㶂 -㶂 㶐㶂, 潕湳 淋 - -,
-潢-/潢/ 湳 - 淋湳, 潕湳 淋 - -, 潢 淋 淋淋 湳湳, 潕湳 㳞 - -,
+`w고향의노래1
+w김재호작사 이수인작곡
+仲 - - 太㒇, 太仲 無 - -, 汰 - -潢 無林, 仲 - - -,
+林 - - 無林, 仲太 㒇 - -, 太 - 太仲 太㒇, 黃 - - -,
 
-湳 湳 -湳 淋湳 潕淋 㳞 - -, 潢-/潢/ 㶂 -㶂 㶐㶂 潕湳 淋 - - 
-潢-/潢/ 湳 - 淋湳 潕湳 淋 - -, 潢 淋 淋淋 湳湳 潕湳 㳞 - - 
+太 -太 仲-/仲/ 林林南 無 - -, 潢 潢 -汰 浹 浹汰潢, 無 - - -,
+△ 無 南 潢, 無南林 太-/林/ 林 - -,林 南無 潢 林, 潢 - - 南,
 
-㳞-/㴌/ 汰 - - 汰㴌㳞 淋㳞 㴌 -, 潢-/潢/ 湳 - 淋湳 潕淋 㶂 - - 
-潢 湳 -湳 淋湳 潕湳 淋 - -, 潢 淋 淋淋 湳湳 潕湳 㳞 - - 
+△仲 姑林 △仲 無汰, 㳞 - △汰/汰/ 無林, 潢 -南 仲 -, △仲 姑林 △仲 無汰,
+㳞⊍ - △汰/汰/ 無林, 潢汰 浹 - 汰/潢/-, 無 - - -,
 `
-        childForm.xyzOutput.value = songIs
+childForm.xyzOutput.value = songIs
     }        
-
-
 
     
     var xyList = songIs.match(/[\W]/gu)
@@ -217,7 +216,7 @@ function bakTobit(no, hanbak) {  //한박시작
     //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
     ///gu, g: 전역, u:unicode
     //[임, 황, -]
-    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△]+?[\(\)\/,子3\|]*/gu)         
+    var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△]+?[\(\)\/,子⊍3\|]*/gu)         
     // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
     // 3
     
@@ -250,7 +249,7 @@ function bakTobit(no, hanbak) {  //한박시작
         bitsCnt ==1 ? xpos = width : "" ;    
 
 
-        var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ△3]+?/gu);
+        var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ⊍△3]+?/gu);
         // console.log("partMat", partMat);
         var partFreq ='';
         var partDur ='';
@@ -260,8 +259,10 @@ function bakTobit(no, hanbak) {  //한박시작
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
-        console.log("partMat[0], partVal",partMat[0], partVal, partMat)  
+        console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
             
+        durr = partMat.includes('⊍') ? durr * 3 : durr; 
+
 
         if (partVal > 10000) {
             
@@ -302,7 +303,7 @@ function bakTobit(no, hanbak) {  //한박시작
         //     // console.log("returnCode3", partVal)  
         //     partFreq = [0]
         //     partDur = [1]
-        } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△'] ) {       
+        } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'] ) {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
             console.log("returnCode#3", returnCode2 )
@@ -403,7 +404,7 @@ function xyzFreq2(pxy, deco) {
                    (deco == '△') ? [[0],[1], i] :
                    (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3], i] :
                    (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33], i] :
-
+                
                    [[xyzFreqArr[i].freq], [1], i]; 
         }
     }    
@@ -566,6 +567,7 @@ function play() {
 
     function preCount() {
 
+        //카운트 다운
         var countdownNumberEl = document.getElementById('countdown-number');
         var countdown = 3;
         // alert(countdownNumberEl.style)
@@ -620,6 +622,7 @@ function play() {
         const pBit = d3.select("#grid").selectAll(".bit");
         const pBitText = d3.select("#grid").selectAll(".bitText");
 
+        //한박 1000의 변경이 있을꼉우
         bakjaTime = document.getElementById('bakSec').value;
         // console.log("bakjaTime", bakjaTime)
 
