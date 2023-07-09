@@ -2,7 +2,7 @@
 <Html><head>
 <title> deageum pop </title>
 <!-- <meta name="viewport" content="width=900, initial-scale=5.0"> -->
-<!-- <meta name="viewport" content="width=device-width, initial-scale=5.0"> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, 
 minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
 <script src = "jquery-3.6.3.min.js"></script>
@@ -19,56 +19,39 @@ body{
     margin : 5px;
     padding : 0;
     border-color: red #32a1ce;
+    overflow: scroll;
+    
 
 }    
     
-<!-- #chart {
-    display: block;
-    margin: 20px auto 0;
-    height: 400px;
-    width: 400px;
-} -->
-
 #grid {
-  overflow-y: auto;
   position: relative; 
-  display: block; 
+  display: flex; 
+  /*flex-wrap: wrap; 
   height: 100%;
-  width: auto;  
+  width: auto; */  
   box-sizing: border-box;
   border-color: skyblue;
   border-width: 3px;
   border-style: solid;
-    
-  /*zoom: 0.3; */ 
+    /*transform:scale(2)*/  
+    overflow-x: auto;
+    overflow-y: auto;
+
 }
 
 #grid svg {
     display: flex;
     flex-wrap: wrap;
-}
-
-
-<!-- #grid {
-    /*width: 100%; */
-    height: auto; 
-    flex-wrap: wrap;  
-    border-color: skyblue;
+    /*overflow-x: auto;
+    overflow: scroll; */
+    border-color: red;
     border-width: 3px;
-    border-style: solid; 
-    zoom: 1.0;
-  } -->
-  
-
-svg g {
-  flex-direction: row;
-  transform:scale(1,1)  
+    border-style: solid;
+    zoom: 1.0;  /* 0.5로 하면 토글 */
+    /*overflow-x: hidden;
+    overflow-y: auto; */
 }
-
-<!-- #gridId, #playId {
-    height: 50px;
-    width: 360px;    
-} -->
 
 #countdown {
     position: fixed;

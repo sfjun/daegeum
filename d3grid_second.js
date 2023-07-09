@@ -58,16 +58,18 @@ function getMid() {
     if (!songIs) {  
 
     songIs = 
-`w고향의노래1
-w김재호작사 이수인작곡
-仲 - - 太㒇, 太仲 無 - -, 汰 - -潢 無林, 仲 - - -,
-林 - - 無林, 仲太 㒇 - -, 太 - 太仲 太㒇, 黃 - - -,
+`w:남촌2 김동환작사 김규환작곡, v액센트
+仲 
+南 -南 無南 林-/南/, 仲 - -, 仲 無 -汰 㳞 汰 潢 - -,潢 潢汰
 
-太 -太 仲-/仲/ 林林南 無 - -, 潢 潢 -汰 浹 浹汰潢, 無 - - -,
-△ 無 南 潢, 無南林 太-/林/ 林 - -,林 南無 潢 林, 潢 - - 南,
+㴌 - -㴌 㳞-/㴌/ 南 - -, 林-/林/ 無 - ^無南 林-/仲/ 仲 - - △
+△仲 仲無 汰 - -無 無汰 㳞 - -,㳞 淋㳞 㴌 㳞 潢 - -,潢 潢汰
 
-△仲 姑林 △仲 無汰, 㳞 - △汰/汰/ 無林, 潢 -南 仲 -, △仲 姑林 △仲 無汰,
-㳞⊍ - △汰/汰/ 無林, 潢汰 浹 - 汰/潢/-, 無 - - -,
+㴌 - -㴌 㴌㳞 淋 - -, 㳞v淋v 湳v -淋 㳞 汰 淋 - -, 潢無
+
+南 -南 無南 林-/南/ 仲 - -, 仲 無 -汰 㳞 汰 潢 - -,潢 潢汰
+
+㴌 - -㴌 㳞-/㴌/ 南 - -, 林 無 - ^無南 林-/仲/ 仲 - -,
 `
 childForm.xyzOutput.value = songIs
     }        
@@ -436,10 +438,10 @@ function runGrid() {
     // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
-        // .attr("width","100%")
-        // .attr("height","1000px");
-        .attr("width", window.innerWidth)
-        .attr("height",window.innerHeight);
+        .attr("width","100%")
+        .attr("height","1000px");
+        // .attr("width", window.innerWidth)
+        // .attr("height",window.innerHeight);
                     
     //1장에 있는 전체 줄 만큼 여러줄 생성
     var gRow = grid.selectAll(".row")
