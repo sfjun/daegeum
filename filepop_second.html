@@ -4,7 +4,7 @@
 <!-- <meta name="viewport" content="width=900, initial-scale=5.0"> -->
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, 
-minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
+minimum-scale=0.3, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
 <script src = "jquery-3.6.3.min.js"></script>
 <!-- <script type = "text/javascript" src = "d3.v7.min.js"></script> -->
 <script src="d3.v4.js"></script>
@@ -13,32 +13,22 @@ minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
 <script type = "text/javascript" src = "colorbrewer.v1.min.js"></script>
 
 <style>
-body{
-    width : 95%;
-    height : 100%;
-    margin : 5px;
-    padding : 0;
-    border-color: red #32a1ce;
-    overflow: scroll;
-    
 
-}    
     
 #grid {
   position: relative; 
-  display: flex; 
-  /*flex-wrap: wrap; 
+  display: flex;  
   height: 100%;
-  width: auto; */  
+  width: 100%;  
   box-sizing: border-box;
   border-color: skyblue;
   border-width: 3px;
   border-style: solid;
+  overflow: scroll;
+
     /*transform:scale(2)*/  
     /*overflow-x: auto;
     overflow-y: auto; */
-  /* overflow:scroll; */  
-
 }
 
 #grid svg {
@@ -49,7 +39,6 @@ body{
     border-color: red;
     border-width: 3px;
     border-style: solid;
-    viewBox: "0 0 793 1122";
     zoom: 1.0;  /* 0.5로 하면 토글 */
     /*overflow-x: hidden;
     overflow-y: auto; */

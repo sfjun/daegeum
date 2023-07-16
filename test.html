@@ -5,51 +5,51 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, 
+minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
   <title>Document</title>
 </head>
 <style>
-  .moving-outline circle {
-    stroke-dasharray: 596;
-    animation: dash 1s linear 3;
-    /*name duration timing-function delay iteration-count direction fill-mode;*/
-    }
-    @keyframes dash {
-    from {
-      stroke-dashoffset: 596;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-    }
 
-
-
-
+  .row {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /*flex-flow: column wrap; */
+    width: 100px;
+    border-style: dashed;
+    border-width: 1px;
+    gap: 10px;
+  }
+  
 </style>
 <body>
+<div class="xx">
+  <svg width="150" height="200">
+    <g class="row">
+      <g class="column">
+        <rect class="bak" x="0" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>  
+      <g class="column">
+        <rect class="bak" x="50" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="100" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="150" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="200" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
 
-  <div class="circle_box">
-    <svg class="moving-outline" width="200" height="200" viewBox="0 0 200 200" fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <!--viewbox="시작점x 시작점y 넓이 높이"-->
-      <circle cx="100" cy="100" r="95" stroke="#C89EC4" stroke-width="10" class="circle"/>
-      <!--cx,xy 는 원의 중심좌표, 넓이와 높이의 중간지점으로 잡음. 지름은 stroke/2를 뺌-->
-    </svg>
+      
+    </g>
+  </svg>
+  
   </div>
-
 </body>
 <script>
-  var cl = document.querySelector(".circle");
-  function circleLine(el) {
-    var line = el.getTotalLength();
-    el.style.strokeDasharray = line;
-    el.style.strokeDashoffset = line;
-
-    console.log(line)
-  }
-
-  circleLine(cl);
 
 </script>
 

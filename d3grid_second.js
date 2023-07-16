@@ -107,23 +107,26 @@ var height = 50;
 // var bakjaTime = 1000;
 var bakjaTime ='';
 //console.log(bakjaTime)
+var textRowcnt= 0;
+var textMaxcolcnt;
 
 function txtTodata() {
     getMid()
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
-	// var width = 60;
-	// var height = 60;
 
     // typeof = string
     // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
     var gakString = document.getElementById('txtOutput').value; 
-    
+    textMaxcolcnt= 0;
     // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
     // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
     var gangString = gakString.split("\n")    
     var jungGans = [];
+
+    // 전체 text에 대한 줄의 갯수는
+    textRowcnt = gangString.length
     
     // " "가 박자 구분자라 박자별로 나눠서 배열화
     gangString.forEach(function(gang) {
@@ -141,7 +144,7 @@ function txtTodata() {
     var title = "";
     // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
 	// iterate for rows	, 5
-    // console.log("j-len", jungGans.length)
+    
 
     //박번호 부여
     var bakSerial = 0;
@@ -152,6 +155,11 @@ function txtTodata() {
 		// console.log("row", hData3[row].length, hData3[row] )
 		// iterate for cells/columns inside rows
         var rowCol = "";
+        
+        // 가장 긴 컬럼의 갯수를 저장
+        textMaxcolcnt = textMaxcolcnt > jungGans[row].length ? textMaxcolcnt : jungGans[row].length ; 
+
+        // console.log("j-len", textMaxcolcnt);
 
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
@@ -197,6 +205,7 @@ function txtTodata() {
 		xpos = 1;
 		// increment the y position for the next row. Move it down 50 (height variable)
 		ypos += height + 5;
+        
         //rowCol.startsWith("w" || "W") ? ypos += height + 20: ypos += height + 5; 
         //( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
 	}
@@ -418,6 +427,13 @@ function xyzFreq2(pxy, deco) {
 // var gColumn = [];
 
 function runGrid() {
+
+
+    let textarea = document.getElementById("txtOutput");
+    console.log(textarea);
+    textarea.style.height ="20px";
+    // textarea.rows = 1;
+    
     // if (!gridOx) return 
     var gridData = txtTodata();
     t.value= "Play"
@@ -438,8 +454,13 @@ function runGrid() {
     // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
-        .attr("width","100%")
-        .attr("height","1000px");
+
+        //textRowcnt, textMaxcolcnt svg 사이즈 결정        
+        .attr("width",textMaxcolcnt * 50)
+        .attr("height", textRowcnt * 50 + 50 )
+        .style("overflow", "visible");
+        // .attr("overflow", auto);
+        //.attr("viewBox", "0 0 800 400");
         // .attr("width", window.innerWidth)
         // .attr("height",window.innerHeight);
                     
