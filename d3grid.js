@@ -728,7 +728,7 @@ function play() {
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
-        .on("start", function(d,i) { 
+        .on("end", function(d,i) { 
             $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
             document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
             document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
