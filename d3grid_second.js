@@ -2,6 +2,7 @@
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
 
+
 //아악, 정악, 당악
 // var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
 //                   {xyz: '㒇', freq: 233.35, no: 4}, {xyz: '㒣', freq: 245.85, no: 5}, {xyz: '黃', freq: 259, no: 6}, 
@@ -36,49 +37,93 @@ $(document).ready(function(){
 
 });
 
+function selectYear() {
+    let yearSelect = document.querySelector('.years');
+    let mainOption = '2023';
+    let songSelect = document.querySelector('.songs');
+
+    mainOption = yearSelect.options[yearSelect.selectedIndex].value;        
+
+
+    switch (mainOption) {
+        case '2023':
+            var subOption = songsList2023;
+            break;
+        case '2022':
+            var subOption = songsList2022;
+            break;
+        case '2021':
+            var subOption = songsList2021;
+            break;
+    }
+
+    console.log("mainOption,suboption", mainOption, subOption)
+    songSelect.options.length = 0;
+
+    for (var i =0; i < subOption.length; i++) {        
+        var option = document.createElement('option');
+        option.value = subOption[i]['title'];
+        option.innerText = subOption[i]['title'];
+        // option = songsList[i]['title'];
+        // console.log("sfsf", option.innerText, option.value)
+        songSelect.append(option);
+        i  == 0 ? childForm.xyzOutput.value = subOption[0]['song']: "" ;
+    }
+
+}
+
+function selectSong() {
+    let yearSelect = document.querySelector('.years');
+    let mainOption = yearSelect.options[yearSelect.selectedIndex].value;
+    let songSelect = document.querySelector('.songs');
+    let selectedSong = songSelect.options[songSelect.selectedIndex].value;
+    
+    switch (mainOption) {
+        case '2023':
+            var subOption = songsList2023;
+            break;
+        case '2022':
+            var subOption = songsList2022;
+            break;
+        case '2021':
+            var subOption = songsList2021;
+            break;
+    }
+
+    console.log("mainOption,suboption", mainOption, subOption)
+    //songSelect.options.length = 0;
+
+    for (var i =0; i < subOption.length; i++) {    
+        document.getElementById("txtOutput").style.height ="200px";    
+        if (subOption[i]['title'] == selectedSong) {
+            childForm.xyzOutput.value = subOption[i]['song']
+        }        
+    }
+
+}
 
 function getMid() {
 //  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
 
-
-//   childForm.xyzOutput.value = 
-//  `w:1장
-// 林潢- ---/ㄴ/( 南 -, 潢/仲/-- -南-, 
-// 汰 ---/N/ 潢 -, 南汰- ---/ㄱ/ 南)林- -,
-// 潢南- - ^南 -), 林潢- -( 林 -,
-// 南)林- --ㄱ/南/, 潢 - - -
-
-// w:2장
-// 林潢- ^汰 --/N/Z 南 - - -)-林, 潢 --/N/南,
-// ㄷ汰 --/N/潢, ㄷ林 --/ㄱ/南,
-// ㄷ汰 --/N/潢,  南潢汰潢 ㅅ潢 -`
-
-    var songIs = document.getElementById('txtOutput').value; 
+    let songIs = document.getElementById('txtOutput').value; 
     
-    if (!songIs) {  
+    if (!songIs) { 
+        // console.log("songsList[-1]", songsList[songsList.length - 1]['title'])
 
-    songIs = 
-`w:남촌2 김동환작사 김규환작곡, v액센트
-仲 
-南 -南 無南 林-/南/, 仲 - -, 仲 無 -汰 㳞 汰 潢 - -,潢 潢汰
-
-㴌 - -㴌 㳞-/㴌/ 南 - -, 林-/林/ 無 - ^無南 林-/仲/ 仲 - - △
-△仲 仲無 汰 - -無 無汰 㳞 - -,㳞 淋㳞 㴌 㳞 潢 - -,潢 潢汰
-
-㴌 - -㴌 㴌㳞 淋 - -, 㳞v淋v 湳v -淋 㳞 汰 淋 - -, 潢無
-
-南 -南 無南 林-/南/ 仲 - -, 仲 無 -汰 㳞 汰 潢 - -,潢 潢汰
-
-㴌 - -㴌 㳞-/㴌/ 南 - -, 林 無 - ^無南 林-/仲/ 仲 - -,
-`
-childForm.xyzOutput.value = songIs
+        // songs.js에서 정의된 songsList 배열을 활용, reverse()로 역순정열
+        
+        songsList = songsList2023;
+        songIs = songsList2023[0]['song'];
+        childForm.xyzOutput.value = songIs
     }        
 
+    selectYear()
+    // subCity.options.length = 0;
     
     var xyList = songIs.match(/[\W]/gu)
     // console.log(xx)
     const xySet = new Set(xyList)
-    console.log(xySet);
+    // console.log(xySet);
 
         for (let xy of xySet) {
             for (let item of xyzFreqArr_ori) {
@@ -89,8 +134,6 @@ childForm.xyzOutput.value = songIs
         }
 
 }
-
-
 
 function setMid() {
   opener.window.document.myform.mid.value = childForm.mid.value;
@@ -122,6 +165,8 @@ function txtTodata() {
     textMaxcolcnt= 0;
     // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
     // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
+
+    //줄단위로 배열로 저장
     var gangString = gakString.split("\n")    
     var jungGans = [];
 
@@ -133,8 +178,9 @@ function txtTodata() {
 
         // console.log("gang", gang)
 
-        (gang.startsWith("w")) ? jungGans.push([gang]) : jungGans.push(gang.split(" ")) ;
-        
+        // (gang.startsWith("w")) ? jungGans.push([gang]) : jungGans.push(gang.split(" ")) ;
+        (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
+                 
         // if (gang) {
         //     jungGans.push(gang.split(" "))
         // }      
@@ -270,7 +316,7 @@ function bakTobit(no, hanbak) {  //한박시작
         // console.log("partMat", partMat.length) 
 
         var partVal = partMat[0].charCodeAt()
-        console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
+        // console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
             
         durr = partMat.includes('⊍') ? durr * 3 : durr; 
 
@@ -282,7 +328,7 @@ function bakTobit(no, hanbak) {  //한박시작
             // console.log("xyzSet", xyzSet )
             if (partMat.length == 1) {
                 var returnCode = xyzFreq(partMat[0])
-                console.log("returnCode#1", returnCode)
+                // console.log("returnCode#1", returnCode)
                 // console.log("returnCode11", returnCode[0], returnCode[1])
                 partFreq = returnCode[0]
                 // console.log("partfreq", partFreq)            
@@ -292,7 +338,7 @@ function bakTobit(no, hanbak) {  //한박시작
             } else {    
                 // console.log("nowBit, partMat", nowBit, partMat[0] )
                 var returnCode2 = xyzFreq2(partMat[0], partMat[1])
-                console.log("returnCode#2", returnCode2 )
+                // console.log("returnCode#2", returnCode2 )
                 // console.log("returnCode22", returnCode2[0], returnCode2[1])
                 partFreq = returnCode2[0]
                 partDur = returnCode2[1]
@@ -317,15 +363,15 @@ function bakTobit(no, hanbak) {  //한박시작
         } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'] ) {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
-            console.log("returnCode#3", returnCode2 )
+            // console.log("returnCode#3", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]
             partColor = returnCode2[2]   
         } else if (partMat[0] in ['^','ㄷ', 'ㅅ'] ) {       
-            console.log("3", nowBit, partMat[0] )
+            // console.log("3", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(partMat[1], partMat[0])
-            console.log("returnCode#4", returnCode2 )
+            // console.log("returnCode#4", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]
@@ -340,7 +386,7 @@ function bakTobit(no, hanbak) {  //한박시작
         } else {       
             // console.log("nowBit, partMat", nowBit, partMat[0] )
             var returnCode2 = xyzFreq2(baseBit, partMat[0])
-            console.log("returnCode#5", returnCode2 )
+            // console.log("returnCode#5", returnCode2 )
             // console.log("returnCode22", returnCode2[0], returnCode2[1])
             partFreq = returnCode2[0]
             partDur = returnCode2[1]
@@ -379,7 +425,7 @@ function bakTobit(no, hanbak) {  //한박시작
         }
         // console.log(part, 1 / partcnt)                    
     })
-    console.log("bitBox", bitBox)
+    // console.log("bitBox", bitBox)
     hanBox.push(bitBox)
 
     return hanBox;
@@ -387,8 +433,8 @@ function bakTobit(no, hanbak) {  //한박시작
 }
 
 function xyzFreq(pxy) {
-    console.log("xyz", pxy);
-    console.log("xyz22", xyzFreqArr);
+    // console.log("xyz", pxy);
+    // console.log("xyz22", xyzFreqArr);
     
     for (var i=0; i < xyzFreqArr.length; i++) {
         // console.log("i10000", xyzFreqArr[i].xyz)
@@ -430,7 +476,8 @@ function runGrid() {
 
 
     let textarea = document.getElementById("txtOutput");
-    console.log(textarea);
+    // console.log(textarea);
+    // textarea 박스 사이즈 축소
     textarea.style.height ="20px";
     // textarea.rows = 1;
     
@@ -454,12 +501,15 @@ function runGrid() {
     // svg 1개 생성
     var grid = d3.select("#grid")
         .append("svg")
-
-        //textRowcnt, textMaxcolcnt svg 사이즈 결정        
-        .attr("width",textMaxcolcnt * 50)
-        .attr("height", textRowcnt * 50 + 50 )
+        .attr("class", "gridSvg")
+        //textRowcnt, textMaxcolcnt svg 사이즈 결정   
+        // .attr("width", window.innerWidth)     
+        .attr("width", textMaxcolcnt * 50)
+        .attr("height", textRowcnt * 50)
+        // .attr("height", textRowcnt * 25 )        
         .style("overflow", "visible");
-        // .attr("overflow", auto);
+        // .style("zoom", "0.5");
+        // .style("overflow", "auto");
         //.attr("viewBox", "0 0 800 400");
         // .attr("width", window.innerWidth)
         // .attr("height",window.innerHeight);
@@ -581,16 +631,22 @@ $('#countdown').css('display', 'none');
 var scoreIs = false
 
 function play() {
-
     // 1박시간 가져오기
 //    var t = document.getElementById('playId');
     // var t = $('playId');
+    let zzoom = 1.0;
     
     if (!scoreIs) return alert("악보보기 먼저 실행하세요");
 
+    //카운트 다운
     function preCount() {
-
-        //카운트 다운
+        
+        //악보를 확대(0.5 -> 1.0)
+        // let zzoom = 3.0;
+        $('svg.gridSvg')
+        .css('zoom', zzoom)
+        
+        //카운터 다운준비
         var countdownNumberEl = document.getElementById('countdown-number');
         var countdown = 3;
         // alert(countdownNumberEl.style)
@@ -614,9 +670,10 @@ function play() {
         // $('#countdown').css('display', 'none');
     } 
    
+    //프로그램시작
     if (t.value == "Play") {
+        //가운트 시작
         preCount();
-
         setTimeout(transitWidth, 3000);
         // 플레이 시작       
         // transitWidth();
@@ -649,23 +706,9 @@ function play() {
         bakjaTime = document.getElementById('bakSec').value;
         // console.log("bakjaTime", bakjaTime)
 
-
-        // document.querySelector(`.bit`).animate(
-        //     [
-        //         { transform: 'scale(1)' },
-        //         { transform: 'scale(3)' }
-        //     ],
-        //     {
-        //         duration: 1000,
-        //         iterations: 1,
-        //         direction: 'alternate'
-        //     }
-        // );
-
-
         pBit.transition()
         // .duration(bakjaTime)
-        .duration(function(d,i){ console.log("dDur", d); 
+        .duration(function(d,i){ //console.log("dDur", d); 
             return d.dur; })
 
         // .delay(function(d,i){ return i * 1000;}) 
@@ -685,9 +728,12 @@ function play() {
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
-        .on("end", function(d,i) { $('#baklog').text(`${d.bakno}박${d.freq}주파수`); })
-        ;
-        
+        .on("start", function(d,i) { 
+            $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
+            document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
+            document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
+        });
+                  
     
         pBitText.transition()
         // .duration(bakjaTime)
@@ -749,11 +795,11 @@ function playFreq2(xyz, freq=[440], pdur, dur = 1) {
         o.connect(gainNode).connect(ac.destination); 
         o.frequency.value = freq[x]; 
         const now = ac.currentTime;
-        console.log("freq,dur",x, freq[x], pdur[x]);
+        // console.log("freq,dur",x, freq[x], pdur[x]);
         o.start(now);
         o.stop(now + pdur[x]*dur);
         // o.stop(now + 1);
-        console.log("now", now)
+        // console.log("now", now)
     }    
     //clearTimeout(setTimeid);
     
@@ -762,10 +808,10 @@ function playFreq2(xyz, freq=[440], pdur, dur = 1) {
 
 function playNote() {
   for(var i = 0; i < freqs.length; i++) {
-    console.log("시작", freqs[i])
+    // console.log("시작", freqs[i])
     // 지연시간을 단계적으로 부여하여, 실행함수 ()없이해야 호출만, 주파수, 지속시간 
     const setTimeid = setTimeout(playFreq, i * 1000, freqs[i], 2);
-    console.log("id", setTimeid)
+    // console.log("id", setTimeid)
     //clearTimeout(setTimeid);
     //requestAnimationFrame(step)
   }

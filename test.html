@@ -43,6 +43,22 @@ minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
         <rect class="bak" x="200" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
       </g>
 
+      <!-- <g class="column">
+        <rect class="bak" x="0" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>  
+      <g class="column">
+        <rect class="bak" x="50" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="100" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="150" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g>
+      <g class="column">
+        <rect class="bak" x="200" y="0" width="50" height="50" style="fill: rgb(255, 255, 255); stroke: rgb(34, 34, 34);"></rect>
+      </g> -->
+
       
     </g>
   </svg>
@@ -50,7 +66,10 @@ minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
   </div>
 </body>
 <script>
-
+  function pageScroll() {
+    window.scrollBy(0,1);
+    scrolldelay = setTimeout(pageScroll,10);
+}
 </script>
 
 </html>

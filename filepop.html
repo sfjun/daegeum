@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <Html><head>
 <title> deageum pop </title>
-
+<!-- <meta name="viewport" content="width=900, initial-scale=5.0"> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, 
+minimum-scale=0.3, maximum-scale=5.0, user-scalable=yes, viewport-fit=auto">
 <script src = "jquery-3.6.3.min.js"></script>
 <!-- <script type = "text/javascript" src = "d3.v7.min.js"></script> -->
 <script src="d3.v4.js"></script>
@@ -10,44 +13,36 @@
 <script type = "text/javascript" src = "colorbrewer.v1.min.js"></script>
 
 <style>
-<!-- html, body{
-    width : 95%;
-    margin : 5px;
-    padding : 0;
-    border-color: red #32a1ce;
-}     -->
-    
-#chart {
-    display: block;
-    margin: 20px auto 0;
-    height: 400px;
-    width: 400px;
-}
 
-<!-- #grid {
-    position: relative; 
-    display: flex;
-    flex-wrap: wrap;  
     
-} -->
-
 #grid {
-  overflow-y: auto;
   position: relative; 
-  display: flex;
-  width: 900px;
-  flex-wrap: wrap;  
+  display: flex;  
+  height: 400px;
+  width: 100%;  
+  box-sizing: border-box;
   border-color: skyblue;
   border-width: 3px;
   border-style: solid;
-  
+  overflow: scroll;
+  /*overflow-y: auto; */
+
+    /*transform:scale(2)*/  
+    /*overflow-x: auto;
+    overflow-y: auto; */
 }
 
-
-<!-- #gridId, #playId {
-    height: 50px;
-    width: 360px;    
-} -->
+#grid svg {
+    display: flex;
+    flex-wrap: wrap;
+    /*overflow-x: auto; */
+    overflow: scroll;
+    border-color: red;
+    border-width: 3px;
+    border-style: solid;
+    /*zoom: 0.5;  /*0.5로 하면 토글 */
+    overflow: scroll;
+}
 
 #countdown {
     position: fixed;
@@ -98,6 +93,9 @@ svg .circle {
     }
 }
 
+<!-- * {
+    font-family: 'Raleway', sans-serif;
+} -->
 
 #gridId, #playId {
     background-color: yellowgreen;
@@ -107,26 +105,37 @@ svg .circle {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 30px;
+    font-size: 20px;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
+    width: 48%;
 }
 
 #gridId:hover, #playId:hover {
-    background: tomato; 
-  
+    background: tomato;   
     color: white;
   
   }
+
+textarea::placeholder {
+    font-family: 'Raleway', sans-serif;
+    font-size: 13.9em;
+ } 
 </style>
 </head>
 
-<h1><p>저사랑 국악회2</p></h1>
+<h2><p>저사랑 국악회2</p></h2>
+<select class="years"onchange="selectYear()">연도선택
+    <option value="2023" selected>2023</option>
+    <option value="2022">2022</option>
+    <option value="2021">2021</option>
+</select>
+<select class="songs" onchange="selectSong()">곡 선택</select>
 <form name="childForm">
   <!-- <input type="button" value="부모창으로 값 보내기" onclick="setMid()"/><br> -->
   <!-- <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p> -->
-  <textarea id="txtOutput" name="xyzOutput" rows="15" cols="119"></textarea><br><br>
+  <textarea id="txtOutput" name="xyzOutput" rows=15 style="width:100%"></textarea><br><br>
 
   <!-- <p><input type="button" value="xyz >>> abc" onclick="f_xyztoabc()"/></p>
   <textarea id="txtOutput2" name="xyzOutput2" rows="6"></textarea><br><br>
@@ -141,11 +150,14 @@ svg .circle {
 <!-- <button value="Play" onclick="play()">Play</button> -->
 <!-- </div> -->
 
+<div id='title'>곡명</div>
 <div id='timelog'></div><div id='baklog'>박자,주파수</div>
+
 <!-- <div id="myProgress"><div id="myBar"></div></div> -->
 <!-- <button>Stop</button> -->
 
 <div id="grid" style="font-size: 2.0em;"></div>
+
 <div id="countdown">
     <div id="countdown-number"></div>
     <svg>
