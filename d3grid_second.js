@@ -261,6 +261,154 @@ function txtTodata() {
 	//return { "title": title, "gridData": data };
 }
 
+function txtTometro() {
+    getMid()
+	var data = new Array();
+	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+	var ypos = 1;
+    var songBakja = 3 // 3또는 4로 결정, 악보와 연결 필요
+    
+
+    // typeof = string
+    // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
+    var gakString = document.getElementById('txtOutput').value; 
+    textMaxcolcnt= 0;
+
+    // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
+    // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
+    // 율명 구조, 1각 4강 16박 각강박 순으로 
+    //줄단위로 배열로 저장
+    var gangString = gakString.split("\n")    
+    var jungGans = [];
+
+    // 전체 text에 대한 줄의 갯수는
+    textRowcnt = gangString.length
+    
+    // " "가 박자 구분자라 박자별로 나눠서 배열화
+    gangString.forEach(function(gang) {
+
+        console.log("gang", gang);
+
+        // (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
+        let songGang = [];
+
+        (gang.startsWith("w")) ? $('#title').text(gang) : songGang = gang.split(" ") ;
+        
+        // let songGang = gang.split(" ") //.splice(0,3)
+        // console.log("songGang", songGang);
+
+        function splitIntoChunk(arr, chunk) {
+            // 빈 배열 생성
+            const result = [];
+              
+            while(arr.length > 0) {
+              let tempArray;
+              // splice() 메서드를 사용하여 특정 길이만큼 배열을 분리함
+              tempArray = arr.splice(0, chunk);
+              // 빈 배열에 특정 길이만큼 분리된 배열을 추가
+              result.push(tempArray);
+            }
+              
+            return result;
+        }
+
+        if (songGang.length == 1) { return;
+        } else {
+            const newArray = splitIntoChunk(songGang, songBakja);
+            // console.log("newArray", newArray, newArray.length);
+
+            (newArray.length >= 1 ) ? jungGans.push(newArray): "" ;
+            
+        };        
+
+        // 배열의 요소가 8개인 배열
+        // 특정 길이만큼 분리된 새로운 배열
+        
+
+        // if (gang) {
+        //     jungGans.push(gang.split(" "))
+        // }      
+        // console.log("junGans", jungGans)
+    })
+
+    var title = "";
+    // 그리드 구성을 위해, x,y 좌표 높이 넓이 설정
+	// iterate for rows	, 5
+    
+
+    //박번호 부여
+    var bakSerial = 0;
+    
+    console.log("jungGans", jungGans);
+	for (var row = 0; row < jungGans.length ; row++) {
+		data.push(new Array());
+        // console.log("rows", row, jungGans[row])
+		// console.log("row", hData3[row].length, hData3[row] )
+		// iterate for cells/columns inside rows
+        var rowCol = "";
+        
+        // 가장 긴 컬럼의 갯수를 저장
+        textMaxcolcnt = textMaxcolcnt > jungGans[row].length ? textMaxcolcnt : jungGans[row].length ; 
+
+        // console.log("j-len", textMaxcolcnt);
+
+		for (var column = 0; column < jungGans[row].length; column++) {
+            // console.log("row-jungGans", row, jungGans)
+            // null 값을 경우 pass
+            //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
+            
+            if (!jungGans[row][column]) continue;
+            // console.log("bakSerial", bakSerial);
+            rowCol = jungGans[row][column];
+                        
+            if (rowCol.startsWith("w")) { 
+
+                data[row].push({
+                    bakno: bakSerial,
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    xyz: jungGans[row][column],
+                    //title을 한박처리 하기 위해
+                    xyzbits: [{bakno: bakSerial}]
+                });
+
+            } else {    
+
+                data[row].push({
+                    bakno: bakSerial,
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    xyz: jungGans[row][column],
+                    xyzbits: bakTobit(bakSerial, rowCol)
+                });
+            }    
+            // console.log("data", data)
+
+			// increment the x position. I.e. move it over by 50 (width variable)
+			xpos += width;
+            bakSerial ++;
+		}
+		// reset the x position after a row is complete
+		xpos = 1;
+		// increment the y position for the next row. Move it down 50 (height variable)
+		ypos += height + 5;
+        
+        //rowCol.startsWith("w" || "W") ? ypos += height + 20: ypos += height + 5; 
+        //( row === jungGans.length -1) ? ypos += height + 3: ypos += height + 3; 	
+	}
+    //console.log("data", data );
+    //console.log("ti", title)
+    return data;
+	//return { "title": title, "gridData": data };
+}
+
+
+
+
 var baseBit ="";
 
 function bakTobit(no, hanbak) {  //한박시작
@@ -474,14 +622,13 @@ function xyzFreq2(pxy, deco) {
 
 function runGrid() {
 
-
     let textarea = document.getElementById("txtOutput");
     // console.log(textarea);
     // textarea 박스 사이즈 축소
     textarea.style.height ="20px";
     // textarea.rows = 1;
     
-    // if (!gridOx) return 
+    // if (!gridOx) return , text를 data로 전환하는 함수 호출
     var gridData = txtTodata();
     t.value= "Play"
     // //var { title, gridData } = txtTodata();
@@ -620,6 +767,155 @@ function runGrid() {
     // }    
 } // function end
 
+function metroGrid() {
+
+    let textarea = document.getElementById("txtOutput");
+    // console.log(textarea);
+    // textarea 박스 사이즈 축소
+    textarea.style.height ="20px";
+    // textarea.rows = 1;
+    
+    // if (!gridOx) return 
+    var gridData = txtTometro();
+    t.value= "Play"
+    // //var { title, gridData } = txtTodata();
+    // //console.log("title", title)    
+    // //console.log("gridData", gridData)
+
+    // //중복 방지
+    // gridOx = false;
+
+    // svg  판 클리어
+    d3.select("#grid").selectAll("*").remove();
+    
+    //색깔 결정
+    var color = d3.scaleOrdinal()
+        .domain(gridData)
+        .range(d3.schemeSet2);
+
+    // svg 1개 생성
+    var grid = d3.select("#grid")
+        .append("svg")
+        .attr("class", "gridSvg")
+        //textRowcnt, textMaxcolcnt svg 사이즈 결정   
+        // .attr("width", window.innerWidth)     
+        .attr("width", textMaxcolcnt * 50)
+        .attr("height", textRowcnt * 50)
+        // .attr("height", textRowcnt * 25 )        
+        .style("overflow", "visible");
+        // .style("zoom", "0.5");
+        // .style("overflow", "auto");
+        //.attr("viewBox", "0 0 800 400");
+        // .attr("width", window.innerWidth)
+        // .attr("height",window.innerHeight);
+                    
+    //1장에 있는 전체 줄 만큼 여러줄 생성
+    var gRow = grid.selectAll(".row")
+        .data(gridData)
+        .enter().append("g")
+        .attr("class", "row");
+
+    //각 줄에 컬럼갯수 만큼 g 생성, function(d) { return d; } 이 중요  
+    var gColumn = gRow.selectAll(".column")
+        .data(function(d) { return d; })
+        .enter().append("g")
+        .attr("class", "column"); 
+     
+    //console.log("col", column);
+    // 생성된 g에 rect 갯수 생성 
+    //한박그리기
+    gColumn.append("rect")
+        //title과 박자박과 class 분리
+        .attr("class",function(d) { 
+            if (d.xyz.startsWith("w" || "W")) {
+                return "titleBak"; } else { return "bak"; } })
+        // .attr("class","square")
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+        // .attr("width", function(d) { return d.width; })
+        .attr("width", function(d) { return d.width; })
+        .attr("height", function(d) { return d.height; })
+        .style("fill", "#fff")
+        .style("stroke", (function(d) {
+            //title은 색깔 없게
+            if (!d.xyz.startsWith("w" || "W")) { return "#222";
+            } else { return "#fff"; }    
+        }))
+        
+    gColumn.append("text")
+        .attr("x", function(d) { return d.x  + d.width/2; })
+        .attr("y", function(d) { 
+            //title은 위치를 가운데로 
+            if (d.xyz.startsWith("w" || "W")) { return d.y + d.height*1/2;
+            } else { return d.y + d.height*1/4; } })
+        // .attr("y", height / 2)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.xyz; })
+        .style("text-anchor", function(d) { 
+            //title은 위치를 가운데로 
+            if (d.xyz.startsWith("w" || "W")) { return "left";
+            } else { return "middle"; } })
+        .style("font-size", 15);
+
+    //한박내 bit그리기
+    var gSubcolumn = gColumn.append("g")
+        .attr("class", "subcolumn")
+        .selectAll(".bit")
+        .data(function(d) { return d.xyzbits[0]; })
+        .enter();
+
+    //bit 박스 그리기    
+    gSubcolumn.append("rect")
+        .attr("class",function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                return "title"; } else { return "bit"; } })  
+        //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
+        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
+        .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 25 ; })
+        //.attr("width", function(d) { return d3.select(this.parentNode).datum().width/2; })
+        .attr("width", function(d) { return 0.3; }) //시작값을 죽여서        
+        // .attr("width", function(d) { return d.bakja; } )
+        .attr("height", function(d) { return d3.select(this.parentNode).datum().height/2; })
+        // .style("fill", function(d,i) { return color(d.bakno%12); }) // 한박기준으로 컬러링
+        // .style("fill", function(d,i) { console.log("i", i); return color((d.bakno +i)%24); }) // bit 기준으로 컬러링
+        .style("fill", function(d,i) { return color(d.partCol); }) // 랜듬하게 bit 기준으로 컬러링
+        
+        .style("stroke", "#222");
+
+    // title 클래스를 제거하여 title의 bit를 제거
+    gSubcolumn.selectAll(".title").remove();
+     
+  
+    // bit text 추가하기
+    gSubcolumn.append("text")
+        .attr("class",function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                return "titleText"; } else { return "bitText"; } })        
+        .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos + d.bakja/2; })
+            
+        .attr("y", function(d) { 
+            if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) { 
+                return d3.select(this.parentNode).datum().y + 
+                    d3.select(this.parentNode).datum().height*3/4; } 
+            else { return d3.select(this.parentNode).datum().y + 
+                d3.select(this.parentNode).datum().height*3/4; } })
+        // .attr("y", height / 2)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.xyz; })
+        .style("text-anchor", "middle")
+        .style("font-size", 10);
+
+    gSubcolumn.selectAll(".titleText").remove(); 
+    
+    scoreIs = true;
+    // xyzSet.forEach(function () )
+    // for (let item of xyzSet) {
+    //     console.log("mySet", item);
+
+    // }    
+} // function end
+
+
 var timerId = "";
 var interruptIndex = 0
 var t = document.getElementById('playId');
@@ -729,6 +1025,139 @@ function play() {
         .attr("class", "played")
         // .on("start", function(d,i) { playFreq(440, 2); })
         .on("start", function(d,i) { 
+            $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
+            document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
+            document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
+        });
+                  
+    
+        pBitText.transition()
+        // .duration(bakjaTime)
+        .duration(function(d,i){ // console.log("d", d); 
+            return d.dur; })    
+        .delay(function(d,i){ 
+            if (d.bakja == width) {
+                // console.log((d.bakno-1) * bakjaTime );
+                return (d.bakno-1) * bakjaTime ;
+            } else { 
+                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
+         }) 
+        .styleTween("font-size", function() { return d3.interpolate(8, 18); })
+        .attr("class", "played")
+        // .on("end",function() { d3.select(this).remove()})
+        
+        // .transition()
+        // .delay(bakjaTime/bakjaTime)
+        // .style("font-size", 10)
+        // .on("interrupt", function(d,i) { //console.log("this", this, i);
+        // })           
+        ;
+
+    }         
+
+}
+
+function metro() {
+    // 1박시간 가져오기
+//    var t = document.getElementById('playId');
+    // var t = $('playId');
+    let zzoom = 1.0;
+    
+    if (!scoreIs) return alert("악보보기 먼저 실행하세요");
+
+    //카운트 다운
+    function preCount() {
+        
+        //악보를 확대(0.5 -> 1.0)
+        // let zzoom = 3.0;
+        $('svg.gridSvg')
+        .css('zoom', zzoom)
+        
+        //카운터 다운준비
+        var countdownNumberEl = document.getElementById('countdown-number');
+        var countdown = 3;
+        // alert(countdownNumberEl.style)
+        // countdownNumberEl.style.display = "block";
+        $('#countdown').css('display', 'block');
+        // $('circle').css('display', 'block');
+        $('circle').attr('class', 'circle');
+        // $('#countdown').css('zIndex', 0);
+        // $('#grid').css('position: relative', 3);
+        // style="position: relative;      
+
+        countdownNumberEl.textContent = countdown;
+
+        const intervalId = setInterval(function() {
+            countdown = --countdown == 0 ? clearInterval(intervalId) : countdown;
+        // --countdown;
+
+            countdownNumberEl.textContent = countdown;
+        }, 1000);
+        // countdownNumberEl.style.display = "none";
+        // $('#countdown').css('display', 'none');
+    } 
+   
+    //프로그램시작
+    if (t.value == "Play") {
+        //가운트 시작
+        preCount();
+        setTimeout(transitWidth, 3000);
+        // 플레이 시작       
+        // transitWidth();
+        // 버튼 변경
+        t.value= "Stop";
+        // playNote();
+
+    } else if (t.value == "Stop") {
+        // bit, bitText 중지
+        d3.select("#grid").selectAll(".bit").interrupt();
+        d3.select("#grid").selectAll(".bitText").interrupt();
+        // 버튼 변경
+        t.value= "Resume";
+
+    } else if (t.value == "Resume") {
+        // 플레이 재시작
+        transitWidth();
+        // 버튼 변경
+        t.value= "Stop";
+    }
+
+    function transitWidth(inDex = 0) {    
+        $('#countdown').css('display', 'none');
+        // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
+        // 플레이안된 것만 가져오기, 
+        const pBit = d3.select("#grid").selectAll(".bit");
+        const pBitText = d3.select("#grid").selectAll(".bitText");
+
+        //한박 1000의 변경이 있을꼉우
+        bakjaTime = document.getElementById('bakSec').value;
+        // console.log("bakjaTime", bakjaTime)
+
+        pBit.transition()
+        // .duration(bakjaTime)
+        .duration(function(d,i){ //console.log("dDur", d); 
+            return d.dur; })
+
+        // .delay(function(d,i){ return i * 1000;}) 
+        .delay(function(d,i){ //console.log("d", d.xyzbits); 
+            if (d.bakja == width) {
+                // console.log((d.bakno-1) * bakjaTime );
+                return (d.bakno-1) * bakjaTime ;
+            } else { 
+                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
+                return (d.bakno- 1) * bakjaTime + d.bittime;
+            }    
+         })
+         // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
+        // .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
+        .on("start", function(d,i) { playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); }) 
+        
+        .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
+        .attr("class", "played")
+        // .on("start", function(d,i) { playFreq(440, 2); })
+        .on("end", function(d,i) { 
             $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
             document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
             document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
