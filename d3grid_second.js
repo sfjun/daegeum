@@ -280,19 +280,27 @@ function txtTometro() {
     //줄단위로 배열로 저장
     var gangString = gakString.split("\n")    
     var jungGans = [];
-
+    let songGang = [];
     // 전체 text에 대한 줄의 갯수는
     textRowcnt = gangString.length
     
     // " "가 박자 구분자라 박자별로 나눠서 배열화
-    gangString.forEach(function(gang) {
+    gangString.forEach(function(gang,i) {
 
-        console.log("gang", gang);
+        console.log("gang", gang,i);
 
         // (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
-        let songGang = [];
 
-        (gang.startsWith("w")) ? $('#title').text(gang) : songGang = gang.split(" ") ;
+        if (gang.startsWith("w")) {
+            $('#title').text(gang)
+        } else {
+            songGang = gang.split(" ")
+        }
+
+        
+        
+
+        // (gang.startsWith("w")) ? $('#title').text(gang) : songGang = gang.split(" ") ;
         
         // let songGang = gang.split(" ") //.splice(0,3)
         // console.log("songGang", songGang);
@@ -361,20 +369,20 @@ function txtTometro() {
             // console.log("bakSerial", bakSerial);
             rowCol = jungGans[row][column];
                         
-            if (rowCol.startsWith("w")) { 
+            // if (rowCol.startsWith("w")) { 
 
-                data[row].push({
-                    bakno: bakSerial,
-                    x: xpos,
-                    y: ypos,
-                    width: width,
-                    height: height,
-                    xyz: jungGans[row][column],
-                    //title을 한박처리 하기 위해
-                    xyzbits: [{bakno: bakSerial}]
-                });
+            //     data[row].push({
+            //         bakno: bakSerial,
+            //         x: xpos,
+            //         y: ypos,
+            //         width: width,
+            //         height: height,
+            //         xyz: jungGans[row][column],
+            //         //title을 한박처리 하기 위해
+            //         xyzbits: [{bakno: bakSerial}]
+            //     });
 
-            } else {    
+            // } else {    
 
                 data[row].push({
                     bakno: bakSerial,
@@ -385,7 +393,7 @@ function txtTometro() {
                     xyz: jungGans[row][column],
                     xyzbits: bakTobit(bakSerial, rowCol)
                 });
-            }    
+            // }    
             // console.log("data", data)
 
 			// increment the x position. I.e. move it over by 50 (width variable)
