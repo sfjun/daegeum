@@ -1,7 +1,7 @@
 // var color = ['skyblue', 'lime', 'yellowgreen', 'blueviolet', 'chocolate', 'darkgreen', 'yellow']
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
-
+var playMode = "p";
 
 //아악, 정악, 당악
 // var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
@@ -206,7 +206,7 @@ function txtTodata() {
         textMaxcolcnt = textMaxcolcnt > jungGans[row].length ? textMaxcolcnt : jungGans[row].length ; 
 
         // console.log("j-len", textMaxcolcnt);
-
+        // console.log("jungGans", jungGans);
 		for (var column = 0; column < jungGans[row].length; column++) {
             // console.log("row-jungGans", row, jungGans)
             // null 값을 경우 pass
@@ -215,6 +215,7 @@ function txtTodata() {
             if (!jungGans[row][column]) continue;
             // console.log("bakSerial", bakSerial);
             rowCol = jungGans[row][column];
+            // console.log("rowCol", rowCol);
                         
             if (rowCol.startsWith("w")) { 
 
@@ -262,6 +263,7 @@ function txtTodata() {
 }
 
 function txtTometro() {
+    playMode = "m";
     getMid()
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
@@ -281,13 +283,11 @@ function txtTometro() {
     var gangString = gakString.split("\n")    
     var jungGans = [];
     let songGang = [];
-    // 전체 text에 대한 줄의 갯수는
-    textRowcnt = gangString.length
     
     // " "가 박자 구분자라 박자별로 나눠서 배열화
     gangString.forEach(function(gang,i) {
 
-        console.log("gang", gang,i);
+        // console.log("gang", gang,i);
 
         // (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
 
@@ -295,9 +295,7 @@ function txtTometro() {
             $('#title').text(gang)
         } else {
             songGang = gang.split(" ")
-        }
-
-        
+        }        
         
 
         // (gang.startsWith("w")) ? $('#title').text(gang) : songGang = gang.split(" ") ;
@@ -314,20 +312,23 @@ function txtTometro() {
               // splice() 메서드를 사용하여 특정 길이만큼 배열을 분리함
               tempArray = arr.splice(0, chunk);
               // 빈 배열에 특정 길이만큼 분리된 배열을 추가
-              result.push(tempArray);
+              jungGans.push(tempArray);
+            //   result.push(tempArray);
             }
               
             return result;
         }
 
-        if (songGang.length == 1) { return;
-        } else {
-            const newArray = splitIntoChunk(songGang, songBakja);
-            // console.log("newArray", newArray, newArray.length);
+        splitIntoChunk(songGang, songBakja);
 
-            (newArray.length >= 1 ) ? jungGans.push(newArray): "" ;
+        // if (songGang.length == 1) { return;
+        // } else {
+        //     const newArray = splitIntoChunk(songGang, songBakja);
+        //     // console.log("newArray", newArray, newArray.length);
+
+        //     (newArray.length >= 1 ) ? jungGans.push(newArray): "" ;
             
-        };        
+        // };        
 
         // 배열의 요소가 8개인 배열
         // 특정 길이만큼 분리된 새로운 배열
@@ -347,7 +348,12 @@ function txtTometro() {
     //박번호 부여
     var bakSerial = 0;
     
-    console.log("jungGans", jungGans);
+    // console.log("jungGans2", jungGans, jungGans.length);
+ 
+    // 전체 text에 대한 줄의 갯수는
+    
+    textRowcnt = jungGans.length
+    
 	for (var row = 0; row < jungGans.length ; row++) {
 		data.push(new Array());
         // console.log("rows", row, jungGans[row])
@@ -368,7 +374,8 @@ function txtTometro() {
             if (!jungGans[row][column]) continue;
             // console.log("bakSerial", bakSerial);
             rowCol = jungGans[row][column];
-                        
+
+            // console.log("rowCol", rowCol);            
             // if (rowCol.startsWith("w")) { 
 
             //     data[row].push({
@@ -635,7 +642,7 @@ function runGrid() {
     // textarea 박스 사이즈 축소
     textarea.style.height ="20px";
     // textarea.rows = 1;
-    
+    playMode = "p";
     // if (!gridOx) return , text를 data로 전환하는 함수 호출
     var gridData = txtTodata();
     t.value= "Play"
@@ -660,10 +667,10 @@ function runGrid() {
         //textRowcnt, textMaxcolcnt svg 사이즈 결정   
         // .attr("width", window.innerWidth)     
         .attr("width", textMaxcolcnt * 50)
-        .attr("height", textRowcnt * 50)
+        .attr("height", textRowcnt * 50 )
         // .attr("height", textRowcnt * 25 )        
-        .style("overflow", "visible");
-        // .style("zoom", "0.5");
+        .style("overflow", "visible")
+        
         // .style("overflow", "auto");
         //.attr("viewBox", "0 0 800 400");
         // .attr("width", window.innerWidth)
@@ -808,10 +815,10 @@ function metroGrid() {
         //textRowcnt, textMaxcolcnt svg 사이즈 결정   
         // .attr("width", window.innerWidth)     
         .attr("width", textMaxcolcnt * 50)
-        .attr("height", textRowcnt * 50)
+        .attr("height", textRowcnt * 50 + 200)
         // .attr("height", textRowcnt * 25 )        
-        .style("overflow", "visible");
-        // .style("zoom", "0.5");
+        .style("overflow", "visible")
+        .style("zoom", "2.0");
         // .style("overflow", "auto");
         //.attr("viewBox", "0 0 800 400");
         // .attr("width", window.innerWidth)
@@ -938,7 +945,7 @@ function play() {
     // 1박시간 가져오기
 //    var t = document.getElementById('playId');
     // var t = $('playId');
-    let zzoom = 1.0;
+    let zzoom = 2.0;
     
     if (!scoreIs) return alert("악보보기 먼저 실행하세요");
 
@@ -947,8 +954,7 @@ function play() {
         
         //악보를 확대(0.5 -> 1.0)
         // let zzoom = 3.0;
-        $('svg.gridSvg')
-        .css('zoom', zzoom)
+        (playMode = "m") ? $('svg.gridSvg').css('zoom', zzoom) : $('svg.gridSvg').css('zoom', 1.0); 
         
         //카운터 다운준비
         var countdownNumberEl = document.getElementById('countdown-number');
@@ -1027,149 +1033,22 @@ function play() {
          })
          // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
         // .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
-        .on("start", function(d,i) { playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); }) 
-        
-        .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
-        .attr("class", "played")
-        // .on("start", function(d,i) { playFreq(440, 2); })
         .on("start", function(d,i) { 
+            playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); 
             $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
-            document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
-            document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
-        });
-                  
-    
-        pBitText.transition()
-        // .duration(bakjaTime)
-        .duration(function(d,i){ // console.log("d", d); 
-            return d.dur; })    
-        .delay(function(d,i){ 
-            if (d.bakja == width) {
-                // console.log((d.bakno-1) * bakjaTime );
-                return (d.bakno-1) * bakjaTime ;
-            } else { 
-                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
-                return (d.bakno- 1) * bakjaTime + d.bittime;
-            }    
-         }) 
-        .styleTween("font-size", function() { return d3.interpolate(8, 18); })
-        .attr("class", "played")
-        // .on("end",function() { d3.select(this).remove()})
+            document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
+            document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;
         
-        // .transition()
-        // .delay(bakjaTime/bakjaTime)
-        // .style("font-size", 10)
-        // .on("interrupt", function(d,i) { //console.log("this", this, i);
-        // })           
-        ;
-
-    }         
-
-}
-
-function metro() {
-    // 1박시간 가져오기
-//    var t = document.getElementById('playId');
-    // var t = $('playId');
-    let zzoom = 1.0;
-    
-    if (!scoreIs) return alert("악보보기 먼저 실행하세요");
-
-    //카운트 다운
-    function preCount() {
-        
-        //악보를 확대(0.5 -> 1.0)
-        // let zzoom = 3.0;
-        $('svg.gridSvg')
-        .css('zoom', zzoom)
-        
-        //카운터 다운준비
-        var countdownNumberEl = document.getElementById('countdown-number');
-        var countdown = 3;
-        // alert(countdownNumberEl.style)
-        // countdownNumberEl.style.display = "block";
-        $('#countdown').css('display', 'block');
-        // $('circle').css('display', 'block');
-        $('circle').attr('class', 'circle');
-        // $('#countdown').css('zIndex', 0);
-        // $('#grid').css('position: relative', 3);
-        // style="position: relative;      
-
-        countdownNumberEl.textContent = countdown;
-
-        const intervalId = setInterval(function() {
-            countdown = --countdown == 0 ? clearInterval(intervalId) : countdown;
-        // --countdown;
-
-            countdownNumberEl.textContent = countdown;
-        }, 1000);
-        // countdownNumberEl.style.display = "none";
-        // $('#countdown').css('display', 'none');
-    } 
-   
-    //프로그램시작
-    if (t.value == "Play") {
-        //가운트 시작
-        preCount();
-        setTimeout(transitWidth, 3000);
-        // 플레이 시작       
-        // transitWidth();
-        // 버튼 변경
-        t.value= "Stop";
-        // playNote();
-
-    } else if (t.value == "Stop") {
-        // bit, bitText 중지
-        d3.select("#grid").selectAll(".bit").interrupt();
-        d3.select("#grid").selectAll(".bitText").interrupt();
-        // 버튼 변경
-        t.value= "Resume";
-
-    } else if (t.value == "Resume") {
-        // 플레이 재시작
-        transitWidth();
-        // 버튼 변경
-        t.value= "Stop";
-    }
-
-    function transitWidth(inDex = 0) {    
-        $('#countdown').css('display', 'none');
-        // 플레이된 bit와 bitText가 플레이되면 class가 played로 변경되므로
-        // 플레이안된 것만 가져오기, 
-        const pBit = d3.select("#grid").selectAll(".bit");
-        const pBitText = d3.select("#grid").selectAll(".bitText");
-
-        //한박 1000의 변경이 있을꼉우
-        bakjaTime = document.getElementById('bakSec').value;
-        // console.log("bakjaTime", bakjaTime)
-
-        pBit.transition()
-        // .duration(bakjaTime)
-        .duration(function(d,i){ //console.log("dDur", d); 
-            return d.dur; })
-
-        // .delay(function(d,i){ return i * 1000;}) 
-        .delay(function(d,i){ //console.log("d", d.xyzbits); 
-            if (d.bakja == width) {
-                // console.log((d.bakno-1) * bakjaTime );
-                return (d.bakno-1) * bakjaTime ;
-            } else { 
-                // console.log((d.bakno- 1) * bakjaTime + d.bittime);
-                return (d.bakno- 1) * bakjaTime + d.bittime;
-            }    
-         })
-         // on, 이벤트처리시, start에서 함수연결, /1000는 oscillator는 초단위로 환산용
-        // .on("start", function(d,i) { playFreq(d.freq, d.dur/1000); }) 
-        .on("start", function(d,i) { playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); }) 
+        }) 
         
         .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
-        .attr("class", "played")
+        .attr("class", "played");
         // .on("start", function(d,i) { playFreq(440, 2); })
-        .on("end", function(d,i) { 
-            $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
-            document.getElementById("grid").scrollLeft = this.getAttribute( 'x' ) -50  ;
-            document.getElementById("grid").scrollTop = this.getAttribute( 'y' ) - 30 ;
-        });
+        // .on("end", function(d,i) { 
+        //     $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
+        //     document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
+        //     document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;
+        // });
                   
     
         pBitText.transition()
@@ -1199,6 +1078,7 @@ function metro() {
     }         
 
 }
+
 
 
 var ac = new (window.AudioContext || window.webkitAudioContext);
@@ -1253,3 +1133,4 @@ function playNote() {
     //requestAnimationFrame(step)
   }
 }
+
