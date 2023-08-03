@@ -2,6 +2,12 @@
 // var xyzFreqArr = [{㑣: 194.25, no: 1},	{侇: 207.45, no: 2},	{㑲: 218.55, no: 3},	{㒇: 233.35, no: 4},	{㒣: 245.85, no: 5},	{黃: 259, no: 6},	{大: 276.6, no: 7},	{太: 291.4, no: 8},	{夾: 311.2, no: 9},	{姑: 327.8, no: 10},	{仲: 350, no: 11},	{㽔: 368.8, no: 12},	{林: 388.5, no: 13},	{夷: 414.9, no: 14},	{南: 437.1, no: 15},	{無: 466.7, no: 16},	{應: 491.7, no: 17},	{潢: 518, no: 18},	{汏: 553.2, no: 19},	{汰: 582.8, no: 20},	{浹: 622.4, no: 21},	{㴌: 655.6, no: 22},	{㳞: 700, no: 23},	{㶋: 737.6, no: 24},	{淋: 777, no: 25},	{洟: 829.8, no: 26},	{湳: 874.2, no: 27},	{潕: 933.4, no: 28},	{㶐: 983.4, no: 29},	{㶂: 518, no: 30},	{𣴘: 553.2, no: 31},	{㳲: 582.8, no: 32}];
 
 var playMode = "p";
+// metro 모드에서 사용할 박자수
+var songBakja;
+
+// 현재선택한곳이나 있는 곡
+var songIs;
+
 
 //아악, 정악, 당악
 // var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
@@ -97,15 +103,18 @@ function selectSong() {
         document.getElementById("txtOutput").style.height ="200px";    
         if (subOption[i]['title'] == selectedSong) {
             childForm.xyzOutput.value = subOption[i]['song']
+            songIs = subOption[i]['song']
+            songBakja =  subOption[i]['gangBak'] 
         }        
     }
 
 }
 
+
 function getMid() {
 //  childForm.xyzOutput.value = opener.window.document.getElementById("txtOutput").value
 
-    let songIs = document.getElementById('txtOutput').value; 
+    songIs = document.getElementById('txtOutput').value; 
     
     if (!songIs) { 
         // console.log("songsList[-1]", songsList[songsList.length - 1]['title'])
@@ -114,6 +123,7 @@ function getMid() {
         
         songsList = songsList2023;
         songIs = songsList2023[0]['song'];
+        songBakja = songsList2023[0]['gangBak']
         childForm.xyzOutput.value = songIs
     }        
 
@@ -125,13 +135,12 @@ function getMid() {
     const xySet = new Set(xyList)
     // console.log(xySet);
 
-        for (let xy of xySet) {
-            for (let item of xyzFreqArr_ori) {
-                if (item.xyz == xy) {
-                    xyzFreqArr.push(item)
-                }
-            }
+    for (let xy of xySet) {
+        for (let item of xyzFreqArr_ori) {
+            if (item.xyz == xy) {
+                xyzFreqArr.push(item) }
         }
+    }
 
 }
 
@@ -154,7 +163,7 @@ var textRowcnt= 0;
 var textMaxcolcnt;
 
 function txtTodata() {
-    getMid()
+    //getMid()
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
@@ -268,7 +277,7 @@ function txtTometro() {
 	var data = new Array();
 	var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
 	var ypos = 1;
-    var songBakja = 3 // 3또는 4로 결정, 악보와 연결 필요
+    // songBakja = 3 // 3또는 4로 결정, 악보와 연결 필요
     
 
     // typeof = string
