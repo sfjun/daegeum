@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <Html><head>
-<title> deageum pop </title>
+<title>j-deageum</title>
 <!-- <meta name="viewport" content="width=900, initial-scale=5.0"> -->
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, 
@@ -133,7 +133,7 @@ textarea::placeholder {
     <option value="2022">2022</option>
     <option value="2021">2021</option>
 </select>
-<select class="songs" onchange="selectSong()">곡 선택</select>
+<select class="songs" onchange="dg.selectSong()">곡 선택</select>
 <form name="childForm">
   <!-- <input type="button" value="부모창으로 값 보내기" onclick="setMid()"/><br> -->
   <!-- <p><input type="button" value="부모창의 값 가져오기" onclick="getMid()"/></p> -->
@@ -146,9 +146,9 @@ textarea::placeholder {
 </form>
 -1박(1초=1000)<input type="number" id = "bakSec" min="800" max="3000" step="100" value="1000" /><br>
 <!-- <div class="btn-grp"> -->
-<input type="button" id= "gridId" value="악보보기" onclick= "runGrid()"/>
-<input type="button" id= "metrogridId" value="메트로놈" onclick= "metroGrid()"/>
-<input type="button" id= "playId"  value="Play" onclick="play()"/>
+<input type="button" id= "gridId" value="악보보기" onclick= "dg.runGrid('p')"/>
+<input type="button" id= "metrogridId" value="메트로놈" onclick= "dg.metroGrid()"/>
+<input type="button" id= "playId"  value="Play" onclick="sd.play()"/>
 <!-- <input type="button" id= "metroId"  value="메트로놈" onclick="play()"/> -->
 
 <!-- <button value="악보보기" onclick= "runGrid()">악보보기</button> -->
@@ -169,8 +169,6 @@ textarea::placeholder {
         <circle class="circle11" r="18" cx="20" cy="20"></circle>
     </svg>
 </div> 
-
-
 
 <!-- <p><input type="button" value="파이전환" onclick= "runPie()"/></p>
 <div id="my_dataviz"><p id="piTitle">각 제목</p></div>

@@ -1,17 +1,26 @@
+//모드 정의: p
 var playMode = "p";
+
 // metro 모드에서 사용할 박자수
 var songBakja;
 
 var baseBit= "sfjun";
 
+// 정간의 가로 세로 사이즈
 var width = 50;
 var height = 50;
 // var bakjaTime = 1000;
 var bakjaTime ='';
 //console.log(bakjaTime)
+
+//한줄에 정간의 수
 var textRowcnt= 0;
 var textMaxcolcnt;
 
+//대금의 구조는
+//1각4강16정간으로 구성예로 보면 1강은 4정간으로 구성
+//정간이 모여 강이되고 강이 모여 각되는 구조
+//각은 1줄, 강은 마디, 정간은 1박
 
 class Daeguem {  /////////////////////////////////////////////////////////////////////////////////////////////////////
     constructor(name) { 
@@ -19,11 +28,13 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         // this.baseBit="sfjun";       
     }
 
+    //textArea에서 값이 있으면 읽어오기
+    //창작시 사용
     textarea = document.getElementById("txtOutput");
     songIs;
     // bitCnt;
     
-
+    //기본 그리드 그리고 작성된 악보를 횡간보 형식으로 그리기
     runGrid() { 
         // textarea 박스 사이즈 축소
         this.textarea.style.height ="20px";
@@ -362,8 +373,15 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         }
     }
 
+    //악보를 다시 읽고, 정간보 형태의 배열로 리턴
+
     getMid() {
         songIs = document.getElementById('txtOutput').value; 
+        
+        //match: 캡처 그룹을 포함해서 모든 일치를 담은 배열을 반환합니다. 일치가 없으면 null을 반환합니다.
+        //'/':시작, '/': 종료, 문자 클래스 [ ] 사이에는 어떤 문자도 들어갈 수 있다.
+        // \w: [A-Za-z0-9_], \W: w가 아닌 모든것
+        // gu: g:문자열내의 모든 패턴을 검색하라 u: 유니코드 전체를 지원
         
         var xyList = songIs.match(/[\W]/gu)
         // console.log(xx)
@@ -378,16 +396,22 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         }
     }
 
-    txtTodata() {
+    //text를 읽어서 정각보 data화 하는 작업    
+    txtTodata(textValue) {
         // getMid()
+        console.log("textValue", textValue)
         var data = new Array();
-        var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+
+        //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+        var xpos = 1; 
         var ypos = 1;
     
         // typeof = string
         // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
-        var gakString = document.getElementById('txtOutput').value; 
-        // console.log('gakstring', gakString)
+        // var gakString = document.getElementById('txtOutput').value; 
+        var gakString = textValue;
+        console.log('gakstring', gakString)
+
         textMaxcolcnt= 0;
         // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
         // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
@@ -399,13 +423,14 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         // 전체 text에 대한 줄의 갯수는
         textRowcnt = gangString.length
         
-        // " "가 박자 구분자라 박자별로 나눠서 배열화
+        // " " 별로 가 1박자로 나눠서 배열화
         gangString.forEach(function(gang) {
             // console.log("gang", gang);
             // (gang.startsWith("w")) ? jungGans.push([gang]) : jungGans.push(gang.split(" ")) ;
-            (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
-        
+            (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;        
         })
+
+        // console.log("jungGans", jungGans)
     
         var title = "";
         
