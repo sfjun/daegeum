@@ -41,8 +41,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         // textarea.rows = 1;
 
         //p: 전체악보보기, m: 메트로늄
-        playMode = pm_mode;     
-        console.log(playMode)        
+        playMode = pm_mode;          
         
         
         //악보를 읽고 xyzFreqArr배에 값을 적재

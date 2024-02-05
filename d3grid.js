@@ -399,7 +399,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     //text를 읽어서 정각보 data화 하는 작업    
     txtTodata(textValue) {
         // getMid()
-        console.log("textValue", textValue)
+        // console.log("textValue", textValue)
         var data = new Array();
 
         //starting xpos and ypos at 1 so the stroke will show when we make the grid below
@@ -408,15 +408,16 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     
         // typeof = string
         // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
-        // var gakString = document.getElementById('txtOutput').value; 
-        var gakString = textValue;
-        console.log('gakstring', gakString)
+        var gakString = document.getElementById('txtOutput').value; 
+        // var gakString = textValue;
+        // console.log('gakstring', gakString)
 
         textMaxcolcnt= 0;
         // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
         // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
     
         //줄단위로 배열로 저장
+        console.log("gakstring", gakString, textValue)
         var gangString = gakString.split("\n")    
         var jungGans = [];
     
@@ -841,7 +842,7 @@ class Soundplay { //////////////////////////////////////////////////////////////
         // 1박시간 가져오기
     //    var t = document.getElementById('playId');
         // var t = $('playId');
-        let zzoom = 1.8;
+        let zzoom = 2.0;
         
         if (!scoreIs) return alert("악보보기 먼저 실행하세요");
     
@@ -850,7 +851,7 @@ class Soundplay { //////////////////////////////////////////////////////////////
             
             //악보를 확대(0.5 -> 1.0)
             // let zzoom = 3.0;
-            (playMode = "m") ? $('svg.gridSvg').css('zoom', zzoom) : $('svg.gridSvg').css('zoom', 1.0); 
+            // (playMode = "m") ? $('svg.gridSvg').css('zoom', zzoom) : $('svg.gridSvg').css('zoom', 1.0); 
             
             //카운터 다운준비
             var countdownNumberEl = document.getElementById('countdown-number');
@@ -933,10 +934,18 @@ class Soundplay { //////////////////////////////////////////////////////////////
             .on("start", function(d,i) { 
                 sd.playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); 
                 $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
-                document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
-                document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;
-            
-            }) 
+                console.log("this", d3.select(this.parentNode).datum().x)
+                // document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
+                document.getElementById("grid").scrollLeft = d3.select(this.parentNode).datum().x -150  ;
+                document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;               
+
+            })             
+            .on("end", function(d,i) { 
+                document.getElementById("grid").scrollLeft = d3.select(this.parentNode).datum().x - 150 ;
+                // document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;               
+
+            })
+
             
             .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
             .attr("class", "played");
