@@ -314,6 +314,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         let songSelect = document.querySelector('.songs');
     
         switch (selectedYear) {
+            case '2024':
+                var subOption = songsList2024;
+                break;
             case '2023':
                 var subOption = songsList2023;
                 break;
