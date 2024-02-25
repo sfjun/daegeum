@@ -17,10 +17,14 @@ var bakjaTime ='';
 var textRowcnt= 0;
 var textMaxcolcnt;
 
+// 율명만 추출하여 string으로 추가하기 위한 변수
+var songStr= '';
+
 //대금의 구조는
 //1각4강16정간으로 구성예로 보면 1강은 4정간으로 구성
 //정간이 모여 강이되고 강이 모여 각되는 구조
 //각은 1줄, 강은 마디, 정간은 1박
+
 class Daeguem {  /////////////////////////////////////////////////////////////////////////////////////////////////////
     constructor(name) { 
         this.name = name;  
@@ -34,27 +38,19 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     // bitCnt;
     
     //기본 그리드 그리고 작성된 악보를 횡간보 형식으로 그리기
-    runGrid(pm_mode) { 
-        // console.log("runGrid 시작")
+    runGrid() { 
         // textarea 박스 사이즈 축소
         this.textarea.style.height ="20px";
         // textarea.rows = 1;
-
-        //p: 전체악보보기, m: 메트로늄
-        playMode = pm_mode;          
-        
-        
-        //악보를 읽고 xyzFreqArr배에 값을 적재
+        playMode = "p";            
+    
         this.getMid();
-            
-        // console.log("dg.textrearea.value", dg.textarea.value )
-        // text를 데이터를 넘겨주고 각간별 data 배열을 return 
-        var gridData = dg.txtTodata(dg.textarea.value);
+    
+        var gridData = dg.txtTodata();
         
         // svg  판 클리어
         d3.select("#grid").selectAll("*").remove();
         
-        // 정간별 사용색깔 준비
         var color = d3.scaleOrdinal()
             .domain(gridData)
             .range(d3.schemeSet2);
@@ -63,11 +59,11 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         var grid = d3.select("#grid")
             .append("svg")
             .attr("class", "gridSvg")
-            .attr("width", textMaxcolcnt * width)
-            .attr("height", textRowcnt * height )
+            .attr("width", textMaxcolcnt * 50)
+            .attr("height", textRowcnt * 50 )
             .style("overflow", "visible");
                         
-        //1장에 있는 tet 줄 만큼 row 줄 생성
+        //1장에 있는 전체 줄 만큼 여러줄 생성
         var gRow = grid.selectAll(".row")
             .data(gridData)
             .enter().append("g")
@@ -83,9 +79,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         //한박그리기
         gColumn.append("rect")
             //title과 박자박과 class 분리
-            // .attr("class",function(d) { 
-            //     if (d.xyz.startsWith("w" || "W")) {
-            //         return "titleBak"; } else { return "bak"; } })
+            .attr("class",function(d) { 
+                if (d.xyz.startsWith("w" || "W")) {
+                    return "titleBak"; } else { return "bak"; } })
             // .attr("class","square")
             .attr("x", function(d) { return d.x; })
             .attr("y", function(d) { return d.y; })
@@ -93,32 +89,28 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             .attr("width", function(d) { return d.width; })
             .attr("height", function(d) { return d.height; })
             .style("fill", "#fff")
-            .style("stroke", "#222")            
-            // .style("stroke", (function(d) {
-            //     //title은 색깔 없게
-            //     if (!d.xyz.startsWith("w" || "W")) { return "#222";
-            //     } else { return "#fff"; }    
-            // }))
-
-        //텍스트 추가하기    
+            .style("stroke", (function(d) {
+                //title은 색깔 없게
+                if (!d.xyz.startsWith("w" || "W")) { return "#222";
+                } else { return "#fff"; }    
+            }))
+            
         gColumn.append("text")
             .attr("x", function(d) { return d.x  + d.width/2; })
-            .attr("y", function(d) { return d.y  + d.height*1/4; })            
-            // .attr("y", function(d) { 
-            //     //title은 위치를 가운데로 
-            //     if (d.xyz.startsWith("w" || "W")) { return d.y + d.height*1/2;
-            //     } else { return d.y + d.height*1/4; } })
+            .attr("y", function(d) { 
+                //title은 위치를 가운데로 
+                if (d.xyz.startsWith("w" || "W")) { return d.y + d.height*1/2;
+                } else { return d.y + d.height*1/4; } })
             // .attr("y", height / 2)
             .attr("dy", ".35em")
             .text(function(d) { return d.xyz; })
-            .style("text-anchor", "middle")            
-            // .style("text-anchor", function(d) { 
-            //     //title은 위치를 가운데로 
-            //     if (d.xyz.startsWith("w" || "W")) { return "left";
-            //     } else { return "middle"; } })
+            .style("text-anchor", function(d) { 
+                //title은 위치를 가운데로 
+                if (d.xyz.startsWith("w" || "W")) { return "left";
+                } else { return "middle"; } })
             .style("font-size", 15);
     
-        //한정간내 bit그리기
+        //한박내 bit그리기
         var gSubcolumn = gColumn.append("g")
             .attr("class", "subcolumn")
             .selectAll(".bit")
@@ -127,10 +119,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     
         //bit 박스 그리기    
         gSubcolumn.append("rect")
-            .attr("class", "bit" )
-            // .attr("class",function(d) { 
-            //     if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
-            //         return "title"; } else { return "bit"; } })  
+            .attr("class",function(d) { 
+                if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                    return "title"; } else { return "bit"; } })  
             //.attr("class", function(d) { console.log("d",d.xyz); return "bit"})          
             .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos ; })
             .attr("y", function(d) { return d3.select(this.parentNode).datum().y + 25 ; })
@@ -150,10 +141,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         
         // bit text 추가하기
         gSubcolumn.append("text")
-            .attr("class", "bitText")
-            // .attr("class",function(d) { 
-            //     if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
-            //         return "titleText"; } else { return "bitText"; } })        
+            .attr("class",function(d) { 
+                if (d3.select(this.parentNode).datum().xyz.startsWith("w" || "W")) {
+                    return "titleText"; } else { return "bitText"; } })        
             .attr("x", function(d) { return d3.select(this.parentNode).datum().x + d.xpos + d.bakja/2; })
                 
             .attr("y", function(d) { 
@@ -327,6 +317,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         let songSelect = document.querySelector('.songs');
     
         switch (selectedYear) {
+            case '2024':
+                var subOption = songsList2024;
+                break;
             case '2023':
                 var subOption = songsList2023;
                 break;
@@ -362,6 +355,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         document.getElementById("txtOutput").style.height ="200px";
         
         switch (selectedYear) {
+            case '2024':
+                var subOption = songsList2024;
+                break;
             case '2023':
                 var subOption = songsList2023;
                 break;
@@ -386,7 +382,8 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         }
     }
 
-    //악보를 읽고, 정간보 형태의 xyzFreqArr배열에 적재
+    //악보를 다시 읽고, 정간보 형태의 배열로 리턴
+
     getMid() {
         songIs = document.getElementById('txtOutput').value; 
         
@@ -398,50 +395,58 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         var xyList = songIs.match(/[\W]/gu)
         // console.log(xx)
         const xySet = new Set(xyList)
-        // console.log(xySet);
-    
+//        console.log("xySet", xySet)
+
+        //한곡의 음정set을 만드는 작업
+        // songStr에는 율명만 만들어 추가
         for (let xy of xySet) {
             for (let item of xyzFreqArr_ori) {
                 if (item.xyz == xy) {
-                    xyzFreqArr.push(item) }
+                    xyzFreqArr.push(item) 
+                    songStr += item.xyz
+                    // console.log("songStr", songStr);
+                }
             }
         }
     }
 
-    // text를 정간별 배열로 정리
-    txtTodata(textValue) {
+    //text를 읽어서 정각보 data화 하는 작업    
+    txtTodata() {
         // getMid()
         // console.log("textValue", textValue)
         var data = new Array();
-        var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+
+        //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+        var xpos = 1; 
         var ypos = 1;
     
         // typeof = string
         // 가로쓰기 전환된 율명 읽어오기, 1각, 2각, 3각...
-        // var gakString = document.getElementById('txtOutput').value; 
-        var gakString = textValue; 
-        
+        var gakString = document.getElementById('txtOutput').value; 
+        // var gakString = textValue;
         // console.log('gakstring', gakString)
+
         textMaxcolcnt= 0;
         // 각별로 정리되어 있지 않고 2음절씩 구부하여 가독성 있게 구성된 단위로 분리
         // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
     
         //줄단위로 배열로 저장
+        console.log("gakstring", gakString)
         var gangString = gakString.split("\n")    
         var jungGans = [];
     
         // 전체 text에 대한 줄의 갯수는
         textRowcnt = gangString.length
         
-        // " "가 박자 구분자라 박자별로 나눠서 배열화
+        // " " 별로 가 1박자로 나눠서 배열화
         gangString.forEach(function(gang) {
             // console.log("gang", gang);
             // (gang.startsWith("w")) ? jungGans.push([gang]) : jungGans.push(gang.split(" ")) ;
-            (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;
-        
+            (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;        
         })
+
+        console.log("jungGans", jungGans)
     
-        // console.log("jungGans", jungGans)
         var title = "";
         
         //박번호 부여
@@ -464,13 +469,12 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                 // null 값을 경우 pass
                 //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
     
+                //row별 컬럼별 현행글자를 변수로
                 rowCol = jungGans[row][column];
-                // console.log("TF", rowC?ol)
+                console.log("TF", rowCol)
                 // if (!jungGans[row][column]) continue;
                 if (rowCol == '') continue;
-                
                 // console.log("bakSerial", bakSerial);
-                
                 // console.log("rowCol", rowCol);
                             
                 if (rowCol.startsWith("w")) { 
@@ -497,7 +501,8 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                         xyz: jungGans[row][column],
                         xyzbits: this.bakTobit(bakSerial, rowCol)
                     });
-                }    
+                }
+
                 // console.log("data", data)
     
                 // increment the x position. I.e. move it over by 50 (width variable)
@@ -623,7 +628,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
         ///gu, g: 전역, u:unicode
         //[임, 황, -]
-        var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△]+?[\(\)\/,子⊍3\|]*/gu)         
+        var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△匕]+?[\(\)\/,子⊍3\|]*/gu)         
         // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
         // 3
         
@@ -652,9 +657,12 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     
             // ? xpos = 0 :  xpos += bakja;
             bitsCnt ==1 ? xpos = width : "" ;    
-    
+
+            var kiho ='WNZ/()ㄱㄴㅅㄷ⊍△3'
             var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ⊍△3]+?/gu);
-            // console.log("partMat", partMat);
+            // var partMat = part.match(kiho);
+            
+            console.log("partMat-진짜", partMat);
             var partFreq ='';
             var partDur ='';
             var partColor = '';
@@ -662,20 +670,24 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             //if (partMat == ':') { return } 
             // console.log("partMat", partMat.length) 
     
-            var partVal = partMat[0].charCodeAt()
+            //var partVal = partMat[0].charCodeAt()
             // console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
                 
             durr = partMat.includes('⊍') ? durr * 3 : durr; 
     
-            if (partVal > 10000) {
-                // console.log("baseBit0", baseBit)
+            console.log("뭐지", songStr.indexOf(partMat[0]))
+
+            // if (partVal > 10000  ) {
+            // songStr는 율명만 모아둔 string, 율명아니면 기호로 가라 
+            if (songStr.indexOf(partMat[0])>= 0) {
+                console.log("baseBit0-탄다", baseBit)
                 baseBit = partMat[0];
                 // console.log("baseBit",baseBit)
                 // xyzSet.add(baseBit);
                 // console.log("xyzSet", xyzSet )
     
                 if (partMat.length == 1) {
-                    // console.log("xyzFreq전", partMat[0])
+                    console.log("xyzFreq전", partMat[0])
                     // var returnCode = this.xyzFreq(partMat[0])
                     var returnCode = dg.singlexyzFreq(partMat[0])
                     
@@ -695,12 +707,12 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                     partDur = returnCode2[1]
                     partColor = returnCode2[2]   
                 }
-            // } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'] ) {
-            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'].includes(partMat[0])) {
+            // 율령에 아니면 기호
+            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍','匕'].includes(partMat[0])) {
                        
-                // console.log("baseBit, partMat -일경우", baseBit, partMat[0] )
+                console.log("baseBit, partMat -일경우", baseBit, partMat[0] )
                 var returnCode2 = dg.xyzFreq2(baseBit, partMat[0])
-                // console.log("returnCode#3", returnCode2 )
+                console.log("returnCode#3", returnCode2 )
                 // console.log("returnCode22", returnCode2[0], returnCode2[1])
                 partFreq = returnCode2[0]
                 partDur = returnCode2[1]
@@ -722,7 +734,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             //     partFreq = returnCode2[0]
             //     partDur = returnCode2[1]   
             } else {       
-                // console.log("nowBit, partMat", partVal, partMat[0] )
+                console.log("nowBit, partMat", partMat[0] )
                 var returnCode2 = dg.xyzFreq2(baseBit, partMat[0])
                 // console.log("returnCode#5", returnCode2 )
                 // console.log("returnCode22", returnCode2[0], returnCode2[1])
@@ -770,24 +782,26 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     }
 
     singlexyzFreq(pxy) {
-        // console.log("xyz", pxy);
-        // console.log("xyz22", xyzFreqArr);
+        console.log("singlepxy", pxy);
+        console.log("xyz22", xyzFreqArr);
         
         for (var i=0; i < xyzFreqArr.length; i++) {
             // console.log("i10000", xyzFreqArr[i].xyz)
         // xyzFreqArr.forEach( function(xyzarr) {
             if (xyzFreqArr[i].xyz === pxy) {
                 return [[xyzFreqArr[i].freq],[1], i];
+            } else {
+                console.log("xyzFreqArr 추가 필요")
             }
         }    
     }
     
     xyzFreq2(pxy, deco) {
-        // console.log("xyz", pxy, deco);
+        console.log("xyz", pxy, deco);
         for (var i=0; i < xyzFreqArr.length; i++) {
         // xyzFreqArr.forEach( function(xyzarr) {
             if (xyzFreqArr[i].xyz == pxy) {
-                // console.log("freq", xyzarr.freq);
+                // return format[[주파수],[시간], i는 표기색깔]
                 return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1], i+1] : 
                        (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1], i-1] :
                        (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5], i] :
@@ -799,6 +813,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                        (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3], i] :
                        (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33], i] :
                        (deco == '"') ? [[xyzFreqArr[i].freq],[1], i] :
+                       (deco == '匕') ? [[xyzFreqArr[i+2].freq],[1], i+2] :       
                        [[xyzFreqArr[i].freq], [1], i]; 
             }
         }    
@@ -847,11 +862,11 @@ class Soundplay { //////////////////////////////////////////////////////////////
     }
 
     play() {
-        // console.log("play", scoreIs)
+        console.log("play", scoreIs)
         // 1박시간 가져오기
     //    var t = document.getElementById('playId');
         // var t = $('playId');
-        let zzoom = 1.8;
+        let zzoom = 2.0;
         
         if (!scoreIs) return alert("악보보기 먼저 실행하세요");
     
@@ -860,7 +875,7 @@ class Soundplay { //////////////////////////////////////////////////////////////
             
             //악보를 확대(0.5 -> 1.0)
             // let zzoom = 3.0;
-            (playMode = "m") ? $('svg.gridSvg').css('zoom', zzoom) : $('svg.gridSvg').css('zoom', 1.0); 
+            // (playMode = "m") ? $('svg.gridSvg').css('zoom', zzoom) : $('svg.gridSvg').css('zoom', 1.0); 
             
             //카운터 다운준비
             var countdownNumberEl = document.getElementById('countdown-number');
@@ -943,10 +958,18 @@ class Soundplay { //////////////////////////////////////////////////////////////
             .on("start", function(d,i) { 
                 sd.playFreq2(d.xyz, d.freq, d.partdur, d.dur/1000); 
                 $('#baklog').text(`${d.bakno}박${d.freq}주파수`);
-                document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
-                document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;
-            
-            }) 
+                console.log("this", d3.select(this.parentNode).datum().x)
+                // document.getElementById("grid").scrollLeft = this.getAttribute( 'x' )* 2   ;
+                document.getElementById("grid").scrollLeft = d3.select(this.parentNode).datum().x -150  ;
+                document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;               
+
+            })             
+            .on("end", function(d,i) { 
+                document.getElementById("grid").scrollLeft = d3.select(this.parentNode).datum().x - 150 ;
+                // document.getElementById("grid").scrollTop = this.getAttribute( 'y' )* 2 - 150 ;               
+
+            })
+
             
             .attrTween("width", function(d,i){ return d3.interpolate(1, d.bakja);})
             .attr("class", "played");

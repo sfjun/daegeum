@@ -17,6 +17,9 @@ var bakjaTime ='';
 var textRowcnt= 0;
 var textMaxcolcnt;
 
+// 율명만 추출하여 string으로 추가하기 위한 변수
+var songStr= '';
+
 //대금의 구조는
 //1각4강16정간으로 구성예로 보면 1강은 4정간으로 구성
 //정간이 모여 강이되고 강이 모여 각되는 구조
@@ -352,6 +355,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         document.getElementById("txtOutput").style.height ="200px";
         
         switch (selectedYear) {
+            case '2024':
+                var subOption = songsList2024;
+                break;
             case '2023':
                 var subOption = songsList2023;
                 break;
@@ -389,18 +395,23 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         var xyList = songIs.match(/[\W]/gu)
         // console.log(xx)
         const xySet = new Set(xyList)
-        // console.log(xySet);
-    
+//        console.log("xySet", xySet)
+
+        //한곡의 음정set을 만드는 작업
+        // songStr에는 율명만 만들어 추가
         for (let xy of xySet) {
             for (let item of xyzFreqArr_ori) {
                 if (item.xyz == xy) {
-                    xyzFreqArr.push(item) }
+                    xyzFreqArr.push(item) 
+                    songStr += item.xyz
+                    // console.log("songStr", songStr);
+                }
             }
         }
     }
 
     //text를 읽어서 정각보 data화 하는 작업    
-    txtTodata(textValue) {
+    txtTodata() {
         // getMid()
         // console.log("textValue", textValue)
         var data = new Array();
@@ -420,7 +431,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         // 2마디(1강, 2강,,,)별 추출,여기서는 2개 쉼표가 한줄로
     
         //줄단위로 배열로 저장
-        console.log("gakstring", gakString, textValue)
+        console.log("gakstring", gakString)
         var gangString = gakString.split("\n")    
         var jungGans = [];
     
@@ -434,7 +445,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             (gang.startsWith("w")) ? $('#title').text(gang) : jungGans.push(gang.split(" ")) ;        
         })
 
-        // console.log("jungGans", jungGans)
+        console.log("jungGans", jungGans)
     
         var title = "";
         
@@ -458,13 +469,12 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                 // null 값을 경우 pass
                 //if ((!jungGans[row]) || (!jungGans[row][column])) continue;
     
+                //row별 컬럼별 현행글자를 변수로
                 rowCol = jungGans[row][column];
-                // console.log("TF", rowC?ol)
+                console.log("TF", rowCol)
                 // if (!jungGans[row][column]) continue;
                 if (rowCol == '') continue;
-                
                 // console.log("bakSerial", bakSerial);
-                
                 // console.log("rowCol", rowCol);
                             
                 if (rowCol.startsWith("w")) { 
@@ -491,7 +501,8 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                         xyz: jungGans[row][column],
                         xyzbits: this.bakTobit(bakSerial, rowCol)
                     });
-                }    
+                }
+
                 // console.log("data", data)
     
                 // increment the x position. I.e. move it over by 50 (width variable)
@@ -617,7 +628,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         //전치어[], \W: 영문자외 모두 +? 오직한개, [후치어] * 없거나 한개 이상
         ///gu, g: 전역, u:unicode
         //[임, 황, -]
-        var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△]+?[\(\)\/,子⊍3\|]*/gu)         
+        var bits = hanbak.match(/[ㄴ^ㄷㅅ]?[\WㄱNZ△匕]+?[\(\)\/,子⊍3\|]*/gu)         
         // console.log("ffaArr", hanbaksub.xyz, hanbaksep)
         // 3
         
@@ -646,9 +657,12 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     
             // ? xpos = 0 :  xpos += bakja;
             bitsCnt ==1 ? xpos = width : "" ;    
-    
+
+            var kiho ='WNZ/()ㄱㄴㅅㄷ⊍△3'
             var partMat = part.match(/[\WNZ\/()ㄱㄴㅅㄷ⊍△3]+?/gu);
-            // console.log("partMat", partMat);
+            // var partMat = part.match(kiho);
+            
+            console.log("partMat-진짜", partMat);
             var partFreq ='';
             var partDur ='';
             var partColor = '';
@@ -656,13 +670,17 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             //if (partMat == ':') { return } 
             // console.log("partMat", partMat.length) 
     
-            var partVal = partMat[0].charCodeAt()
-            console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
+            //var partVal = partMat[0].charCodeAt()
+            // console.log("partMat[0], partVal, partMat",partMat[0], partVal, partMat)  
                 
             durr = partMat.includes('⊍') ? durr * 3 : durr; 
     
-            if (partVal > 10000) {
-                // console.log("baseBit0", baseBit)
+            console.log("뭐지", songStr.indexOf(partMat[0]))
+
+            // if (partVal > 10000  ) {
+            // songStr는 율명만 모아둔 string, 율명아니면 기호로 가라 
+            if (songStr.indexOf(partMat[0])>= 0) {
+                console.log("baseBit0-탄다", baseBit)
                 baseBit = partMat[0];
                 // console.log("baseBit",baseBit)
                 // xyzSet.add(baseBit);
@@ -689,8 +707,8 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                     partDur = returnCode2[1]
                     partColor = returnCode2[2]   
                 }
-            // } else if (partMat[0] in ['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'] ) {
-            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍'].includes(partMat[0])) {
+            // 율령에 아니면 기호
+            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍','匕'].includes(partMat[0])) {
                        
                 console.log("baseBit, partMat -일경우", baseBit, partMat[0] )
                 var returnCode2 = dg.xyzFreq2(baseBit, partMat[0])
@@ -716,7 +734,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
             //     partFreq = returnCode2[0]
             //     partDur = returnCode2[1]   
             } else {       
-                console.log("nowBit, partMat", partVal, partMat[0] )
+                console.log("nowBit, partMat", partMat[0] )
                 var returnCode2 = dg.xyzFreq2(baseBit, partMat[0])
                 // console.log("returnCode#5", returnCode2 )
                 // console.log("returnCode22", returnCode2[0], returnCode2[1])
@@ -764,14 +782,16 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
     }
 
     singlexyzFreq(pxy) {
-        // console.log("xyz", pxy);
-        // console.log("xyz22", xyzFreqArr);
+        console.log("singlepxy", pxy);
+        console.log("xyz22", xyzFreqArr);
         
         for (var i=0; i < xyzFreqArr.length; i++) {
             // console.log("i10000", xyzFreqArr[i].xyz)
         // xyzFreqArr.forEach( function(xyzarr) {
             if (xyzFreqArr[i].xyz === pxy) {
                 return [[xyzFreqArr[i].freq],[1], i];
+            } else {
+                console.log("xyzFreqArr 추가 필요")
             }
         }    
     }
@@ -781,7 +801,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         for (var i=0; i < xyzFreqArr.length; i++) {
         // xyzFreqArr.forEach( function(xyzarr) {
             if (xyzFreqArr[i].xyz == pxy) {
-                // console.log("freq", xyzarr.freq);
+                // return format[[주파수],[시간], i는 표기색깔]
                 return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1], i+1] : 
                        (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1], i-1] :
                        (deco == 'N') ? [[xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.5, 0.5], i] :
@@ -793,6 +813,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                        (deco == '子') ? [[xyzFreqArr[i].freq, xyzFreqArr[i-1].freq, xyzFreqArr[i].freq],[0.3, 0.4, 0.3], i] :
                        (deco == 3) ? [[xyzFreqArr[i].freq, xyzFreqArr[i+1].freq, xyzFreqArr[i].freq],[0.33, 0.33, 0.33], i] :
                        (deco == '"') ? [[xyzFreqArr[i].freq],[1], i] :
+                       (deco == '匕') ? [[xyzFreqArr[i+2].freq],[1], i+2] :       
                        [[xyzFreqArr[i].freq], [1], i]; 
             }
         }    
