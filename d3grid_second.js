@@ -391,7 +391,9 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         //'/':시작, '/': 종료, 문자 클래스 [ ] 사이에는 어떤 문자도 들어갈 수 있다.
         // \w: [A-Za-z0-9_], \W: w가 아닌 모든것
         // gu: g:문자열내의 모든 패턴을 검색하라 u: 유니코드 전체를 지원
-        
+
+        // 재실행시 클리어 중복생성방지
+        xyzFreqArr = []
         var xyList = songIs.match(/[\W]/gu)
         // console.log(xx)
         const xySet = new Set(xyList)
@@ -408,6 +410,23 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                 }
             }
         }
+        // 평조, 계면조에 따라서 마스터를 구분하여 자동선택
+        if (/㒇無潕浹夾/g.test(songStr)) {
+            // console.log("계면조") 
+            xyzFreqArr = [...new Set([...xyzFreqArr, ...xyzFreqArr_A])];
+        } else {
+            // console.log("평조") 
+            xyzFreqArr = [...new Set([...xyzFreqArr, ...xyzFreqArr_G])];
+        }
+        // 객체를 오름순으로 정렬하여 색깔 구분자인 no를 활용해도 문제없음 
+        const map = new Map(); // 맵
+        for(const character of xyzFreqArr){
+            map.set(JSON.stringify(character), character); // 중복제거 로직추가
+        }
+        xyzFreqArr = [...map.values()];
+        // xyzFreqArr.filter((item, pos) => xyzFreqArr.indexOf(item) === pos);
+        xyzFreqArr.sort((a, b) => a.no - b.no);
+        console.log("merge", xyzFreqArr);
     }
 
     //text를 읽어서 정각보 data화 하는 작업    
@@ -708,7 +727,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
                     partColor = returnCode2[2]   
                 }
             // 율령에 아니면 기호
-            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z','△', '⊍','匕'].includes(partMat[0])) {
+            } else if (['-', 'ㄴ', 'ㄱ', 'N', 'Z', '△', '⊍', '匕'].includes(partMat[0])) {
                        
                 console.log("baseBit, partMat -일경우", baseBit, partMat[0] )
                 var returnCode2 = dg.xyzFreq2(baseBit, partMat[0])
@@ -801,6 +820,7 @@ class Daeguem {  ///////////////////////////////////////////////////////////////
         for (var i=0; i < xyzFreqArr.length; i++) {
         // xyzFreqArr.forEach( function(xyzarr) {
             if (xyzFreqArr[i].xyz == pxy) {
+                console.log("xyzFreqArr", xyzFreqArr)
                 // return format[[주파수],[시간], i는 표기색깔]
                 return (deco == 'ㄴ') ? [[xyzFreqArr[i+1].freq], [1], i+1] : 
                        (deco == 'ㄱ') ? [[xyzFreqArr[i-1].freq], [1], i-1] :

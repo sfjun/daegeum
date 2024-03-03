@@ -372,16 +372,40 @@ song :
 ]    
 
 var xyzFreqArr_ori = [{xyz: '㑣', freq: 233.25, no: 1}, {xyz: '侇', freq: 249.1, no: 2}, {xyz: '㑲', freq: 262.4, no: 3},
-                  {xyz: '㒇', freq: 280.2, no: 4}, {xyz: '㒣', freq: 295.2, no: 5}, {xyz: '黃', freq: 311, no: 6},
-                  {xyz: '大', freq: 332.1, no: 7}, {xyz: '太', freq: 349.9, no: 8}, {xyz: '夾', freq: 373.6, no: 9},
-                  {xyz: '姑', freq: 393.6, no: 10}, {xyz: '仲', freq: 420.3, no: 11}, {xyz: '㽔', freq: 442.8, no: 12},
-                  {xyz: '林', freq: 466.5, no: 13}, {xyz: '夷', freq: 498.2, no: 14}, {xyz: '南', freq: 524.8, no: 15},
-                  {xyz: '無', freq: 560.4, no: 16}, {xyz: '應', freq: 590.4, no: 17}, {xyz: '潢', freq: 622, no: 18},
-                  {xyz: '汏', freq: 664.2, no: 19}, {xyz: '汰', freq: 699.8, no: 20}, {xyz: '浹', freq: 747.2, no: 21},
-                  {xyz: '㴌', freq: 787.2, no: 22}, {xyz: '㳞', freq: 840.6, no: 23}, {xyz: '㶋', freq: 885.6, no: 24},
-                  {xyz: '淋', freq: 933, no: 25}, {xyz: '洟', freq: 996.4, no: 26}, {xyz: '湳', freq: 1049.6, no: 27},
-                  {xyz: '潕', freq: 1120.8, no: 28}, {xyz: '㶐', freq: 1180.8, no: 29}, {xyz: '㶂', freq: 1244, no: 30},
-                  {xyz: '𣴘', freq: 1328.4, no: 31}, {xyz: '㳲', freq: 1399.6, no: 32}]
+                      {xyz: '㒇', freq: 280.2, no: 4}, {xyz: '㒣', freq: 295.2, no: 5}, {xyz: '黃', freq: 311, no: 6},
+                      {xyz: '大', freq: 332.1, no: 7}, {xyz: '太', freq: 349.9, no: 8}, {xyz: '夾', freq: 373.6, no: 9},
+                      {xyz: '姑', freq: 393.6, no: 10}, {xyz: '仲', freq: 420.3, no: 11}, {xyz: '㽔', freq: 442.8, no: 12},
+                      {xyz: '林', freq: 466.5, no: 13}, {xyz: '夷', freq: 498.2, no: 14}, {xyz: '南', freq: 524.8, no: 15},
+                      {xyz: '無', freq: 560.4, no: 16}, {xyz: '應', freq: 590.4, no: 17}, {xyz: '潢', freq: 622, no: 18},
+                      {xyz: '汏', freq: 664.2, no: 19}, {xyz: '汰', freq: 699.8, no: 20}, {xyz: '浹', freq: 747.2, no: 21},
+                      {xyz: '㴌', freq: 787.2, no: 22}, {xyz: '㳞', freq: 840.6, no: 23}, {xyz: '㶋', freq: 885.6, no: 24},
+                      {xyz: '淋', freq: 933, no: 25}, {xyz: '洟', freq: 996.4, no: 26}, {xyz: '湳', freq: 1049.6, no: 27},
+                      {xyz: '潕', freq: 1120.8, no: 28}, {xyz: '㶐', freq: 1180.8, no: 29}, {xyz: '㶂', freq: 1244, no: 30},
+                      {xyz: '𣴘', freq: 1328.4, no: 31}, {xyz: '㳲', freq: 1399.6, no: 32}]
+
+//평조(G-mode),계면조(A-mode) 두개조 중 계면조
+//현행: 현재 연주되고 있는 가곡의 계면조는 우조계면조(황종계면조)이며,
+// 「영산회상(靈山會相)」 중 「상영산」부터 「타령」까지의 여덟 곡이 우조계면조(황종계면조)로, 
+//「평조회상(平調會相)」은 평조계면조(임종계면조)로 되어 있어 15세기에 사용되던 조의 일부가 남아 있음을 알 수 있다.
+//1 key(임종계,황종계), 2: 모드(평조, 계면조), 3: 음계(), 4:악상(우조,평조,석화재,강산제)
+//계면조: 황협중임무, 우조,라모드(A)
+//평조: 황태중임남,치조,솔모드(G)
+
+//평조: 황태중임남, 솔모드G 
+var xyzFreqArr_G = [{xyz: '㑣', freq: 233.25, no: 1}, {xyz: '㑲', freq: 262.4, no: 3},
+                        {xyz: '黃', freq: 311, no: 6}, {xyz: '太', freq: 349.9, no: 8}, {xyz: '仲', freq: 420.3, no: 11}, 
+                        {xyz: '林', freq: 466.5, no: 13}, {xyz: '南', freq: 524.8, no: 15},
+                        {xyz: '潢', freq: 622, no: 18}, {xyz: '汰', freq: 699.8, no: 20}, {xyz: '㳞', freq: 840.6, no: 23}, 
+                        {xyz: '淋', freq: 933, no: 25}, {xyz: '湳', freq: 1049.6, no: 27},
+                        {xyz: '㶂', freq: 1244, no: 30},{xyz: '㳲', freq: 1399.6, no: 32}]
+                      
+//계면조: 황협중임무, 라모드A 
+var xyzFreqArr_A = [{xyz: '㑣', freq: 233.25, no: 1}, {xyz: '㒇', freq: 280.2, no: 4}, {xyz: '黃', freq: 311, no: 6},
+                      {xyz: '夾', freq: 373.6, no: 9}, {xyz: '仲', freq: 420.3, no: 11},
+                      {xyz: '林', freq: 466.5, no: 13}, {xyz: '無', freq: 560.4, no: 16}, {xyz: '潢', freq: 622, no: 18},
+                      {xyz: '浹', freq: 747.2, no: 21}, {xyz: '㳞', freq: 840.6, no: 23}, 
+                      {xyz: '淋', freq: 933, no: 25}, {xyz: '潕', freq: 1120.8, no: 28}, {xyz: '㶂', freq: 1244, no: 30}]
+
 
 // 아악, 정악, 당악
 // var xyzFreqArr_ori = [{xyz: '㑣', freq: 194.25, no: 1}, {xyz: '侇', freq: 207.45, no: 2}, {xyz: '㑲', freq: 218.55, no: 3}, 
